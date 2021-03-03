@@ -9,17 +9,17 @@
 ### FAQs
 * customer gets a form to ask a question. Support can see pending questions and answer them.
 * All support can remove or edit any question and they can choose to publish it or leave it as a draft.
-## Ads
+### Ads
 * Ads show up on homepage for customers and public.
 * Ads can have images, a set time to appear, and a url to the sensor page. Ads are added by marketing.
-## UserTrackings
+### UserTrackings
 * Track aggregate user data over periods of time to show on graphs
 * Each time a user logins or registers or logs out, a new track is recorded. 
 * The time is given, and a type name is given so it can be picked from a list of specific reports.
 * each buy also sends a track
-## Customer Reviews
+### Customer Reviews
 * Customer can leave review after installation is done. Also after support role resolves complaint
-## Notifications
+### Notifications
 * A new report comes in, or a sensor gets a critical reading. 
 * Each user can see new notifications coming in inside the app regardless of what tab they're in. 
 * A new ad also gives customers a notification
