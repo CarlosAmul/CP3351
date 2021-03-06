@@ -14,6 +14,7 @@ export type DrawerParamList = {
 
 export type TabOneParamList = {
   PublicHomeScreen: undefined;
+  CategoryFavsScreen: undefined;
 };
 
 export type TabTwoParamList = {

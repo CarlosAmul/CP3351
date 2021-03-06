@@ -5,6 +5,8 @@ import * as React from 'react';
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
 // @ts-expect-error
+import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+// @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Customer/ActionsScreen'
@@ -14,7 +16,6 @@ import SensorsScreen from '../../../screens/Customer/SensorsScreen'
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
   return (
@@ -49,6 +50,11 @@ function PublicHomeNavigator() {
         name="PublicHomeScreen"
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
+      />
+      <PublicHomeStack.Screen
+        name="CategoryFavsScreen"
+        component={CategoryFavsScreen}
+        options={{ headerTitle: 'Category Favorites' }}
       />
     </PublicHomeStack.Navigator>
   )

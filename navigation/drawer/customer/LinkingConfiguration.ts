@@ -9,6 +9,7 @@ export default {
           TabOne: {
             screens: {
               PublicHomeScreen: 'one',
+              CategoryFavsScreen: 'five',
             },
           },
           TabTwo: {
