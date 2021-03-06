@@ -6,9 +6,19 @@ import TemperatureInfo from './TemperatureInfo'
 import CategoryByUserPicker from '../pickers/CategoryByUserPicker';
 import SensorByUserAndCategoryPicker from '../pickers/SensorByUserAndCategoryPicker';
 import UserContext from '../../UserContext'
+import { useNavigation } from '@react-navigation/native';
+import MenuIcon from '../../components/MenuIcon'
 
 export default function ActionsScreen() {
 
+  const navigation = useNavigation();
+    useEffect(() => {
+        navigation.setOptions({
+            // @ts-expect-error
+            headerLeft: () => (<MenuIcon />)
+        });
+    });
+    
   const { user } = useContext(UserContext)
   useEffect(() => setCategory(null), [user])
   const [category, setCategory] = useState(null)

@@ -5,9 +5,19 @@ import CategoryPicker from '../pickers/CategoryPicker'
 import SensorByCategoryPicker from '../pickers/SensorByCategoryPicker'
 import TemperatureActions from './TemperatureActions'
 import MotionActions from './MotionActions'
+import { useNavigation } from '@react-navigation/native';
+import MenuIcon from '../../components/MenuIcon'
 
 export default function ActionsScreen() {
 
+  const navigation = useNavigation();
+	useEffect(() => {
+		navigation.setOptions({
+			// @ts-expect-error
+			headerLeft: () => (<MenuIcon />)
+		});
+	});
+  
   const [category, setCategory] = useState(null)
   useEffect(() => setSensor(null), [category])
   const [sensor, setSensor] = useState(null)

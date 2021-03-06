@@ -3,14 +3,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
+import Colors from '../../../constants/Colors';
+import useColorScheme from '../../../hooks/useColorScheme';
 // @ts-expect-error
-import SensorsScreen from '../../screens/Admin/DashboardScreen';
+import SensorsScreen from '../../../screens/Admin/DashboardScreen';
 // @ts-expect-error
-import ActionsScreen from '../../screens/Admin/ActionsScreen';
+import ActionsScreen from '../../../screens/Admin/ActionsScreen';
 // @ts-expect-error
-import SettingsScreen from '../../screens/Admin/SettingsScreen';
+import SettingsScreen from '../../../screens/Admin/SettingsScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from './types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
