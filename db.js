@@ -121,12 +121,37 @@ class Categories extends DB {
 
     constructor() {
         super('categories')
+        this.Favorites = new Favorites(this.collection)
     }
 
     // max 10
     listenInIds = (set, ids) =>
         db.collection(this.collection).where(db.FieldPath.documentId(), "in", ids).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
+}
+
+/*********************************** Zainab ************************************/
+class Favorites extends DB {
+    constructor(containing) {
+        super('favorites')
+        this.containing = containing
+    }
+
+    reformat(doc) {
+        return { id: doc.id, when: doc.data().when.toDate(), ...doc.data() }
+    }
+
+    listenToCategoryFavs = (set, catId) => 
+        db.collection(this.containing).doc(catId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToCatgoryFavsByUser = (set, catId, userId) =>
+        db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    addFav = async (catId, like) => 
+        await db.collection(this.containing).doc(catId).collection(this.collection).add(like)
+
+    removeFavs = async (catId, likeId) =>
+        await db.collection(this.containing).doc(catId).collection(this.collection).doc(likeId).delete()
 }
 
 export default {
