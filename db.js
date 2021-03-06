@@ -113,8 +113,24 @@ class Users extends DB {
 
     constructor() {
         super('users')
+        this.Notifications = new Notifications(this.collection)
     }
 
+}
+
+class Notifications extends DB {
+    constructor(containing) {
+        super('notifications')
+        this.containing = containing
+    }
+
+    listenByUserAll(uid, set){
+        return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByUserUnread(uid, set){
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
 }
 
 class Categories extends DB {

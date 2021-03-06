@@ -26,6 +26,11 @@ export default {
               SensorsScreen: 'two',
             },
           },
+          TabFive: {
+            screens: {
+              NotificationsScreen: 'five',
+            },
+          },
         },
       },
       NotFound: '*',

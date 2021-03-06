@@ -10,8 +10,10 @@ import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 import ActionsScreen from '../../../screens/Customer/ActionsScreen'
 // @ts-expect-error
 import SensorsScreen from '../../../screens/Customer/SensorsScreen'
+// @ts-expect-error
+import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -23,6 +25,10 @@ export default function DrawerNavigator() {
         name="PublicHome"
         component={PublicHomeNavigator}
         options={{ drawerLabel: "Home" }} 
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationsNavigator}
       />
       <Drawer.Screen
         name="Actions"
@@ -93,5 +99,19 @@ function SensorsNavigator() {
         options={{ headerTitle: 'Sensors' }}
       />
     </SensorsStack.Navigator>
+  )
+}
+
+const NotificationStack = createStackNavigator<TabFiveParamList>();
+
+function NotificationsNavigator() {
+  return (
+    <NotificationStack.Navigator>
+      <NotificationStack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+        options={{ headerTitle: 'Notifications' }}
+      />
+    </NotificationStack.Navigator>
   )
 }

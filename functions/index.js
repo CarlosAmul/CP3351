@@ -166,3 +166,21 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
 
   })
+
+exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
+  async (snap, context) => {
+    const { userid } = context.params
+    const userDoc = await db.collection('users').doc(userid).get()
+    const user = { id: userDoc.id, ...userDoc.data() }
+
+    if (user.role == "Customer") {
+      const notif = await db.collection('users').doc(userid).collection('notifications').add({
+        message: "Welcome to Smart FitIoT!",
+        status: false,
+        url: '',
+        when: new Date()
+      })
+      functions.logger.info("notification sent", notif)
+    }
+   
+  })
