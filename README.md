@@ -17,6 +17,10 @@ npm i @react-native-community/netinfo
 npm i @react-native-picker/picker
 npm i @react-native-community/picker
 ```
+### Main Components Used
+* Cards, Cards.Section, Cards.Image
+* List, ListItem, ListItem.Part
+* Drawer for Navigation (native component)
 ## Carlos Tasks
 ### FAQs
 - [ ] Finished ❌
