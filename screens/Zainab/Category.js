@@ -7,6 +7,13 @@ import db from '../../db'
 
 export default function Category({ category, onPress }) {
 
+    Colors.loadColors({
+        primary: '#6874e2',
+		secondary: '#f9ce7f',
+        mainbg: '#f5f6fa',
+		sidebg: '#ffffff',
+    });
+
     const { user } = useContext(UserContext)
 
     const [userCatFavs, setuserCatFavs] = useState([])

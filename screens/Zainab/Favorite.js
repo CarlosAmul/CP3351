@@ -11,12 +11,11 @@ export default function CategoryFavsScreen({ favorite }) {
     const [fuser, setFuser] = useState(null)
     useEffect(() => db.Users.listenOne(setFuser, favorite?.userid || ""), [favorite])
 
-    console.log(fuser)
-
     Colors.loadColors({
         primary: '#6874e2',
-        basic: '#f5f6fa',
-        white: '#ffffff'
+		secondary: '#f9ce7f',
+        mainbg: '#f5f6fa',
+		sidebg: '#ffffff',
     });
 
     return (
@@ -32,7 +31,7 @@ export default function CategoryFavsScreen({ favorite }) {
             </ListItem.Part>
             <ListItem.Part middle>
                 <Text>
-                    {new Date(favorite.when.seconds * 1000 + favorite.when.nanoseconds / 1000000).toDateString() }
+                    {favorite.when.toLocaleDateString() }
                 </Text>
             </ListItem.Part>
             <ListItem.Part right>

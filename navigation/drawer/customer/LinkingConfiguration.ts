@@ -27,6 +27,11 @@ export default {
               SensorsScreen: 'two',
             },
           },
+          UserFavorites: {
+            screens: {
+              UserFavoritesScreen: 'two',
+            },
+          },
         },
       },
       NotFound: '*',

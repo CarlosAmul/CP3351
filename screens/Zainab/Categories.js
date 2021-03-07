@@ -20,8 +20,9 @@ export default function Categories({stacknavigation}) {
 
     Colors.loadColors({
         primary: '#6874e2',
-        basic: '#f5f6fa',
-        white: '#ffffff'
+		secondary: '#f9ce7f',
+        mainbg: '#f5f6fa',
+		sidebg: '#ffffff',
     });
 
     const { user } = useContext(UserContext)
@@ -50,10 +51,7 @@ export default function Categories({stacknavigation}) {
 }
 
 const styles = StyleSheet.create({
-    tinyLogo: {
-        width: 150,
-        height: 150,
-    },
+
     scrollcontainer: {
         flex: 1,
         backgroundColor: '#f5f6fa',

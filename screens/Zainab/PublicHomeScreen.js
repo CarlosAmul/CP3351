@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { Button } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import db from '../../db'
 import { Colors } from 'react-native-ui-lib'
 import Categories from './Categories'
+import MostFavorite from './MostFavorite'
 
 export default function PublicHomeScreen(props) {
     const stacknavigation = props.navigation;
@@ -20,13 +19,15 @@ export default function PublicHomeScreen(props) {
 
     Colors.loadColors({
         primary: '#6874e2',
-        basic: '#f5f6fa',
-        white: '#ffffff'
+		secondary: '#f9ce7f',
+        mainbg: '#f5f6fa',
+		sidebg: '#ffffff',
     });
 
     return (
         <ScrollView style={styles.scrollcontainer}>
             <Categories stacknavigation={stacknavigation}/>
+            <MostFavorite />
         </ScrollView>
     );
 }
