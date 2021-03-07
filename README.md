@@ -53,7 +53,7 @@ npm i @react-native-community/picker
 * Discount codes are redeeming instructions.
 * Redeeming a reward links the ID of the customer to the reward.
 ### Favorites
-- [ ] Finished ❌
+- [x] Finished ✅
 * A customer can mark a category as a favorite.
 * A customer can see a list of their favorite in a separate tab.
 * For the public, total favorites can be displayed for a category, as well as most favorited.
