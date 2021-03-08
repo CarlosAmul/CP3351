@@ -27,7 +27,8 @@ export default function NotificationsScreen() {
 
     function linkToSensor(uid, nid, screen, extra) {
         db.Users.Notifications.markRead(uid, nid)
-        navigation.navigate(screen, { params: extra? extra : '' })
+        navigation.navigate(screen, { catId: extra.catId, sensorId: extra.sensorId })
+        // navigation.navigate({name: screen, params: { catId: extra.catId, sensorId: extra.sensorId }})
     }
 
     return (

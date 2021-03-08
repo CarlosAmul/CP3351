@@ -124,6 +124,10 @@ class Notifications extends DB {
         this.containing = containing
     }
 
+    unreadCount(uid,set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").where('status', '==', false).onSnapshot(snap => set(snap.size))
+    }
+
     listenByUserAll(uid, set){
         return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }

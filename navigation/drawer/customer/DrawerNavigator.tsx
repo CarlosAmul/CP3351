@@ -1,6 +1,11 @@
+import { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as React from 'react';
+// @ts-expect-error
+import db from '../../../db.js'
+// @ts-expect-error
+import UserContext from '../../../UserContext';
 
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
@@ -18,7 +23,14 @@ import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, T
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
 
+
 export default function DrawerNavigator() {
+
+  const { user } = useContext(UserContext)
+
+  const [notifCount, setNotifCount] = React.useState(0)
+  React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
+
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -29,6 +41,7 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Notifications"
         component={NotificationsNavigator}
+        options={{drawerLabel: `Notifications (${notifCount})`}}
       />
       <Drawer.Screen
         name="Actions"

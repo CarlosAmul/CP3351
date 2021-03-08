@@ -186,7 +186,7 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
     const user = { id: userDoc.id, ...userDoc.data() }
 
     if (user.role == "Customer") {
-      const notif = newNotification(userid, 'Welcome to FitIoT!', 'Sensors')
+      const notif = newNotification(userid, 'Welcome to FitIoT!', 'PublicHome')
       functions.logger.info("notification sent", notif)
     }
   })
