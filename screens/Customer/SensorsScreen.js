@@ -10,9 +10,8 @@ import {  Text } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 
-export default function SensorsScreen() {
+export default function SensorsScreen({route}) {
 	const navigation = useNavigation();
-
 	const { user } = useContext(UserContext)
 	useEffect(() => setCategory(null), [user])
 	const [category, setCategory] = useState(null)

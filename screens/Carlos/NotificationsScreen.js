@@ -6,10 +6,13 @@ import UserContext from '../../UserContext'
 import MenuIcon from '../../components/MenuIcon'
 import db from '../../db'
 import { Card } from 'react-native-ui-lib'
+import { ScrollView } from 'react-native-gesture-handler';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default function NotificationsScreen() {
 
     const navigation = useNavigation();
+    
     useEffect(() => {
         navigation.setOptions({
             // @ts-expect-error
@@ -22,24 +25,35 @@ export default function NotificationsScreen() {
     const [notifications, setNotifications] = useState([])
     useEffect(() => db.Users.Notifications.listenByUserAll(user?.id || "", setNotifications), [user])
 
+    function linkToSensor(uid, nid, screen, extra) {
+        db.Users.Notifications.markRead(uid, nid)
+        navigation.navigate(screen, { params: extra? extra : '' })
+    }
+
     return (
-        <View>
+        <ScrollView style={styles.notifContainer}>
             {
                 notifications.map(
                     notification =>
-                        <Card row useNative key={notification.id} style={styles.card} onPress={() => { }}>
+                        <Card 
+                            row 
+                            enableShadow
+                            key={notification.id} 
+                            // useNative
+                            containerStyle={{backgroundColor: notification.status ? '#f2f2f2':'white'}}
+                            style={styles.card}
+                            onPress={() => linkToSensor(user.id, notification.id, notification.screen, notification.extra)}>
                             <Card.Section
-                                bg-white
                                 content={[
-                                    { text: notification.message, text70: true, grey10: true },
-                                    {text: notification.when.toDate().toString(), text90: true, grey30: true}
+                                    { text: notification.message, text60: true, grey10: true },
+                                    { text: notification.when.toDate('MM/dd/yyyy').toString().slice(0,24), text70: true, grey30: true}
                                 ]}
                                 style={{ padding: 20 }}
                             />
                         </Card>
                 )
             }
-        </View>
+        </ScrollView>
 
     );
 }
@@ -50,12 +64,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    notifContainer: {
+        flex: 1
+    },
     card: {
         padding: 20,
-        // backgroundColor: "#ffffff",
-        // margin: 20,
-        // width: 300,
-        // textAlign: "center"
+        margin: 5,
+        borderWidth: 2,
+        borderColor: 'lightgray',
+        color: 'red'
+    },
+    cardRead: {
+        backgroundColor: 'lightgray',
+        color: 'black'
     },
     title: {
         fontSize: 20,

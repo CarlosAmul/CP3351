@@ -125,12 +125,19 @@ class Notifications extends DB {
     }
 
     listenByUserAll(uid, set){
-        return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
 
     listenByUserUnread(uid, set){
-        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").where('status', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
+
+    markRead(uid, nid){
+        db.collection(this.containing).doc(uid).collection(this.collection).doc(nid).set({ status: true }, { merge: true })
+    }
+
+    newNotification = async(userid,message,screen,extra) => await db.collection('users').doc(userid).collection('notifications').add({message, status: false, screen, when: new Date(), extra: extra? extra : {}})
+
 }
 
 class Categories extends DB {

@@ -21,6 +21,8 @@ const findAll = async collection => (await db.collection(collection).get()).docs
 const findOneSubAll = async (collection, id, subcollection) => (await db.collection(collection).doc(id).collection(subcollection).get()).docs.map(reformat)
 const removeOneSubOne = async (collection, id, subcollection, subId) => await db.collection(collection).doc(id).collection(subcollection).doc(subId).delete()
 const removeOne = async (collection, id) => await db.collection(collection).doc(id).delete()
+const newNotification = async(userid,message,screen,extra) => await db.collection('users').doc(userid).collection('notifications').add({message, status: false, screen, when: new Date(), extra: extra? extra : {}})
+
 
 exports.createSampleData = functions.https.onCall(
   async (data, context) => {
@@ -153,14 +155,24 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         const buffer2 = await response2.buffer()
         const base64_2 = buffer2.toString('base64')
 
-        functions.logger.info("motion detected", { sensor, motiondetected: base64_1 != base64_2 });
+        const isDetected = base64_1 != base64_2
+        functions.logger.info("motion detected", { sensor, motiondetected: isDetected });
 
-        await db.collection('sensors').doc(sensor.id).set({ motiondetected: base64_1 != base64_2 }, { merge: true })
+        await db.collection('sensors').doc(sensor.id).set({ motiondetected: isDetected }, { merge: true })
+
+        if(isDetected){
+          newNotification(sensor.userid, `Motion detected by ${category.name} sensor in location "${sensor.location}"`, '')
+        }
       }
     }
     else if (category.name = "Temperature") {
-      await db.collection('sensors').doc(sensor.id).set({ alert: reading.current > sensor.max || reading.current < sensor.min }, { merge: true })
-      functions.logger.info("temp alert update", { alert: reading.current > sensor.max || reading.current < sensor.min });
+      const isAlert = reading.current > sensor.max || reading.current < sensor.min
+
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if(isAlert){
+        newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
+      functions.logger.info("temp alert update", { alert: isAlert });
     } else {
       functions.logger.info("No such category", { category });
     }
@@ -174,13 +186,7 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
     const user = { id: userDoc.id, ...userDoc.data() }
 
     if (user.role == "Customer") {
-      const notif = await db.collection('users').doc(userid).collection('notifications').add({
-        message: "Welcome to Smart FitIoT!",
-        status: false,
-        url: '',
-        when: new Date()
-      })
+      const notif = newNotification(userid, 'Welcome to FitIoT!', 'Sensors')
       functions.logger.info("notification sent", notif)
     }
-   
   })

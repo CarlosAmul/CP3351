@@ -1,13 +1,14 @@
 import * as React from 'react';
 
-import { Feather } from './Themed';
+import { Text, Feather } from './Themed';
 import { TouchableOpacity } from 'react-native';
 
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { onPressFunc } from '../navigation/drawer/customer/types';
 
-export default function MenuIcon() {
+export default function MenuIcon(notif: number) {
+  notif = 0
   const navigation = useNavigation();
 
   const openDrawer = useCallback(() => {
