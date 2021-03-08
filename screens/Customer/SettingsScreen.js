@@ -1,11 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
+import { Text } from '../../components/Themed';
+import { Button, TextField, View, Colors } from 'react-native-ui-lib';
 import UserContext from '../../UserContext'
 import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
+import MapComponent from './MapComponent';
 
 export default function SettingsScreen() {
 
@@ -25,13 +26,50 @@ export default function SettingsScreen() {
 
 	console.log(user)
 
+	const [openProfileEditor, setOpenProfileEditor] = useState(false)
+	const [name, setName] = useState("")
+
+	Colors.loadColors({
+		primary: '#6874e2',
+		basic: '#f5f6fa',
+	});
+
 	return (
 		<View>
 			<View style={styles.getStartedContainer}>
-				<TouchableOpacity onPress={logout} style={styles.title}>
-					<Text style={styles.helpLinkText} lightColor={Colors.light.tint}>Logout</Text>
-				</TouchableOpacity>
+				<Button label="Logout"
+					style={{ width: '80%' }}
+					backgroundColor={Colors.primary}
+					onPress={logout}
+					marginT-15
+				/>
+				<Button label={openProfileEditor ? "Cancel Edit" : "Edit Profile"}
+					style={{ width: '80%' }}
+					backgroundColor={Colors.primary}
+					onPress={() => setOpenProfileEditor(!openProfileEditor)}
+					marginT-15
+				/>
 			</View>
+			<View style={styles.centerMargin}>
+				<View style={styles.separator}></View>
+				{
+					openProfileEditor &&
+					<>
+						<Text>Name: </Text>
+						<TextField
+							onChangeText={text => setName(text)}
+							hideUnderline
+							placeholder={user.name}
+							style={styles.inputText}
+							value={name}
+						/>
+					</>
+				}
+			</View>
+			{
+				openProfileEditor &&
+				<MapComponent />
+			}
 		</View>
 	);
 }
@@ -65,6 +103,13 @@ const styles = StyleSheet.create({
 		resizeMode: 'contain',
 		marginTop: 3,
 		marginLeft: -10,
+	},
+	getStartedContainer: {
+		alignItems: 'center',
+		marginHorizontal: 50,
+	},
+	centerMargin: {
+		marginHorizontal: 50,
 	},
 	getStartedContainer: {
 		alignItems: 'center',
