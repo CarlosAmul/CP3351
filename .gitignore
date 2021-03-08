@@ -16,3 +16,4 @@ fb.js
 functions/firebase-debug.log
 functions/firestore-debug.log
 functions/ui-debug.log
+firebase-debug.log

@@ -4,8 +4,8 @@ import * as React from 'react';
 
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
-// @ts-expect-error
-import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+
+// import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
@@ -51,11 +51,11 @@ function PublicHomeNavigator() {
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
       />
-      <PublicHomeStack.Screen
+      {/* <PublicHomeStack.Screen
         name="CategoryFavsScreen"
         component={CategoryFavsScreen}
         options={{ headerTitle: 'Category Favorites' }}
-      />
+      /> */}
     </PublicHomeStack.Navigator>
   )
 }
