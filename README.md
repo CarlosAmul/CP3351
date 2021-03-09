@@ -68,7 +68,7 @@ npm i @react-native-community/picker
 * Support will be able to do all CRUD.
 * The safety instructions could be shown with a button under each category saying "view safety instructions" for this category
 ### Manufacturers
-- [ ] Finished ❌
+- [x] Finished ✅
 * Admin can create manufacturers with CRUD 
 * Admin can assign manufacturers to a category
 * When customers will purchase sensors, they can choose which manufacturer they want with high quality, low price etc. These manufacturers can be displayed on the public home page.
