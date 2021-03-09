@@ -31,6 +31,11 @@ export default {
               NotificationsScreen: 'five',
             },
           },
+          TabSix: {
+            screens: {
+              FAQsScreen: 'six',
+            },
+          },
         },
       },
       NotFound: '*',

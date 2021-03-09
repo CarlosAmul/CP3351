@@ -10,7 +10,8 @@ export type DrawerParamList = {
   Settings: undefined,
   Actions: undefined,
   Sensors: undefined,
-  Notifications: undefined;
+  Notifications: undefined,
+  FAQs: undefined
 };
 
 export type TabOneParamList = {
@@ -31,6 +32,10 @@ export type TabFourParamList = {
 
 export type TabFiveParamList = {
   NotificationsScreen: undefined;
+};
+
+export type TabSixParamList = {
+  FAQsScreen: undefined;
 };
 
 export type onPressFunc = (event: GestureResponderEvent) => void;

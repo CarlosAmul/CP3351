@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerGestureContext } from '@react-navigation/drawer';
 import * as React from 'react';
 // @ts-expect-error
 import db from '../../../db.js'
@@ -17,8 +17,10 @@ import ActionsScreen from '../../../screens/Customer/ActionsScreen'
 import SensorsScreen from '../../../screens/Customer/SensorsScreen'
 // @ts-expect-error
 import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
+// @ts-expect-error
+import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -42,6 +44,11 @@ export default function DrawerNavigator() {
         name="Notifications"
         component={NotificationsNavigator}
         options={{drawerLabel: `Notifications (${notifCount})`}}
+      />
+      <Drawer.Screen
+        name="FAQs"
+        component={FAQsNavigator}
+        options={{drawerLabel: 'FAQ'}}
       />
       <Drawer.Screen
         name="Actions"
@@ -126,5 +133,19 @@ function NotificationsNavigator() {
         options={{ headerTitle: 'Notifications' }}
       />
     </NotificationStack.Navigator>
+  )
+}
+
+const FAQsStack = createStackNavigator<TabSixParamList>();
+
+function FAQsNavigator() {
+  return (
+    <FAQsStack.Navigator>
+      <FAQsStack.Screen
+        name="FAQsScreen"
+        component={FAQsScreen}
+        options={{ headerTitle: 'Frequently Asked Questions' }}
+      />
+    </FAQsStack.Navigator>
   )
 }

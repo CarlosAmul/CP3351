@@ -25,9 +25,10 @@ export default function NotificationsScreen() {
     const [notifications, setNotifications] = useState([])
     useEffect(() => db.Users.Notifications.listenByUserAll(user?.id || "", setNotifications), [user])
 
-    function link(uid, nid, screen, extra) {
+    function linkToSensor(uid, nid, screen, extra) {
         db.Users.Notifications.markRead(uid, nid)
-        navigation.navigate(screen, { screen: screen+"Screen", params: { extra: extra? extra : null }})
+        navigation.navigate(screen, { catId: extra.catId, sensorId: extra.sensorId })
+        // navigation.navigate({name: screen, params: { catId: extra.catId, sensorId: extra.sensorId }})
     }
 
     return (
@@ -38,10 +39,11 @@ export default function NotificationsScreen() {
                         <Card 
                             row 
                             enableShadow
-                            key={notification.id}
+                            key={notification.id} 
+                            // useNative
                             containerStyle={{backgroundColor: notification.status ? '#f2f2f2':'white'}}
                             style={styles.card}
-                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra)}>
+                            onPress={() => linkToSensor(user.id, notification.id, notification.screen, notification.extra)}>
                             <Card.Section
                                 content={[
                                     { text: notification.message, text60: true, grey10: true },

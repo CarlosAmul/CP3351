@@ -60,8 +60,16 @@ exports.createSampleData = functions.https.onCall(
     const users = await findAll('users')
     await Promise.all(
       users.map(
-        async user =>
+        async user => {
+          const notifications = await findOneSubAll('users', user.id, 'notifications')
+          await Promise.all(
+            notifications.map(
+              async notification =>
+                await removeOneSubOne('users', user.id, 'notifications', notification.id))
+          )
           await removeOne('users', user.id)
+        }
+          
       )
     )
 
@@ -109,6 +117,8 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false })
     functions.logger.info("sensorId2", { sensorId2 })
+
+    await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
   }
 )
 
@@ -161,7 +171,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         await db.collection('sensors').doc(sensor.id).set({ motiondetected: isDetected }, { merge: true })
 
         if(isDetected){
-          newNotification(sensor.userid, `Motion detected by ${category.name} sensor in location "${sensor.location}"`, '')
+          newNotification(sensor.userid, `Motion detected by ${category.name} sensor in location "${sensor.location}"`, 'Sensors', { catId: category.id, sensorId: sensor.id })
         }
       }
     }
