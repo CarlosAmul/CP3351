@@ -40,7 +40,7 @@ npm i @react-native-community/picker
 - [ ] Finished ❌
 * Customer can leave review after installation is done. Also after support role resolves complaint
 ### Notifications
-- [ ] Finished ❌
+- [x] Finished ✅
 * A new report comes in, or a sensor gets a critical reading. 
 * Each user can see new notifications coming in inside the app regardless of what tab they're in. 
 * A new ad also gives customers a notification
