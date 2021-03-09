@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text } from '../../components/Themed';
-import { Button, TextField, View, Colors } from 'react-native-ui-lib';
+import { StyleSheet } from 'react-native';
+import { Button, View, Colors } from 'react-native-ui-lib';
 import UserContext from '../../UserContext'
 import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import MapComponent from './MapComponent';
+import ProfileEditor from './SettingsComponents/ProfileEditor.js'
+import MapComponent from './SettingsComponents/MapComponent.js'
 
 export default function SettingsScreen() {
 
@@ -24,15 +24,24 @@ export default function SettingsScreen() {
 		await fb.auth().signOut()
 	}
 
-	console.log(user)
+	const [isOpen, open] = useState(false)
 
-	const [openProfileEditor, setOpenProfileEditor] = useState(false)
+	// User settings for profile editing
+	const [userLocation, setUserLocation] = useState(null)
 	const [name, setName] = useState("")
 
 	Colors.loadColors({
 		primary: '#6874e2',
 		basic: '#f5f6fa',
 	});
+
+	const save = () => {
+
+	}
+
+	const validate = () =>
+		name === "" &&
+		userLocation === null
 
 	return (
 		<View>
@@ -43,32 +52,23 @@ export default function SettingsScreen() {
 					onPress={logout}
 					marginT-15
 				/>
-				<Button label={openProfileEditor ? "Cancel Edit" : "Edit Profile"}
+				<Button label={isOpen ? "Cancel Edit" : "Edit Profile"}
 					style={{ width: '80%' }}
 					backgroundColor={Colors.primary}
-					onPress={() => setOpenProfileEditor(!openProfileEditor)}
+					onPress={() => open(!isOpen)}
 					marginT-15
 				/>
 			</View>
 			<View style={styles.centerMargin}>
-				<View style={styles.separator}></View>
+				<View style={styles.smallSeparator}></View>
 				{
-					openProfileEditor &&
-					<>
-						<Text>Name: </Text>
-						<TextField
-							onChangeText={text => setName(text)}
-							hideUnderline
-							placeholder={user.name}
-							style={styles.inputText}
-							value={name}
-						/>
-					</>
+					isOpen &&
+					<ProfileEditor name={name} setName={setName} />
 				}
 			</View>
 			{
-				openProfileEditor &&
-				<MapComponent />
+				isOpen &&
+				<MapComponent set={setUserLocation} location={userLocation} />
 			}
 		</View>
 	);
@@ -147,6 +147,11 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		marginVertical: 30,
+		height: 1,
+		width: '80%',
+	},
+	smallSeparator: {
+		marginVertical: 10,
 		height: 1,
 		width: '80%',
 	},

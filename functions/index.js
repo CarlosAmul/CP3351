@@ -6,7 +6,7 @@ admin.initializeApp();
 
 const createSampleCenters = require('./createSampleCenters')
 
-exports.createSampleData = functions.https.onCall(createSampleCenters)
+exports.createSampleCenters = functions.https.onCall(createSampleCenters)
 
 exports.findAuthUser = functions.https.onCall(
   async (uid, context) => {

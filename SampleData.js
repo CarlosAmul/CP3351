@@ -5,4 +5,12 @@ const createSampleData = async () => {
   const response = await init()
   console.log(response)
 }
+
+const createSampleCenters = async () => {
+  const init = fb.functions().httpsCallable('createSampleCenters');
+  const response = await init()
+  console.log(response)
+}
+
 createSampleData()
+createSampleCenters()
