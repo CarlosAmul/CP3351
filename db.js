@@ -174,11 +174,18 @@ class Favorites extends DB {
 
         set(caetgoriesFavs)
     }
-    
 }
+
+class Manufacturers extends DB {
+    constructor() {
+        super('manufacturers')
+    }
+}
+
 
 export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
-    Users: new Users()
+    Users: new Users(),
+    Manufacturers: new Manufacturers()
 }

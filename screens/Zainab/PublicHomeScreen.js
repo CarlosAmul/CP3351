@@ -7,7 +7,7 @@ import Categories from './Categories'
 import MostFavorite from './MostFavorite'
 
 export default function PublicHomeScreen(props) {
-    const stacknavigation = props.navigation;
+    const stacknavigation = props.navigation
 
     const navigation = useNavigation();
     useEffect(() => {
@@ -15,7 +15,7 @@ export default function PublicHomeScreen(props) {
             // @ts-expect-error
             headerLeft: () => (<MenuIcon />)
         });
-    });
+    }, [navigation]);
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -37,13 +37,9 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
     },
-    scrollcontainer: {
-        flex: 1,
-        backgroundColor: '#f5f6fa',
-    },
     container: {
         flex: 1,
-        backgroundColor: '#f5f6fa',
+        backgroundColor: '#ffffff',
         alignItems: "center",
     },
     subcontainer: {
@@ -52,7 +48,7 @@ const styles = StyleSheet.create({
     },
     scrollcontainer: {
         flex: 1,
-        backgroundColor: '#f5f6fa',
+        backgroundColor: '#ffffff',
     },
     developmentModeText: {
         marginBottom: 20,

@@ -32,11 +32,12 @@ export default function MostFavorite() {
             <Card
                 borderRadius={10}
                 style={styles.card}
+                elevation={15}
             >
                 <View style={styles.leftCardView}>
                     <Card.Image
                         style={styles.cardimg}
-                        source={{ uri: "https://help.apple.com/assets/5FC7E0F6680CE2AB1DD5C9B5/5FC7E100680CE2AB1DD5C9CD/en_US/eb91e3ce332fd07b4eeeb3d462066ffe.png" }}
+                        source={{ uri: catFavs.length > 0 ? catFavs.reduce((first, second) => first.favs > second.favs ? first : second).category.url : "Nothing yet"}}
                     />
                 </View>
                 <View style={styles.rightCardView}>

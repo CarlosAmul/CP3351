@@ -10,12 +10,14 @@ export type DrawerParamList = {
   Settings: undefined,
   Actions: undefined,
   Sensors: undefined,
-  UserFavorites: undefined
+  UserFavorites: undefined,
+  PaymentForm: undefined
 };
 
 export type TabOneParamList = {
   PublicHomeScreen: undefined;
   CategoryFavsScreen: undefined;
+  PaymentFormScreen: undefined;
 };
 
 export type TabTwoParamList = {

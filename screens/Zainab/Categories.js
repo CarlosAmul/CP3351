@@ -34,6 +34,10 @@ export default function Categories({stacknavigation}) {
         stacknavigation.navigate("CategoryFavsScreen", {category: category})
     }
 
+    const onPressBuy = (category) => {
+        stacknavigation.navigate("PaymentFormScreen", {category: category})
+    }
+
     return (
         <View style={styles.container}>
             <Text style={[styles.title, styles.mainHeader]}>
@@ -42,7 +46,7 @@ export default function Categories({stacknavigation}) {
             <ScrollView style={styles.subcontainer}>
                 {
                     categories.map(category =>
-                        <Category key={category.id} category={category} onPress={() => onPress(category)} />
+                        <Category key={category.id} category={category} onPressFav={() => onPress(category)} onPressBuy={() => onPressBuy(category)}/>
                     )
                 }
             </ScrollView>
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: '#f5f6fa',
+        backgroundColor: '#ffffff',
         alignItems: "center",
     },
     subcontainer: {

@@ -8,6 +8,8 @@ import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
 // @ts-expect-error
+import PaymentFormScreen from '../../../screens/Zainab/PaymentFormScreen'
+// @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Customer/ActionsScreen'
@@ -37,6 +39,7 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
+        options={{ drawerLabel: "Settings" }} 
       />
       <Drawer.Screen
         name="UserFavorites"
@@ -61,6 +64,11 @@ function PublicHomeNavigator() {
         name="CategoryFavsScreen"
         component={CategoryFavsScreen}
         options={{ headerTitle: 'Category Favorites' }}
+      />
+      <PublicHomeStack.Screen
+        name="PaymentFormScreen"
+        component={PaymentFormScreen}
+        options={{ headerTitle: 'Payment Form' }}
       />
     </PublicHomeStack.Navigator>
   )

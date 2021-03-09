@@ -5,13 +5,17 @@ import { AntDesign } from '@expo/vector-icons'
 import UserContext from '../../UserContext'
 import db from '../../db'
 
-export default function Category({ category, onPress }) {
+export default function Category({ category, onPressFav, onPressBuy }) {
 
     Colors.loadColors({
         primary: '#6874e2',
-		secondary: '#f9ce7f',
+        secondary: '#f9ce7f',
         mainbg: '#f5f6fa',
-		sidebg: '#ffffff',
+        sidebg: '#ffffff',
+        darkprimary: '#ff466a',
+        darksecondary: '#0df5e3',
+        darkmainbg: '#201a31',
+        darksidebg: '#38304d'
     });
 
     const { user } = useContext(UserContext)
@@ -35,14 +39,15 @@ export default function Category({ category, onPress }) {
         <Card key={category.id}
             borderRadius={10}
             style={styles.card}
+            elevation={15}
         >
             <View style={styles.leftCardView}>
                 <Card.Image
                     style={styles.cardimg}
-                    source={{ uri: "https://help.apple.com/assets/5FC7E0F6680CE2AB1DD5C9B5/5FC7E100680CE2AB1DD5C9CD/en_US/eb91e3ce332fd07b4eeeb3d462066ffe.png" }}
+                    source={{ uri: category.url }}
                 />
                 <Card.Section
-                    content={[{ text: category.name, text60M: true, dark10: true }]}
+                    content={[{ text: category.name + " QAR " + category.price, text60M: true, dark10: true }]}
                     backgroundColor={Colors.white}
                 />
                 <Button
@@ -57,12 +62,17 @@ export default function Category({ category, onPress }) {
                 />
                 <Button
                     style={styles.iconButton}
-                    onPress={onPress}
+                    onPress={onPressFav}
                     label={<Text style={styles.buttonText}>{catFavs.length} favs </Text>}
                 />
             </View>
             <View style={styles.rightCardView}>
-                <Text>Category Description</Text>
+                <Text>{category.description} </Text>
+                <Button
+                    label="Buy this sensor"
+                    backgroundColor={Colors.darkprimary}
+                    onPress={onPressBuy}
+                />
             </View>
         </Card>
     )
@@ -84,6 +94,9 @@ const styles = StyleSheet.create({
     },
     rightCardView: {
         width: "50%",
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-around'
     },
     cardimg: {
         width: 120,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import fb from './fb'
 import db from './db'
 import { StyleSheet, Image } from 'react-native';
@@ -14,7 +14,7 @@ export default function RegisterLogin() {
 		mainbg: '#f5f6fa',
 		sidebg: '#ffffff',
 	});
-	
+
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
@@ -38,7 +38,7 @@ export default function RegisterLogin() {
 	}
 
 	return (
-		<View style={[styles.container, { backgroundColor: Colors.mainbg }]}>
+		<View style={[styles.container, { backgroundColor: Colors.sidebg }]}>
 			<Image
 				style={{ width: 200, height: 200, marginBottom: 20 }}
 				source={require('./assets/images/logo.png')}
@@ -49,14 +49,14 @@ export default function RegisterLogin() {
 				onChangeText={text => setEmail(text)}
 				hideUnderline
 				placeholder={"Email..."}
-				style={styles.inputText}
+				style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
 				value={email}
 			/>
 			<TextField
 				onChangeText={text => setPassword(text)}
 				hideUnderline
 				placeholder={"Password..."}
-				style={styles.inputText}
+				style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
 				value={password}
 			/>
 			<Button label="Login"
@@ -69,7 +69,7 @@ export default function RegisterLogin() {
 				marginT-15
 				style={{ width: '80%' }}
 				outlineColor={Colors.primary}
-				backgroundColor={Colors.mainbg}
+				backgroundColor={Colors.sidebg}
 				color="#6874e2"
 				onPress={register}
 			/>
