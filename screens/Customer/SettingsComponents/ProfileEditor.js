@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text } from '../../../components/Themed';
 import { Button, TextField, View, Colors } from 'react-native-ui-lib';
+
 import UserContext from '../../../UserContext'
 
-export default function ProfileEditor({ name, setName }) {
+export default function ProfileEditor({ name, setName, validate, save }) {
 
     const { user } = useContext(UserContext)
 
@@ -12,8 +13,6 @@ export default function ProfileEditor({ name, setName }) {
         primary: '#6874e2',
         basic: '#f5f6fa',
     });
-
-    const [isOpen, open] = useState(false)
 
     return (
         <View>
@@ -23,19 +22,17 @@ export default function ProfileEditor({ name, setName }) {
                 <Text>Name: </Text>
                 <TextField
                     onChangeText={text => setName(text)}
-                    hideUnderline
-                    placeholder={user.name}
                     style={styles.inputText}
+                    placeholder={user.name}
                     value={name}
                 />
                 <Button label={"Save"}
                     style={{ width: '80%' }}
                     backgroundColor={Colors.primary}
-                    // onPress={ save }
-                    // disabled={validate()}
+                    onPress={save}
+                    disabled={validate()}
                     marginT-15
                 />
-
             </View>
         </View>
     );

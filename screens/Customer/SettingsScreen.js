@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Button, View, Colors } from 'react-native-ui-lib';
-import UserContext from '../../UserContext'
-import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import ProfileEditor from './SettingsComponents/ProfileEditor.js'
-import MapComponent from './SettingsComponents/MapComponent.js'
+import UserMapComponent from './SettingsComponents/UserMapComponent.js'
+
+import UserContext from '../../UserContext'
+import fb from '../../fb'
+import db from '../../db'
 
 export default function SettingsScreen() {
 
@@ -36,12 +38,15 @@ export default function SettingsScreen() {
 	});
 
 	const save = () => {
-
+		let location = [userLocation.latitude, userLocation.longitude]
+		db.Users.update({ ...user, name: name, address: location })
+		open(!isOpen)
 	}
 
 	const validate = () =>
-		name === "" &&
+		name.length === 0 ||
 		userLocation === null
+
 
 	return (
 		<View>
@@ -63,12 +68,14 @@ export default function SettingsScreen() {
 				<View style={styles.smallSeparator}></View>
 				{
 					isOpen &&
-					<ProfileEditor name={name} setName={setName} />
+					<ProfileEditor name={name} setName={setName} location={userLocation}
+						validate={validate} save={save}
+					/>
 				}
 			</View>
 			{
 				isOpen &&
-				<MapComponent set={setUserLocation} location={userLocation} />
+				<UserMapComponent set={setUserLocation} location={userLocation} />
 			}
 		</View>
 	);

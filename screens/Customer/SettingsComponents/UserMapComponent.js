@@ -12,7 +12,7 @@ class LatLng {
     }
 }
 
-export default function MapComponent({ set, location }) {
+export default function UserMapComponent({ set, location }) {
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -68,8 +68,7 @@ export default function MapComponent({ set, location }) {
                     location && centers.length > 0 &&
                     <Marker key={centers.length}
                         coordinate={new LatLng(location.latitude, location.longitude)}
-                        icon={require('../../../assets/images/pin.png')}
-                        pinColor={"red"}
+                        icon={require('../../../assets/images/pin-user.png')}
                     >
                     </Marker>
                 }
