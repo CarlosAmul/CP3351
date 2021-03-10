@@ -21,6 +21,8 @@ npm i @react-native-community/picker
 * Cards, Cards.Section, Cards.Image
 * List, ListItem, ListItem.Part
 * Drawer for Navigation (native component)
+* Tabbar and Tabs
+* Dialog
 ## Carlos Tasks
 ### FAQs
 - [ ] Finished ❌
