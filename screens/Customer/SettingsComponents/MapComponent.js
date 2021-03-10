@@ -20,19 +20,18 @@ export default function MapComponent({ set, location }) {
     });
 
     const [centers, setCenters] = useState([])
-
+    const [region, setRegion] = useState(null)
 
     useEffect(() => db.SupportCenters.listenAll(setCenters), [])
 
-    console.log(centers)
-
     const placeMarker = (e) => {
-        console.log("PLACING MARKER")
         let coordinate = e.nativeEvent.coordinate
-        // console.log("COORD", coordinate)
         set(new LatLng(coordinate.latitude, coordinate.longitude))
-        // console.log("NEW USER MARKER", userLocation)
     }
+
+    // Save moved position to stay still
+    // on component render
+    const savePan = (r) => { setRegion(r) }
 
     return (
 
@@ -41,19 +40,20 @@ export default function MapComponent({ set, location }) {
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 zoomEnabled={true}
-                region={{
+                region={region || {
                     latitude: 25.28625331405168,
                     longitude: 51.42407464959876,
                     latitudeDelta: 0.615,
                     longitudeDelta: 0.6121,
                 }}
+                onRegionChangeComplete={savePan}
                 onLongPress={placeMarker}
             >
-                {/* Adding markers without keys for 
-                react native causes some serious
-                performance issues for the map */}
+                {/* Adding markers as images and not
+                icons causes some serious performance
+                issues */}
                 {
-                    centers.map((e,i) =>
+                    centers.map((e, i) =>
                         <Marker
                             coordinate={new LatLng(e.address[0], e.address[1])}
                             icon={require('../../../assets/images/pin.png')}
@@ -69,6 +69,7 @@ export default function MapComponent({ set, location }) {
                     <Marker key={centers.length}
                         coordinate={new LatLng(location.latitude, location.longitude)}
                         icon={require('../../../assets/images/pin.png')}
+                        pinColor={"red"}
                     >
                     </Marker>
                 }
