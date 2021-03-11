@@ -35,14 +35,16 @@ export default {
           TabSix: {
             screens: {
               FAQsScreen: 'six'
-              },
+            },
           },
           UserFavorites: {
             screens: {
               UserFavoritesScreen: 'two',
+            },
+          },
+          NotFound: '*',
         },
       },
-      NotFound: '*',
     },
-  },
-};
+  }
+}

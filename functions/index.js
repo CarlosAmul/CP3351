@@ -21,7 +21,7 @@ const findAll = async collection => (await db.collection(collection).get()).docs
 const findOneSubAll = async (collection, id, subcollection) => (await db.collection(collection).doc(id).collection(subcollection).get()).docs.map(reformat)
 const removeOneSubOne = async (collection, id, subcollection, subId) => await db.collection(collection).doc(id).collection(subcollection).doc(subId).delete()
 const removeOne = async (collection, id) => await db.collection(collection).doc(id).delete()
-const newNotification = async(userid,message,screen,extra) => await db.collection('users').doc(userid).collection('notifications').add({message, status: false, screen, when: new Date(), extra: extra? extra : {}})
+const newNotification = async (userid, message, screen, extra) => await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, when: new Date(), extra: extra ? extra : {} })
 
 
 exports.createSampleData = functions.https.onCall(
@@ -70,7 +70,7 @@ exports.createSampleData = functions.https.onCall(
           )
           await removeOne('users', user.id)
         }
-          
+
       )
     )
 
@@ -86,12 +86,12 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId1 } = await admin.auth().createUser({ email: "joe@joe.com", password: "joejoe" })
     functions.logger.info("authId1", { authId1 })
 
-    await db.collection('faqs').add({question: 'Test Question', answer: "Test Answer", userid: authId1})
+    await db.collection('faqs').add({ question: 'Test Question', answer: "Test Answer", userid: authId1 })
 
     const { uid: authId2 } = await admin.auth().createUser({ email: "ann@ann.com", password: "annann" })
     functions.logger.info("authId2", { authId2 })
 
-    await db.collection('faqs').add({question: 'Another Test Question', answer: "Another Test Answer", userid: authId2})
+    await db.collection('faqs').add({ question: 'Another Test Question', answer: "Another Test Answer", userid: authId2 })
 
     const { uid: authId3 } = await admin.auth().createUser({ email: "admin@admin.com", password: "adminadmin" })
     functions.logger.info("authId3", { authId3 })
@@ -110,9 +110,9 @@ exports.createSampleData = functions.https.onCall(
 
     const result4 = await db.collection('users').doc(authId4).set({ name: "Fred", role: "Support" })
     functions.logger.info("result4", { result4 })
-    
-    const {id: manufacturer1} = await db.collection('manufacturers').add({name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg'})
-    const {id: manufacturer2} = await db.collection('manufacturers').add({name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg'})
+
+    const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
+    const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
 
     const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion", description: "All Motion sensors here", price: 500, url: "https://is5-ssl.mzstatic.com/image/thumb/Purple30/v4/cf/b9/cf/cfb9cfdb-0258-d8c0-245d-18d644205b8d/source/512x512bb.jpg", manufacturers: [manufacturer1, manufacturer2] })
     functions.logger.info("categoryId1", { categoryId1 })
@@ -178,7 +178,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
 
         await db.collection('sensors').doc(sensor.id).set({ motiondetected: isDetected }, { merge: true })
 
-        if(isDetected){
+        if (isDetected) {
           newNotification(sensor.userid, `Motion detected by ${category.name} sensor in location "${sensor.location}"`, 'Sensors', { catId: category.id, sensorId: sensor.id })
         }
       }
@@ -187,15 +187,13 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
 
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
-      if(isAlert){
+      if (isAlert) {
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
       functions.logger.info("temp alert update", { alert: isAlert });
     } else {
       functions.logger.info("No such category", { category });
     }
-  })
-
   })
 
 exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
@@ -209,10 +207,10 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
       functions.logger.info("notification sent", notif)
     }
   })
-  //this function will be different for every different sensor because there will be separate fields
-  exports.addSensor = functions.https.onCall(
-    async({location, userid, categoryid, min, max, alert, price, manufacturer}, context) => {
-      functions.logger.info("Done with it!!!!!!!")
-      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer})
-    }
-  )
+//this function will be different for every different sensor because there will be separate fields
+exports.addSensor = functions.https.onCall(
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
+    functions.logger.info("Done with it!!!!!!!")
+    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+  }
+)

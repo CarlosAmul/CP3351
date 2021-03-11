@@ -26,7 +26,7 @@ import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
 // @ts-expect-error
 import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -43,17 +43,17 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="PublicHome"
         component={PublicHomeNavigator}
-        options={{ drawerLabel: "Home" }} 
+        options={{ drawerLabel: "Home" }}
       />
       <Drawer.Screen
         name="Notifications"
         component={NotificationsNavigator}
-        options={{drawerLabel: `Notifications (${notifCount})`}}
+        options={{ drawerLabel: `Notifications (${notifCount})` }}
       />
       <Drawer.Screen
         name="FAQs"
         component={FAQsNavigator}
-        options={{drawerLabel: 'FAQ'}}
+        options={{ drawerLabel: 'FAQ' }}
       />
       <Drawer.Screen
         name="Actions"
@@ -66,12 +66,12 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
-        options={{ drawerLabel: "Settings" }} 
+        options={{ drawerLabel: "Settings" }}
       />
       <Drawer.Screen
         name="UserFavorites"
         component={UserFavoritesNavigator}
-        options={{ drawerLabel: "My Favorites" }} 
+        options={{ drawerLabel: "My Favorites" }}
       />
     </Drawer.Navigator>
   );
@@ -168,7 +168,8 @@ function FAQsNavigator() {
         options={{ headerTitle: 'Frequently Asked Questions' }}
       />
     </FAQsStack.Navigator>
-
+  )
+}
 const UserFavoritesStack = createStackNavigator<TabSevenParamList>();
 
 function UserFavoritesNavigator() {
