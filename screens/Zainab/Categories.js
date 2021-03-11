@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
+import { View } from '../../components/Themed';
+import UserContext from '../../UserContext'
+import { Text } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
+import db from '../../db'
 import { Colors } from 'react-native-ui-lib'
-import Categories from './Categories'
-import MostFavorite from './MostFavorite'
+import Category from './Category'
 
-export default function PublicHomeScreen(props) {
-    const stacknavigation = props.navigation
-
+export default function Categories({stacknavigation}) {
     const navigation = useNavigation();
     useEffect(() => {
         navigation.setOptions({
             // @ts-expect-error
             headerLeft: () => (<MenuIcon />)
         });
-    }, [navigation]);
+    });
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -24,18 +25,40 @@ export default function PublicHomeScreen(props) {
 		sidebg: '#ffffff',
     });
 
+    const { user } = useContext(UserContext)
+
+    const [categories, setCategories] = useState([])
+    useEffect(() => db.Categories.listenAll(setCategories), [])
+
+    const onPress = (category) => {
+        stacknavigation.navigate("CategoryFavsScreen", {category: category})
+    }
+
+    const onPressBuy = (category) => {
+        stacknavigation.navigate("PaymentFormScreen", {category: category})
+    }
+
     return (
-        <ScrollView style={styles.scrollcontainer}>
-            <Categories stacknavigation={stacknavigation}/>
-            <MostFavorite />
-        </ScrollView>
+        <View style={styles.container}>
+            <Text style={[styles.title, styles.mainHeader]}>
+                Sensor Categories
+            </Text>
+            <ScrollView style={styles.subcontainer}>
+                {
+                    categories.map(category =>
+                        <Category key={category.id} category={category} onPressFav={() => onPress(category)} onPressBuy={() => onPressBuy(category)}/>
+                    )
+                }
+            </ScrollView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    tinyLogo: {
-        width: 150,
-        height: 150,
+
+    scrollcontainer: {
+        flex: 1,
+        backgroundColor: '#f5f6fa',
     },
     container: {
         flex: 1,
@@ -45,10 +68,6 @@ const styles = StyleSheet.create({
     subcontainer: {
         display: 'flex',
         width: "100%"
-    },
-    scrollcontainer: {
-        flex: 1,
-        backgroundColor: '#ffffff',
     },
     developmentModeText: {
         marginBottom: 20,

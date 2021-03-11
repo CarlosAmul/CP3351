@@ -137,25 +137,55 @@ class Favorites extends DB {
         this.containing = containing
     }
 
-    reformat(doc) {
-        return { id: doc.id, when: doc.data().when.toDate(), ...doc.data() }
+    reformatFav(doc) {
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data(), when: doc.data().when.toDate() }    
     }
 
     listenToCategoryFavs = (set, catId) => 
-        db.collection(this.containing).doc(catId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        db.collection(this.containing).doc(catId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     listenToCatgoryFavsByUser = (set, catId, userId) =>
-        db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     addFav = async (catId, like) => 
         await db.collection(this.containing).doc(catId).collection(this.collection).add(like)
 
     removeFavs = async (catId, likeId) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).doc(likeId).delete()
+    
+    listenToFavsByUser = (set, userid) =>
+        db.collectionGroup(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
+    
+    listenToAllFavs = (set) => 
+        db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
+
+    findAllFavsWithCategories = async (set) => {
+        const categoriesdata = await db.collection('categories').get()
+        const categories = categoriesdata.docs.map(doc => (this.reformat(doc)))
+        const caetgoriesFavs = []
+        const favoritesdata = await db.collectionGroup(this.collection).get()
+        const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
+
+        categories.map(c => {
+            if(favorites.length > 0) { 
+                caetgoriesFavs.push({category: c, favs: favorites.filter(f => f.parentId === c.id).length})
+            }
+        })
+
+        set(caetgoriesFavs)
+    }
 }
+
+class Manufacturers extends DB {
+    constructor() {
+        super('manufacturers')
+    }
+}
+
 
 export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
-    Users: new Users()
+    Users: new Users(),
+    Manufacturers: new Manufacturers()
 }
