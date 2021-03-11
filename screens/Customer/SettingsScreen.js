@@ -1,11 +1,14 @@
-import React, { useContext, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
-import UserContext from '../../UserContext'
-import fb from '../../fb'
+import React, { useContext, useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import { Button, View, Colors } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
+import ProfileEditor from './SettingsComponents/ProfileEditor.js'
+import UserMapComponent from './SettingsComponents/UserMapComponent.js'
+
+import UserContext from '../../UserContext'
+import fb from '../../fb'
+import db from '../../db'
 
 export default function SettingsScreen() {
 
@@ -23,15 +26,57 @@ export default function SettingsScreen() {
 		await fb.auth().signOut()
 	}
 
-	console.log(user)
+	const [isOpen, open] = useState(false)
+
+	// User settings for profile editing
+	const [userLocation, setUserLocation] = useState(null)
+	const [name, setName] = useState("")
+
+	Colors.loadColors({
+		primary: '#6874e2',
+		basic: '#f5f6fa',
+	});
+
+	const save = () => {
+		let location = [userLocation.latitude, userLocation.longitude]
+		db.Users.update({ ...user, name: name, address: location })
+		open(!isOpen)
+	}
+
+	const validate = () =>
+		name.length === 0 ||
+		userLocation === null
+
 
 	return (
 		<View>
 			<View style={styles.getStartedContainer}>
-				<TouchableOpacity onPress={logout} style={styles.title}>
-					<Text style={styles.helpLinkText} lightColor={Colors.light.tint}>Logout</Text>
-				</TouchableOpacity>
+				<Button label="Logout"
+					style={{ width: '80%' }}
+					backgroundColor={Colors.primary}
+					onPress={logout}
+					marginT-15
+				/>
+				<Button label={isOpen ? "Cancel Edit" : "Edit Profile"}
+					style={{ width: '80%' }}
+					backgroundColor={Colors.primary}
+					onPress={() => open(!isOpen)}
+					marginT-15
+				/>
 			</View>
+			<View style={styles.centerMargin}>
+				<View style={styles.smallSeparator}></View>
+				{
+					isOpen &&
+					<ProfileEditor name={name} setName={setName} location={userLocation}
+						validate={validate} save={save}
+					/>
+				}
+			</View>
+			{
+				isOpen &&
+				<UserMapComponent set={setUserLocation} location={userLocation} />
+			}
 		</View>
 	);
 }
@@ -70,6 +115,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		marginHorizontal: 50,
 	},
+	centerMargin: {
+		marginHorizontal: 50,
+	},
+	getStartedContainer: {
+		alignItems: 'center',
+		marginHorizontal: 50,
+	},
 	homeScreenFilename: {
 		marginVertical: 7,
 	},
@@ -102,6 +154,11 @@ const styles = StyleSheet.create({
 	},
 	separator: {
 		marginVertical: 30,
+		height: 1,
+		width: '80%',
+	},
+	smallSeparator: {
+		marginVertical: 10,
 		height: 1,
 		width: '80%',
 	},

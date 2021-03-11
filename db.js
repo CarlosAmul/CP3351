@@ -111,6 +111,14 @@ class Readings extends DB {
 
 }
 
+class SupportCenters extends DB {
+
+    constructor() {
+        super('supportcenters')
+    }
+}
+
+
 class Users extends DB {
 
     constructor() {
@@ -227,5 +235,6 @@ export default {
     Sensors: new Sensors(),
     Users: new Users(),
     FAQs: new FAQs(),
-    Manufacturers: new Manufacturers()
+    Manufacturers: new Manufacturers(),
+    SupportCenters: new SupportCenters()
 }

@@ -9,8 +9,8 @@ import db from '../../../db.js'
 import UserContext from '../../../UserContext';
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
-// @ts-expect-error
-import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+
+// import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
 // @ts-expect-error
@@ -87,7 +87,7 @@ function PublicHomeNavigator() {
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
       />
-      <PublicHomeStack.Screen
+      {/* <PublicHomeStack.Screen
         name="CategoryFavsScreen"
         component={CategoryFavsScreen}
         options={{ headerTitle: 'Category Favorites' }}
@@ -96,7 +96,7 @@ function PublicHomeNavigator() {
         name="PaymentFormScreen"
         component={PaymentFormScreen}
         options={{ headerTitle: 'Payment Form' }}
-      />
+      /> */}
     </PublicHomeStack.Navigator>
   )
 }

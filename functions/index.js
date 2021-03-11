@@ -4,6 +4,10 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+const createSampleCenters = require('./createSampleCenters')
+
+exports.createSampleCenters = functions.https.onCall(createSampleCenters)
+
 exports.findAuthUser = functions.https.onCall(
   async (uid, context) => {
     functions.logger.info("uid", { uid })
