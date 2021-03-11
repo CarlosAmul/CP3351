@@ -38,7 +38,7 @@ export default function NotificationsScreen() {
                         <Card 
                             row 
                             enableShadow
-                            key={notification.id}
+                            key={notification.id}       
                             containerStyle={{backgroundColor: notification.status ? '#f2f2f2':'white'}}
                             style={styles.card}
                             onPress={() => link(user.id, notification.id, notification.screen, notification.extra)}>

@@ -49,6 +49,14 @@ exports.createSampleData = functions.https.onCall(
       )
     )
 
+    const faqs = await findAll('faqs')
+    await Promise.all(
+      faqs.map(
+        async faq =>
+          await removeOne('faqs', faq.id)
+      )
+    )
+
     const categories = await findAll('categories')
     await Promise.all(
       categories.map(
@@ -85,8 +93,12 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId1 } = await admin.auth().createUser({ email: "joe@joe.com", password: "joejoe" })
     functions.logger.info("authId1", { authId1 })
 
+    await db.collection('faqs').add({question: 'Test Question', answer: "Test Answer", userid: authId1})
+
     const { uid: authId2 } = await admin.auth().createUser({ email: "ann@ann.com", password: "annann" })
     functions.logger.info("authId2", { authId2 })
+
+    await db.collection('faqs').add({question: 'Another Test Question', answer: "Another Test Answer", userid: authId2})
 
     const { uid: authId3 } = await admin.auth().createUser({ email: "admin@admin.com", password: "adminadmin" })
     functions.logger.info("authId3", { authId3 })
@@ -118,7 +130,7 @@ exports.createSampleData = functions.https.onCall(
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false })
     functions.logger.info("sensorId2", { sensorId2 })
 
-    await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
+    // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
   }
 )
 
