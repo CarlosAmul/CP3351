@@ -1,10 +1,16 @@
+import { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerGestureContext } from '@react-navigation/drawer';
 import * as React from 'react';
+
+// @ts-expect-error
+import db from '../../../db.js'
+// @ts-expect-error
+import UserContext from '../../../UserContext';
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
-// @ts-expect-error
-import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+
+// import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
 // @ts-expect-error
@@ -15,18 +21,39 @@ import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 import ActionsScreen from '../../../screens/Customer/ActionsScreen'
 // @ts-expect-error
 import SensorsScreen from '../../../screens/Customer/SensorsScreen'
+// @ts-expect-error
+import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
+// @ts-expect-error
+import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
+
 export default function DrawerNavigator() {
+
+  const { user } = useContext(UserContext)
+
+  const [notifCount, setNotifCount] = React.useState(0)
+  React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
+
   return (
     <Drawer.Navigator>
       <Drawer.Screen
         name="PublicHome"
         component={PublicHomeNavigator}
-        options={{ drawerLabel: "Home" }} 
+        options={{ drawerLabel: "Home" }}
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationsNavigator}
+        options={{ drawerLabel: `Notifications (${notifCount})` }}
+      />
+      <Drawer.Screen
+        name="FAQs"
+        component={FAQsNavigator}
+        options={{ drawerLabel: 'FAQ' }}
       />
       <Drawer.Screen
         name="Actions"
@@ -39,12 +66,12 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
-        options={{ drawerLabel: "Settings" }} 
+        options={{ drawerLabel: "Settings" }}
       />
       <Drawer.Screen
         name="UserFavorites"
         component={UserFavoritesNavigator}
-        options={{ drawerLabel: "My Favorites" }} 
+        options={{ drawerLabel: "My Favorites" }}
       />
     </Drawer.Navigator>
   );
@@ -60,7 +87,7 @@ function PublicHomeNavigator() {
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
       />
-      <PublicHomeStack.Screen
+      {/* <PublicHomeStack.Screen
         name="CategoryFavsScreen"
         component={CategoryFavsScreen}
         options={{ headerTitle: 'Category Favorites' }}
@@ -69,7 +96,7 @@ function PublicHomeNavigator() {
         name="PaymentFormScreen"
         component={PaymentFormScreen}
         options={{ headerTitle: 'Payment Form' }}
-      />
+      /> */}
     </PublicHomeStack.Navigator>
   )
 }
@@ -116,7 +143,34 @@ function SensorsNavigator() {
   )
 }
 
-const UserFavoritesStack = createStackNavigator<TabFiveParamList>();
+const NotificationStack = createStackNavigator<TabFiveParamList>();
+
+function NotificationsNavigator() {
+  return (
+    <NotificationStack.Navigator>
+      <NotificationStack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+        options={{ headerTitle: 'Notifications' }}
+      />
+    </NotificationStack.Navigator>
+  )
+}
+
+const FAQsStack = createStackNavigator<TabSixParamList>();
+
+function FAQsNavigator() {
+  return (
+    <FAQsStack.Navigator>
+      <FAQsStack.Screen
+        name="FAQsScreen"
+        component={FAQsScreen}
+        options={{ headerTitle: 'Frequently Asked Questions' }}
+      />
+    </FAQsStack.Navigator>
+  )
+}
+const UserFavoritesStack = createStackNavigator<TabSevenParamList>();
 
 function UserFavoritesNavigator() {
   return (

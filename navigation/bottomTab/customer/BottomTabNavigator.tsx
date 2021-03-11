@@ -10,8 +10,10 @@ import SensorsScreen from '../../../screens/Customer/SensorsScreen';
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Customer/ActionsScreen';
 // @ts-expect-error
+import NotificationScreen from '../../../screens/Customer/NotificationScreen';
+// @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from './types';
+import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList } from './types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -38,6 +40,13 @@ export default function BottomTabNavigator() {
       <BottomTab.Screen
         name="Settings"
         component={TabThreeNavigator}
+        options={{
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Notifications"
+        component={TabFourNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
@@ -94,5 +103,19 @@ function TabThreeNavigator() {
         options={{ headerTitle: 'Settings' }}
       />
     </TabThreeStack.Navigator>
+  );
+}
+
+const TabFourStack = createStackNavigator<TabFourParamList>();
+
+function TabFourNavigator() {
+  return (
+    <TabFourStack.Navigator>
+      <TabFourStack.Screen
+        name="NotificationScreen"
+        component={NotificationScreen}
+        options={{ headerTitle: 'Notifications' }}
+      />
+    </TabFourStack.Navigator>
   );
 }

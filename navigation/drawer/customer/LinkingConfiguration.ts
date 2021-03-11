@@ -27,14 +27,24 @@ export default {
               SensorsScreen: 'two',
             },
           },
+          TabFive: {
+            screens: {
+              NotificationsScreen: 'five',
+            },
+          },
+          TabSix: {
+            screens: {
+              FAQsScreen: 'six'
+            },
+          },
           UserFavorites: {
             screens: {
               UserFavoritesScreen: 'two',
             },
           },
+          NotFound: '*',
         },
       },
-      NotFound: '*',
     },
-  },
-};
+  }
+}

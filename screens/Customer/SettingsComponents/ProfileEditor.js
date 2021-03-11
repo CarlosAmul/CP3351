@@ -1,33 +1,41 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import db from '../../db'
-import { Picker } from '@react-native-picker/picker';
-import UserContext from '../../UserContext'
+import { Text } from '../../../components/Themed';
+import { Button, TextField, View, Colors } from 'react-native-ui-lib';
 
-export default function SensorByUserAndCategoryPicker({ category, set, routeId }) {
+import UserContext from '../../../UserContext'
 
+export default function ProfileEditor({ name, setName, validate, save }) {
 
-    console.log('this is root id ', routeId)
     const { user } = useContext(UserContext)
 
-    const [sensors, setSensors] = useState([])
-    useEffect(() => db.Sensors.listenByUserAndCategory(setSensors, user?.id || "", category?.id || ""), [user, category])
-    
-    const [sensorId, setSensorId] = useState(routeId)
-    useEffect(() => db.Sensors.listenOne(set, sensorId), [sensorId])
+    Colors.loadColors({
+        primary: '#6874e2',
+        basic: '#f5f6fa',
+    });
 
     return (
-        <Picker
-            style={{ height: 50, width: 200 }}
-            selectedValue={sensorId}
-            onValueChange={setSensorId}
-        >
-            <Picker.Item label='Select Sensor' value="" />
-            {
-                sensors.map(sensor => <Picker.Item key={sensor.id} label={sensor.location} value={sensor.id} />)
-            }
-        </Picker>
-    )
+        <View>
+            <View style={styles.centerMargin}>
+                <View style={styles.smallSeparator}></View>
+
+                <Text>Name: </Text>
+                <TextField
+                    onChangeText={text => setName(text)}
+                    style={styles.inputText}
+                    placeholder={user.name}
+                    value={name}
+                />
+                <Button label={"Save"}
+                    style={{ width: '80%' }}
+                    backgroundColor={Colors.primary}
+                    onPress={save}
+                    disabled={validate()}
+                    marginT-15
+                />
+            </View>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -59,6 +67,13 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginTop: 3,
         marginLeft: -10,
+    },
+    getStartedContainer: {
+        alignItems: 'center',
+        marginHorizontal: 50,
+    },
+    centerMargin: {
+        marginHorizontal: 50,
     },
     getStartedContainer: {
         alignItems: 'center',
@@ -96,6 +111,11 @@ const styles = StyleSheet.create({
     },
     separator: {
         marginVertical: 30,
+        height: 1,
+        width: '80%',
+    },
+    smallSeparator: {
+        marginVertical: 10,
         height: 1,
         width: '80%',
     },

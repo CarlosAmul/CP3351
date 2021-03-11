@@ -5,19 +5,19 @@ import 'firebase/storage'
 import 'firebase/functions'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyBQH1A9fHAnQbOjkRj47L3HrXOn_g_841A",
-    authDomain: "imagesensor-d3d51.firebaseapp.com",
-    databaseURL: "https://imagesensor-d3d51-default-rtdb.firebaseio.com",
-    projectId: "imagesensor-d3d51",
-    storageBucket: "imagesensor-d3d51.appspot.com",
-    messagingSenderId: "747089375585",
-    appId: "1:747089375585:web:5c5ee73fcdb84b351fd520",
-    measurementId: "G-DXJL97PWHY"
+    apiKey: "AIzaSyCPV44gVwibJaPpWH_4G2KY8kc6AKvA1ZM",
+    authDomain: "cp3351-39dd4.firebaseapp.com",
+    databaseURL: "https://cp3351-39dd4-default-rtdb.firebaseio.com",
+    projectId: "cp3351-39dd4",
+    storageBucket: "cp3351-39dd4.appspot.com",
+    messagingSenderId: "442367383444",
+    appId: "1:442367383444:web:c462446d76f860aac6e181",
+    measurementId: "G-XQJBRTN4B6"
 }
 
 firebase.initializeApp(firebaseConfig)
 
-firebase.firestore().useEmulator("10.0.2.2", 8080)
+firebase.firestore().useEmulator("10.0.2.2", 8081)
 firebase.functions().useEmulator("10.0.2.2", 5001)
 firebase.auth().useEmulator("http://10.0.2.2:9099")
 

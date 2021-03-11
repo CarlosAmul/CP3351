@@ -22,6 +22,7 @@ export default function App() {
     const colorScheme = useColorScheme();
 
     const [user, setUser] = useState(null) // store db user, not auth user 
+    const [notifCount, setNotifCount] = useState(0)
 
     // run once, set listener to auth user state
     useEffect(() => {
@@ -74,6 +75,7 @@ export default function App() {
                 {selectNavigation()}
                 <StatusBar />
             </SafeAreaProvider>
+
         </UserContext.Provider>
     )
 
