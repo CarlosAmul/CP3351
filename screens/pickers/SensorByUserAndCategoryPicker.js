@@ -4,14 +4,16 @@ import db from '../../db'
 import { Picker } from '@react-native-picker/picker';
 import UserContext from '../../UserContext'
 
-export default function SensorByUserAndCategoryPicker({ category, set }) {
+export default function SensorByUserAndCategoryPicker({ category, set, routeId }) {
 
+
+    console.log('this is root id ', routeId)
     const { user } = useContext(UserContext)
 
     const [sensors, setSensors] = useState([])
     useEffect(() => db.Sensors.listenByUserAndCategory(setSensors, user?.id || "", category?.id || ""), [user, category])
-
-    const [sensorId, setSensorId] = useState("")
+    
+    const [sensorId, setSensorId] = useState(routeId)
     useEffect(() => db.Sensors.listenOne(set, sensorId), [sensorId])
 
     return (

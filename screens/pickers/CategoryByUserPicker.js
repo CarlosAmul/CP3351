@@ -4,32 +4,37 @@ import db from '../../db'
 import { Picker } from '@react-native-picker/picker';
 import UserContext from '../../UserContext'
 
-export default function CategoryByUserPicker({ set }) {
+export default function CategoryByUserPicker({ set, routeId, setRoute }) {
 
     const { user } = useContext(UserContext)
 
     const [sensors, setSensors] = useState([])
     useEffect(() => db.Sensors.listenByUser(setSensors, user?.id || ""), [user])
-  
     const [categoryIds, setCategoryIds] = useState([])
     useEffect(() => setCategoryIds([...new Set(sensors.map(sensor => sensor.categoryid))]), [sensors])
     const [categories, setCategories] = useState([])
     useEffect(() => db.Categories.listenAll(setCategories), []) // get thenm all -- way simpler
-    const [categoryId, setCategoryId] = useState("")
+
+    const [categoryId, setCategoryId] = useState(routeId)
     useEffect(() => db.Categories.listenOne(set, categoryId), [categoryId])
-  
+
+    const handleChange = (id) => {
+        setCategoryId(id)
+        setRoute("")
+    }
+
     return (
         <Picker
-          style={{ height: 50, width: 200 }}
-          selectedValue={categoryId}
-          onValueChange={setCategoryId}
+            style={{ height: 50, width: 200 }}
+            selectedValue={categoryId}
+            onValueChange={value => handleChange(value)}
         >
-          <Picker.Item label='Select Category' value="" />
-          {
-            categories
-            .filter(category => sensors.find(sensor => sensor.categoryid === category.id) !== undefined)
-            .map(category => <Picker.Item key={category.id} label={category.name} value={category.id} />)
-          }
+            <Picker.Item label='Select Category' value="" />
+            {
+                categories
+                    .filter(category => sensors.find(sensor => sensor.categoryid === category.id) !== undefined)
+                    .map(category => <Picker.Item key={category.id} label={category.name} value={category.id} />)
+            }
         </Picker>
     )
 }

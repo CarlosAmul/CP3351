@@ -9,17 +9,19 @@ import UserContext from '../../UserContext'
 import {  Text } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
+import db from '../../db';
 
-export default function SensorsScreen() {
+export default function SensorsScreen({route}) {
 	const navigation = useNavigation();
+
+	const [catId, setCatId] = useState(route.params? route.params.extra.catId : "")
+	const [sensorId, setSensorId] = useState(route.params? route.params.extra.sensorId : "")
 
 	const { user } = useContext(UserContext)
 	useEffect(() => setCategory(null), [user])
 	const [category, setCategory] = useState(null)
 	useEffect(() => setSensor(null), [category])
 	const [sensor, setSensor] = useState(null)
-
-	console.log(user, category, sensor)
 
 	const renderDrawerView = () =>
 		<View>
@@ -40,14 +42,14 @@ export default function SensorsScreen() {
 				{
 					user
 					&&
-					<CategoryByUserPicker set={setCategory} />
+					<CategoryByUserPicker set={setCategory} routeId={catId} setRoute={setSensorId}/>
 				}
 				{
 					user
 					&&
 					category
 					&&
-					<SensorByUserAndCategoryPicker category={category} set={setSensor} />
+					<SensorByUserAndCategoryPicker category={category} set={setSensor} routeId={sensorId}/>
 				}
 				{
 					user

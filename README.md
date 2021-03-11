@@ -16,6 +16,7 @@ npm i @react-native-community/datetimepicker
 npm i @react-native-community/netinfo
 npm i @react-native-picker/picker
 npm i @react-native-community/picker
+npm i @expo/vector-icons@12.0.3 (for icons)
 ```
 ### Main Components Used
 * Cards, Cards.Section, Cards.Image

@@ -9,10 +9,11 @@ npm-debug.*
 *.orig.*
 web-build/
 .firebaserc
-
-# macOS
-.DS_Store
 fb.js
 functions/firebase-debug.log
 functions/firestore-debug.log
 functions/ui-debug.log
+*.log
+
+# macOS
+.DS_Store

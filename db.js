@@ -40,12 +40,14 @@ class DB {
         return doc.exists ? this.reformat(doc) : undefined
     }
 
-    listenOne = (set, id) =>
+    listenOne = (set, id) => {
+        console.log('received id ', id)
         id === ""
             ?
             set(null)
             :
             db.collection(this.collection).doc(id).onSnapshot(snap => set(this.reformat(snap)))
+    }
 
     // item has no id
     create = async item => {
@@ -113,7 +115,34 @@ class Users extends DB {
 
     constructor() {
         super('users')
+        this.Notifications = new Notifications(this.collection)
     }
+
+}
+
+class Notifications extends DB {
+    constructor(containing) {
+        super('notifications')
+        this.containing = containing
+    }
+
+    unreadCount(uid, set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").where('status', '==', false).onSnapshot(snap => set(snap.size))
+    }
+
+    listenByUserAll(uid, set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByUserUnread(uid, set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).orderBy("when", "desc").where('status', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    markRead(uid, nid) {
+        db.collection(this.containing).doc(uid).collection(this.collection).doc(nid).set({ status: true }, { merge: true })
+    }
+
+    newNotification = async (userid, message, screen, extra) => await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, when: new Date(), extra: extra ? extra : {} })
 
 }
 
@@ -130,7 +159,17 @@ class Categories extends DB {
 
 }
 
-/*********************************** Zainab ************************************/
+class FAQs extends DB {
+
+    constructor() {
+        super('faqs')
+    }
+
+    listenAllAnswered = (set) => {
+        return db.collection(this.collection).where('answer', '!=', '').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+}
+
 class Favorites extends DB {
     constructor(containing) {
         super('favorites')
@@ -187,5 +226,6 @@ export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
     Users: new Users(),
+    FAQs: new FAQs(),
     Manufacturers: new Manufacturers()
 }
