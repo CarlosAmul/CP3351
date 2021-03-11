@@ -24,6 +24,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Drawer for Navigation (native component)
 * Tabbar and Tabs
 * Dialog
+* Expandable Section
 ## Carlos Tasks
 ### FAQs
 - [ ] Finished ❌
