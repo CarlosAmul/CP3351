@@ -27,13 +27,6 @@ const newNotification = async(userid,message,screen,extra) => await db.collectio
 exports.createSampleData = functions.https.onCall(
   async (data, context) => {
 
-    // comment the following out to reset auth db every time
-    // const users = await db.collection('users').get()
-    // if (users.docs.length > 0) {
-    //   functions.logger.info("already have data", {})
-    //   return
-    // }
-
     const sensors = await findAll('sensors')
     await Promise.all(
       sensors.map(
@@ -117,11 +110,14 @@ exports.createSampleData = functions.https.onCall(
 
     const result4 = await db.collection('users').doc(authId4).set({ name: "Fred", role: "Support" })
     functions.logger.info("result4", { result4 })
+    
+    const {id: manufacturer1} = await db.collection('manufacturers').add({name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg'})
+    const {id: manufacturer2} = await db.collection('manufacturers').add({name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg'})
 
-    const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion" })
+    const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion", description: "All Motion sensors here", price: 500, url: "https://is5-ssl.mzstatic.com/image/thumb/Purple30/v4/cf/b9/cf/cfb9cfdb-0258-d8c0-245d-18d644205b8d/source/512x512bb.jpg", manufacturers: [manufacturer1, manufacturer2] })
     functions.logger.info("categoryId1", { categoryId1 })
 
-    const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature" })
+    const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All Temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     functions.logger.info("categoryId2", { categoryId2 })
 
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false })
@@ -198,6 +194,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     } else {
       functions.logger.info("No such category", { category });
     }
+  })
 
   })
 
@@ -212,3 +209,10 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
       functions.logger.info("notification sent", notif)
     }
   })
+  //this function will be different for every different sensor because there will be separate fields
+  exports.addSensor = functions.https.onCall(
+    async({location, userid, categoryid, min, max, alert, price, manufacturer}, context) => {
+      functions.logger.info("Done with it!!!!!!!")
+      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer})
+    }
+  )

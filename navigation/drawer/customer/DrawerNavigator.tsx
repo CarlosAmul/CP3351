@@ -2,13 +2,19 @@ import { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerGestureContext } from '@react-navigation/drawer';
 import * as React from 'react';
+
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
-
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
+// @ts-expect-error
+import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+// @ts-expect-error
+import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
+// @ts-expect-error
+import PaymentFormScreen from '../../../screens/Zainab/PaymentFormScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
@@ -23,7 +29,6 @@ import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
 
 
 export default function DrawerNavigator() {
@@ -61,6 +66,12 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
+        options={{ drawerLabel: "Settings" }} 
+      />
+      <Drawer.Screen
+        name="UserFavorites"
+        component={UserFavoritesNavigator}
+        options={{ drawerLabel: "My Favorites" }} 
       />
     </Drawer.Navigator>
   );
@@ -75,6 +86,16 @@ function PublicHomeNavigator() {
         name="PublicHomeScreen"
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
+      />
+      <PublicHomeStack.Screen
+        name="CategoryFavsScreen"
+        component={CategoryFavsScreen}
+        options={{ headerTitle: 'Category Favorites' }}
+      />
+      <PublicHomeStack.Screen
+        name="PaymentFormScreen"
+        component={PaymentFormScreen}
+        options={{ headerTitle: 'Payment Form' }}
       />
     </PublicHomeStack.Navigator>
   )
@@ -147,5 +168,17 @@ function FAQsNavigator() {
         options={{ headerTitle: 'Frequently Asked Questions' }}
       />
     </FAQsStack.Navigator>
+
+const UserFavoritesStack = createStackNavigator<TabSevenParamList>();
+
+function UserFavoritesNavigator() {
+  return (
+    <UserFavoritesStack.Navigator>
+      <UserFavoritesStack.Screen
+        name="UserFavoritesScreen"
+        component={UserFavoritesScreen}
+        options={{ headerTitle: 'My Favorites' }}
+      />
+    </UserFavoritesStack.Navigator>
   )
 }

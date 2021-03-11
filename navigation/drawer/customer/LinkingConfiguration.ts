@@ -9,6 +9,7 @@ export default {
           TabOne: {
             screens: {
               PublicHomeScreen: 'one',
+              CategoryFavsScreen: 'five',
             },
           },
           TabTwo: {
@@ -33,9 +34,12 @@ export default {
           },
           TabSix: {
             screens: {
-              FAQsScreen: 'six',
-            },
+              FAQsScreen: 'six'
+              },
           },
+          UserFavorites: {
+            screens: {
+              UserFavoritesScreen: 'two',
         },
       },
       NotFound: '*',

@@ -11,11 +11,15 @@ export type DrawerParamList = {
   Actions: undefined,
   Sensors: undefined,
   Notifications: undefined,
-  FAQs: undefined
+  FAQs: undefined,
+  UserFavorites: undefined,
+  PaymentForm: undefined
 };
 
 export type TabOneParamList = {
   PublicHomeScreen: undefined;
+  CategoryFavsScreen: undefined;
+  PaymentFormScreen: undefined;
 };
 
 export type TabTwoParamList = {
@@ -36,6 +40,10 @@ export type TabFiveParamList = {
 
 export type TabSixParamList = {
   FAQsScreen: undefined;
+};
+
+export type TabSevenParamList = {
+  UserFavoritesScreen: undefined;
 };
 
 export type onPressFunc = (event: GestureResponderEvent) => void;

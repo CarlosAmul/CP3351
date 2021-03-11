@@ -18,6 +18,12 @@ npm i @react-native-picker/picker
 npm i @react-native-community/picker
 npm i @expo/vector-icons@12.0.3 (for icons)
 ```
+### Main Components Used
+* Cards, Cards.Section, Cards.Image
+* List, ListItem, ListItem.Part
+* Drawer for Navigation (native component)
+* Tabbar and Tabs
+* Dialog
 ## Carlos Tasks
 ### FAQs
 - [ ] Finished ❌
@@ -37,7 +43,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 - [ ] Finished ❌
 * Customer can leave review after installation is done. Also after support role resolves complaint
 ### Notifications
-- [ ] Finished ❌
+- [x] Finished ✅
 * A new report comes in, or a sensor gets a critical reading. 
 * Each user can see new notifications coming in inside the app regardless of what tab they're in. 
 * A new ad also gives customers a notification
@@ -54,7 +60,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Discount codes are redeeming instructions.
 * Redeeming a reward links the ID of the customer to the reward.
 ### Favorites
-- [ ] Finished ❌
+- [x] Finished ✅
 * A customer can mark a category as a favorite.
 * A customer can see a list of their favorite in a separate tab.
 * For the public, total favorites can be displayed for a category, as well as most favorited.
@@ -65,7 +71,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Support will be able to do all CRUD.
 * The safety instructions could be shown with a button under each category saying "view safety instructions" for this category
 ### Manufacturers
-- [ ] Finished ❌
+- [x] Finished ✅
 * Admin can create manufacturers with CRUD 
 * Admin can assign manufacturers to a category
 * When customers will purchase sensors, they can choose which manufacturer they want with high quality, low price etc. These manufacturers can be displayed on the public home page.

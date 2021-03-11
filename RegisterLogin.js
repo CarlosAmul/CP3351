@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import fb from './fb'
 import db from './db'
 import { StyleSheet, Image } from 'react-native';
 import LoginPicker from './screens/pickers/LoginPicker'
 import { Button, TextField, View } from 'react-native-ui-lib';
-import {Colors} from 'react-native-ui-lib'
+import { Colors } from 'react-native-ui-lib'
 
 export default function RegisterLogin() {
 
 	Colors.loadColors({
-        primary: '#6874e2',
-        basic: '#f5f6fa',
-    });
+		primary: '#6874e2',
+		secondary: '#f9ce7f',
+		mainbg: '#f5f6fa',
+		sidebg: '#ffffff',
+	});
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
@@ -36,9 +38,9 @@ export default function RegisterLogin() {
 	}
 
 	return (
-		<View style={[styles.container, {backgroundColor: Colors.basic}]}>
-			<Image 
-				style={{width: 200, height: 200, marginBottom: 20}}
+		<View style={[styles.container, { backgroundColor: Colors.sidebg }]}>
+			<Image
+				style={{ width: 200, height: 200, marginBottom: 20 }}
 				source={require('./assets/images/logo.png')}
 				resizeMode="contain"
 			/>
@@ -47,14 +49,14 @@ export default function RegisterLogin() {
 				onChangeText={text => setEmail(text)}
 				hideUnderline
 				placeholder={"Email..."}
-				style={styles.inputText}
+				style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
 				value={email}
 			/>
 			<TextField
 				onChangeText={text => setPassword(text)}
 				hideUnderline
 				placeholder={"Password..."}
-				style={styles.inputText}
+				style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
 				value={password}
 			/>
 			<Button label="Login"
@@ -67,7 +69,7 @@ export default function RegisterLogin() {
 				marginT-15
 				style={{ width: '80%' }}
 				outlineColor={Colors.primary}
-				backgroundColor={Colors.basic}
+				backgroundColor={Colors.sidebg}
 				color="#6874e2"
 				onPress={register}
 			/>
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
 		width: '80%',
 	},
 	inputText: {
-		backgroundColor: "white",
+		backgroundColor: Colors.sidebg,
 		borderRadius: 20,
 		padding: 10,
 		width: '80%'

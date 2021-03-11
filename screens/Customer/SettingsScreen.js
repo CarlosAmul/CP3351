@@ -15,7 +15,7 @@ export default function SettingsScreen() {
 			// @ts-expect-error
 			headerLeft: () => (<MenuIcon />)
 		});
-	});
+	}, [navigation]);
 
 	const { user } = useContext(UserContext)
 
