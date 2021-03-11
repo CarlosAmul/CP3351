@@ -166,6 +166,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
   exports.addSensor = functions.https.onCall(
     async({location, userid, categoryid, min, max, alert, price, manufacturer}, context) => {
       functions.logger.info("Done with it!!!!!!!")
-      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer})
+      
+      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, })
     }
   )

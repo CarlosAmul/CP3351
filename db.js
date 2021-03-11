@@ -110,11 +110,9 @@ class Readings extends DB {
 }
 
 class Users extends DB {
-
     constructor() {
         super('users')
     }
-
 }
 
 class Categories extends DB {
