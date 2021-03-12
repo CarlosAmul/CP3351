@@ -28,6 +28,7 @@ export default function PublicHomeScreen(props) {
         <ScrollView style={styles.scrollcontainer}>
             <Categories stacknavigation={stacknavigation}/>
             <MostFavorite />
+            
         </ScrollView>
     );
 }

@@ -124,6 +124,10 @@ class Users extends DB {
         super('users')
         this.Notifications = new Notifications(this.collection)
     }
+
+    listenToUsersByRole = (set, role) =>
+        db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
 }
 
 class Notifications extends DB {
@@ -227,6 +231,13 @@ class Manufacturers extends DB {
     }
 }
 
+class FitnessTips extends DB {
+    constructor() {
+        super('fitnesstips')
+    }
+    listenToUserFitnessTips = (set, userid) =>
+        db.collection(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
 
 export default {
     Categories: new Categories(),
@@ -234,5 +245,6 @@ export default {
     Users: new Users(),
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
-    SupportCenters: new SupportCenters()
+    SupportCenters: new SupportCenters(),
+    FitnessTips: new FitnessTips()
 }

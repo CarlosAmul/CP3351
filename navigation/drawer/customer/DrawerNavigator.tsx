@@ -9,8 +9,6 @@ import db from '../../../db.js'
 import UserContext from '../../../UserContext';
 // @ts-expect-error
 import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
-
-// import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
 // @ts-expect-error
@@ -25,8 +23,12 @@ import SensorsScreen from '../../../screens/Customer/SensorsScreen'
 import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
 // @ts-expect-error
 import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
+// @ts-expect-error
+import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+// @ts-expect-error
+import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -73,6 +75,11 @@ export default function DrawerNavigator() {
         component={UserFavoritesNavigator}
         options={{ drawerLabel: "My Favorites" }}
       />
+      <Drawer.Screen
+        name="FitnessTips"
+        component={FitnessTipsNavigator}
+        options={{ drawerLabel: "My Fitness Tips" }}
+      />
     </Drawer.Navigator>
   );
 }
@@ -87,7 +94,7 @@ function PublicHomeNavigator() {
         component={PublicHomeScreen}
         options={{ headerTitle: 'Home' }}
       />
-      {/* <PublicHomeStack.Screen
+      <PublicHomeStack.Screen
         name="CategoryFavsScreen"
         component={CategoryFavsScreen}
         options={{ headerTitle: 'Category Favorites' }}
@@ -96,7 +103,7 @@ function PublicHomeNavigator() {
         name="PaymentFormScreen"
         component={PaymentFormScreen}
         options={{ headerTitle: 'Payment Form' }}
-      /> */}
+      />
     </PublicHomeStack.Navigator>
   )
 }
@@ -181,5 +188,19 @@ function UserFavoritesNavigator() {
         options={{ headerTitle: 'My Favorites' }}
       />
     </UserFavoritesStack.Navigator>
+  )
+}
+
+const FitnessTipsStack = createStackNavigator<TabEightParamList>();
+
+function FitnessTipsNavigator() {
+  return (
+    <FitnessTipsStack.Navigator>
+      <FitnessTipsStack.Screen
+        name="FitnessTipsScreen"
+        component={FitnessTipsScreen}
+        options={{ headerTitle: 'My Fitness Tips' }}
+      />
+    </FitnessTipsStack.Navigator>
   )
 }

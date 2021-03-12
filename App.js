@@ -7,6 +7,7 @@ import useColorScheme from './hooks/useColorScheme';
 //import NavigationCustomer from './navigation/bottomTab/customer';
 import DrawerAdmin from './navigation/drawer/admin';
 import DrawerCustomer from './navigation/drawer/customer';
+import DrawerSupport from './navigation/drawer/support';
 
 import { LogBox } from 'react-native'
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -60,6 +61,8 @@ export default function App() {
             return <DrawerCustomer colorScheme={colorScheme} />
         } else if (user?.role === "Admin") {
             return <DrawerAdmin colorScheme={colorScheme} />
+        } else if (user?.role === "Support") {
+            return <DrawerSupport colorScheme={colorScheme} />
         } else {
             console.log('user role', user?.role)
             fb.auth().signOut()

@@ -36,7 +36,7 @@ export default function UserMapComponent({ set, location }) {
     return (
 
         <View style={styles.container}>
-            <MapView
+            {/* <MapView
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 zoomEnabled={true}
@@ -48,11 +48,11 @@ export default function UserMapComponent({ set, location }) {
                 }}
                 onRegionChangeComplete={savePan}
                 onLongPress={placeMarker}
-            >
+            > */}
                 {/* Adding markers as images and not
                 icons causes some serious performance
                 issues */}
-                {
+                {/* {
                     centers.map((e, i) =>
                         <Marker
                             coordinate={new LatLng(e.address[0], e.address[1])}
@@ -73,7 +73,7 @@ export default function UserMapComponent({ set, location }) {
                     </Marker>
                 }
 
-            </MapView>
+            </MapView> */}
         </View >
 
     );
