@@ -34,11 +34,10 @@ export default function FitnessTipsScreen() {
 
     const { user } = useContext(UserContext)
 
-    const approve = async (tip, approved) => {
+    const approve = async (tip, approved) => 
         await db.FitnessTips.update({ ...tip, approved: approved, approvedby: user.id})
         //on the server side
         //await db.Users.Notifications.newNotification(tip.userid, !approved ? "Your fitness tip was disapproved to be posted" : "Your fitness tip was approved to be posted", "FitnessTipsScreen")
-    }
 
     const [allFitness, setAllFitness] = useState([])
     useEffect(() => db.FitnessTips.listenAll(setAllFitness), [])

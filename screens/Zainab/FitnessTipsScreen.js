@@ -37,7 +37,7 @@ export default function FitnessTipsScreen() {
         });
     }, [navigation]);
 
-    const [type, setType] = useState(0)
+    const [index, setIndex] = useState(0)
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -66,24 +66,22 @@ export default function FitnessTipsScreen() {
     const remove = async (id) =>
         await db.FitnessTips.remove(id)
 
-    const [visible, setVisible] = useState(false)
-
     return (
         <ScrollView style={styles.scrollcontainer}>
             <Text style={[styles.mainHeader, styles.title]}>Our sensors made you fit!</Text>
             <Text style={{ marginTop: -30, marginBottom: 20, textAlign: 'center' }}>You can give valuable tips to the public</Text>
-            <Button 
+            <Button
                 onPress={() => Alert.alert(
-                    'How we approve/disapprove tips?', 
+                    'How we approve/disapprove tips?',
                     'We make sure our public can see valuable tips from our app 😃. Therefore, customers are asked to post valuable tips. The tip must relate to our sensors and must be helpful. If theses guidelines are not followed, our support team will disapprove. Looking forward to your valuable tips 😊'
                 )}
                 label="Approval Policy"
-                style={{width: 150, flex: 1, alignSelf: 'center', marginBottom: 20, backgroundColor: Colors.secondary}}
+                style={{ width: 150, flex: 1, alignSelf: 'center', marginBottom: 20, backgroundColor: Colors.secondary }}
 
             />
             <TabBar
                 backgroundColor={Colors.sidebg}
-                onTabSelected={(index) => setType(index)}
+                onTabSelected={(index) => setIndex(index)}
                 enableShadow
             >
                 <TabBar.Item
@@ -100,7 +98,7 @@ export default function FitnessTipsScreen() {
                 />
             </TabBar>
             {
-                type === 0 ?
+                index === 0 ?
                     purchasedSensors.length > 0 ?
                         <View style={styles.fieldsContainer}>
                             <TextField
@@ -147,7 +145,7 @@ export default function FitnessTipsScreen() {
                             />
                         </View>
                     :
-                    type === 1 ?
+                    index === 1 ?
                         <View>
                             {
                                 userFitness.filter(f => f.approved === false).length === 0 ?
@@ -178,6 +176,14 @@ export default function FitnessTipsScreen() {
                                                     )
                                                 }
                                             </View>
+                                            {
+                                                tip.approvedby !== "" ?
+                                                    <Card.Section
+                                                        content={[{ text: 'Disapproved', text65M: true, color: Colors.violet50, margin: 20 }]}
+                                                    />
+                                                :
+                                                    <></>
+                                            }
                                             <Button
                                                 label={<MaterialIcons name="delete" size={24} color={Colors.secondary} />}
                                                 onPress={() => remove(tip.id)}
