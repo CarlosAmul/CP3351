@@ -25,6 +25,8 @@ export default function NotificationsScreen() {
     const [notifications, setNotifications] = useState([])
     useEffect(() => db.Users.Notifications.listenByUserAll(user?.id || "", setNotifications), [user])
 
+    // console.log(notifications)
+
     function link(uid, nid, screen, extra) {
         db.Users.Notifications.markRead(uid, nid)
         navigation.navigate(screen, { screen: screen+"Screen", params: { extra: extra? extra : null }})

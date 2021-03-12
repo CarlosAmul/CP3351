@@ -59,6 +59,7 @@ class DB {
     update = async item => {
         const { id, ...rest } = item
         await db.collection(this.collection).doc(id).set(rest)
+        console.log('updated')
     }
 
     remove = async id => {
@@ -126,6 +127,10 @@ class Users extends DB {
         this.Notifications = new Notifications(this.collection)
     }
 
+    listenByRole(role) {
+        return db.Users.collection(this.containing).where('role', '==', role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
 }
 
 class Notifications extends DB {
@@ -174,7 +179,23 @@ class FAQs extends DB {
     }
 
     listenAllAnswered = (set) => {
-        return db.collection(this.collection).where('answer', '!=', '').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        return db.collection(this.collection).where('status', '==', 'answered').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenAllPending = (set) => {
+        return db.collection(this.collection).where('status', '==', 'pending').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenAllDraft = (set) => {
+        return db.collection(this.collection).where('status', '==', 'draft').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    answerFAQ = (id, answer) => {
+        db.collection(this.collection).doc(id).set({ answer, status: 'answered' }, {merge:true})
+    }
+
+    saveDraft = (id, answer) => {
+        db.collection(this.collection).doc(id).set({ answer, status: 'draft' }, {merge:true})
     }
 }
 

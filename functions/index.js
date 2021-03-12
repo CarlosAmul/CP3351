@@ -90,12 +90,12 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId1 } = await admin.auth().createUser({ email: "joe@joe.com", password: "joejoe" })
     functions.logger.info("authId1", { authId1 })
 
-    await db.collection('faqs').add({ question: 'Test Question', answer: "Test Answer", userid: authId1 })
+    await db.collection('faqs').add({ question: 'Test Question', answer: "Test Answer", userid: authId1, status: 'answered' })
 
     const { uid: authId2 } = await admin.auth().createUser({ email: "ann@ann.com", password: "annann" })
     functions.logger.info("authId2", { authId2 })
 
-    await db.collection('faqs').add({ question: 'Another Test Question', answer: "Another Test Answer", userid: authId2 })
+    await db.collection('faqs').add({ question: 'Another Test Question', answer: "Another Test Answer", userid: authId2, status: 'answered' })
 
     const { uid: authId3 } = await admin.auth().createUser({ email: "admin@admin.com", password: "adminadmin" })
     functions.logger.info("authId3", { authId3 })
@@ -211,6 +211,17 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
       functions.logger.info("notification sent", notif)
     }
   })
+
+exports.sendFAQNotification = functions.firestore.document('faqs/{faqid}').onCreate(
+  async (snap, context) => {
+    functions.logger.info("Sending notification to supports")
+    const supportsDoc = await db.collection('users').where('role', '==', 'Support').get()
+    functions.logger.info(supportsDoc, 'doc')
+    supportsDoc.docs.map(doc => {
+      newNotification(doc.id, 'An FAQ has been submitted', 'PendingQuestions')
+    })
+  }
+)
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
   async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {

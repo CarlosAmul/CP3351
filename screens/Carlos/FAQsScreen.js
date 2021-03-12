@@ -44,7 +44,7 @@ export default function FAQsScreen() {
     }
 
     const submitQuestion = () => {
-        db.FAQs.create({question ,answer: "", userid: user.id})
+        db.FAQs.create({ question, answer: "", userid: user.id, status: 'pending' })
         console.log('Question Sent2!')
         setExpanded(false)
         setQuestion("")
@@ -54,15 +54,17 @@ export default function FAQsScreen() {
 
     const drawSubmitForm = () => {
         return (
-            <View style={styles.submitContainer}>
-                <View style={styles.textAreaContainer}>
-                    <TextArea
-                        placeholder={"What's on your mind?"}
-                        style={{ marginBottom: 20 }}
-                        onChangeText={text => setQuestion(text)}
-                        placeholder={"What's on your mind?"}
-                        value={question}
-                    />
+            <>
+                <View style={styles.submitContainer}>
+                    <View style={styles.textAreaContainer}>
+                        <TextArea
+                            placeholder={"What's on your mind?"}
+                            style={{ marginBottom: 20 }}
+                            onChangeText={text => setQuestion(text)}
+                            placeholder={"What's on your mind?"}
+                            value={question}
+                        />
+                    </View>
                 </View>
                 <Button
                     backgroundColor={Colors.primary}
@@ -72,21 +74,47 @@ export default function FAQsScreen() {
                     enableShadow
                     onPress={submitQuestion}
                 />
-            </View>
+            </>
         )
     }
 
     return (
         <ScrollView contentContainerStyle={styles.helpContainer}>
-            <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                <ExpandableSection
-                    sectionHeader={drawFormHeader()}
-                    expanded={expanded}
-                    onPress={() => setExpanded(!expanded)}
-                >
-                    {drawSubmitForm()}
-                </ExpandableSection>
-            </View>
+            {
+                user.role != 'Support' ?
+                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                        <ExpandableSection
+                            sectionHeader={drawFormHeader()}
+                            expanded={expanded}
+                            onPress={() => setExpanded(!expanded)}
+                        >
+                            {drawSubmitForm()}
+                        </ExpandableSection>
+                    </View>
+                    :
+                    <>
+                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                        <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
+                            <View style={styles.headerSection}>
+                                <Text style={styles.header}>Pending Questions</Text>
+                                <View style={styles.icon}>
+                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                        <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
+                            <View style={styles.headerSection}>
+                                <Text style={styles.header}>Drafts</Text>
+                                <View style={styles.icon}>
+                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    </>
+            }
             {
                 !statusHidden &&
                 <View style={{ backgroundColor: '#f2f2f2' }}>
@@ -107,6 +135,7 @@ export default function FAQsScreen() {
 
     );
 }
+
 
 const styles = StyleSheet.create({
     statusMessage: {
@@ -129,12 +158,12 @@ const styles = StyleSheet.create({
         width: 350
     },
     submitContainer: {
-        padding: 5,
+        padding: 10,
         width: 350
     },
     textAreaContainer: {
-        padding: 30,
-        width: 350
+        padding: 20,
+        backgroundColor: Colors.grey60
     },
     container: {
         flex: 1,
