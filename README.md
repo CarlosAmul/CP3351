@@ -77,7 +77,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Admin can assign manufacturers to a category
 * When customers will purchase sensors, they can choose which manufacturer they want with high quality, low price etc. These manufacturers can be displayed on the public home page.
 ### Fitness Tips
-- [ ] Finished ❌
+- [x] Finished ✅
 * Customers can post some tips for the public and other customers. Support must approve these tips.
 * Once approved will be shown to other people
 * ~Again may be the other people can post their likes for these tips
