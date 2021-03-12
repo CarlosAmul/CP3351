@@ -9,6 +9,7 @@ import { ExpandableSection, TextArea, Button, Colors } from 'react-native-ui-lib
 import { ScrollView } from 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
 import FAQ from './FAQ'
+import { createImportSpecifier } from 'typescript';
 
 export default function FAQsScreen() {
 
@@ -28,6 +29,7 @@ export default function FAQsScreen() {
 
     const [expanded, setExpanded] = useState(false)
     const [question, setQuestion] = useState('')
+    const [statusHidden, setStatusHidden] = useState(true)
     console.log(question)
 
     const drawFormHeader = () => {
@@ -42,7 +44,12 @@ export default function FAQsScreen() {
     }
 
     const submitQuestion = () => {
-        console.log('Question Submitted! ' + question)
+        db.FAQs.create({question ,answer: "", userid: user.id})
+        console.log('Question Sent2!')
+        setExpanded(false)
+        setQuestion("")
+        setStatusHidden(false)
+        setTimeout(() => setStatusHidden(true), 3000)
     }
 
     const drawSubmitForm = () => {
@@ -71,7 +78,7 @@ export default function FAQsScreen() {
 
     return (
         <ScrollView contentContainerStyle={styles.helpContainer}>
-            <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray', marginBottom: 20 }}>
+            <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
                 <ExpandableSection
                     sectionHeader={drawFormHeader()}
                     expanded={expanded}
@@ -81,19 +88,32 @@ export default function FAQsScreen() {
                 </ExpandableSection>
             </View>
             {
-                faqs.map(
-                    faq =>
-                        // {console.log(faq)},
-                        <FAQ key={faq.id} faq={faq}>
-                        </FAQ>
-                )
+                !statusHidden &&
+                <View style={{ backgroundColor: '#f2f2f2' }}>
+                    <Text style={styles.statusMessage}>Question Submitted!</Text>
+                </View>
             }
+            <View style={{ marginTop: 20 }}>
+                {
+                    faqs.map(
+                        faq =>
+                            // {console.log(faq)},
+                            <FAQ key={faq.id} faq={faq}>
+                            </FAQ>
+                    )
+                }
+            </View>
         </ScrollView>
 
     );
 }
 
 const styles = StyleSheet.create({
+    statusMessage: {
+        color: 'green',
+        alignSelf: 'center',
+        marginTop: 10
+    },
     header: {
         fontSize: 20,
         color: Colors.primary,
@@ -109,7 +129,6 @@ const styles = StyleSheet.create({
         width: 350
     },
     submitContainer: {
-        marginBottom: 15,
         padding: 5,
         width: 350
     },
