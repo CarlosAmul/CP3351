@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet,  View } from 'react-native';
 import UserContext from '../../UserContext'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import db from '../../db'
-import { Colors, Button, Card, Chip, TabBar } from 'react-native-ui-lib'
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Colors,  Card, Chip } from 'react-native-ui-lib'
+import { Fontisto } from '@expo/vector-icons';
 
 export default function FitnessTip({tip}) {
 
@@ -41,6 +39,7 @@ export default function FitnessTip({tip}) {
                 contentStyle={{ marginBottom: 10 }}
                 content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
             />
+            <Fontisto name="quote-a-right" size={15} color={Colors.secondary} style={{ marginTop: 5, marginBottom: 10 }} />
             <Card.Section
                 content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
             />

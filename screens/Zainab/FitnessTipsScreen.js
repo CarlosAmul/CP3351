@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
 import UserContext from '../../UserContext'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import db from '../../db'
 import { Colors, TabBar, TextField, TextArea, ChipsInput, Button, Card, Chip } from 'react-native-ui-lib'
 import { MaterialIcons } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
 
 export default function FitnessTipsScreen() {
 
@@ -14,8 +15,8 @@ export default function FitnessTipsScreen() {
     const [userFitness, setUserFitness] = useState([])
     useEffect(() => db.FitnessTips.listenToUserFitnessTips(setUserFitness, user?.id || ""), [user])
 
-    const [supports, setSupports] = useState([])
-    useEffect(() => db.Users.listenToUsersByRole(setSupports, 'Support'), [])
+    const [purchasedSensors, setPurchasedSensors] = useState([])
+    useEffect(() => db.Sensors.listenByUser(setPurchasedSensors, user?.id || ""), [user])
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -48,12 +49,12 @@ export default function FitnessTipsScreen() {
             setTitle("")
             setDescription("")
             setTags([])
-            //give a notification to all the users
-            await Promise.all(
-                supports.map(async support => 
-                    await db.Users.Notifications.newNotification(support.id, `${user.name} has submitted a fitness tip. `, 'AllFitness')
-                )
-            )
+            //give a notification to all the users (client side but should be on server side)
+            // await Promise.all(
+            //     supports.map(async support =>
+            //         await db.Users.Notifications.newNotification(support.id, `${user.name} has submitted a fitness tip. `, 'AllFitness')
+            //     )
+            // )
         }
     }
 
@@ -65,10 +66,21 @@ export default function FitnessTipsScreen() {
     const remove = async (id) =>
         await db.FitnessTips.remove(id)
 
+    const [visible, setVisible] = useState(false)
+
     return (
         <ScrollView style={styles.scrollcontainer}>
             <Text style={[styles.mainHeader, styles.title]}>Our sensors made you fit!</Text>
             <Text style={{ marginTop: -30, marginBottom: 20, textAlign: 'center' }}>You can give valuable tips to the public</Text>
+            <Button 
+                onPress={() => Alert.alert(
+                    'How we approve/disapprove tips?', 
+                    'We make sure our public can see valuable tips from our app 😃. Therefore, customers are asked to post valuable tips. The tip must relate to our sensors and must be helpful. If theses guidelines are not followed, our support team will disapprove. Looking forward to your valuable tips 😊'
+                )}
+                label="Approval Policy"
+                style={{width: 150, flex: 1, alignSelf: 'center', marginBottom: 20, backgroundColor: Colors.secondary}}
+
+            />
             <TabBar
                 backgroundColor={Colors.sidebg}
                 onTabSelected={(index) => setType(index)}
@@ -89,106 +101,127 @@ export default function FitnessTipsScreen() {
             </TabBar>
             {
                 type === 0 ?
-                    <View style={styles.fieldsContainer}>
-                        <TextField
-                            onChangeText={text => setTitle(text)}
-                            hideUnderline
-                            placeholder="Title"
-                            style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
-                            value={title}
-                        />
-                        <View
-                            style={{
-                                height: 150,
-                                marginBottom: 30,
-                                padding: 10,
-                                backgroundColor: Colors.mainbg,
-                                borderRadius: 20
-                            }}
-                        >
-                            <TextArea placeholder="Write Description.." value={description} onChangeText={text => setDescription(text)} />
+                    purchasedSensors.length > 0 ?
+                        <View style={styles.fieldsContainer}>
+                            <TextField
+                                onChangeText={text => setTitle(text)}
+                                hideUnderline
+                                placeholder="Title"
+                                style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
+                                value={title}
+                            />
+                            <View
+                                style={{
+                                    height: 150,
+                                    marginBottom: 30,
+                                    padding: 10,
+                                    backgroundColor: Colors.mainbg,
+                                    borderRadius: 20
+                                }}
+                            >
+                                <TextArea placeholder="Write Description.." value={description} onChangeText={text => setDescription(text)} />
+                            </View>
+                            <ChipsInput
+                                containerStyle={styles.inputChips}
+                                placeholder="Enter Tags"
+                                hideUnderline
+                                disableTagRemoval={false}
+                                onChangeTags={(tags) => setTags(tags)}
+                                tags={tags}
+                            />
+                            <Button
+                                label="Post Tip"
+                                style={styles.transparentButton}
+                                labelStyle={{ color: Colors.darkprimary }}
+                                onPress={() => addTip()}
+                            />
                         </View>
-                        <ChipsInput
-                            containerStyle={styles.inputChips}
-                            placeholder="Enter Tags"
-                            hideUnderline
-                            disableTagRemoval={false}
-                            onChangeTags={(tags) => setTags(tags)}
-                            tags={tags}
-                        />
-                        <Button
-                            label="Post Tip"
-                            style={styles.transparentButton}
-                            labelStyle={{ color: Colors.darkprimary }}
-                            onPress={() => addTip()}
-                        />
-                    </View>
+                        :
+                        <View style={styles.bigMsgContainer}>
+                            <Text style={[styles.bigMsg, { color: Colors.darkprimary }]}>You need to buy sensor from us to be able to post tips</Text>
+                            <Button
+                                label="Buy Now"
+                                style={styles.transparentButton}
+                                labelStyle={{ color: Colors.darkprimary }}
+                                onPress={() => navigation.navigate("PublicHomeScreen")}
+                            />
+                        </View>
                     :
                     type === 1 ?
                         <View>
                             {
                                 userFitness.filter(f => f.approved === false).length === 0 ?
                                     <View style={styles.bigMsgContainer}>
-                                        <Text style={[styles.bigMsg, {color: Colors.darkprimary}]}>Nothing here...</Text>
+                                        <Text style={[styles.bigMsg, { color: Colors.darkprimary }]}>Nothing here...</Text>
                                         <MaterialIcons name="hourglass-empty" size={45} color={Colors.darkprimary} />
                                     </View>
-                                :
-                                userFitness.filter(f => f.approved === false).map(tip =>
-                                    <Card key={tip.id} style={styles.disapproved} elevation={12}>
-                                        <Card.Section
-                                            contentStyle={{ marginBottom: 10 }}
-                                            content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
-                                        />
-                                        <Card.Section
-                                            content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
-                                        />
-                                        <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start' }}>
-                                            {
-                                                tip.tags.map((tag, index) =>
-                                                    <Chip
-                                                        key={index}
-                                                        label={"#" + tag}
-                                                        labelStyle={{ color: Colors.darksecondary }}
-                                                        containerStyle={{ borderWidth: 0, width: 100 }}
-                                                    />
-                                                )
-                                            }
-                                        </View>
-                                        <Button
-                                            label={<MaterialIcons name="delete" size={24} color={Colors.secondary} />}
-                                            onPress={() => remove(tip.id)}
-                                            style={{backgroundColor: 'transparent'}}
-                                        />
-                                    </Card>
-                                )
+                                    :
+                                    userFitness.filter(f => f.approved === false).map(tip =>
+                                        <Card key={tip.id} style={styles.disapproved} elevation={12}>
+                                            <Card.Section
+                                                contentStyle={{ marginBottom: 10 }}
+                                                content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
+                                            />
+                                            <Fontisto name="quote-a-right" size={15} color={Colors.secondary} style={{ marginTop: 5, marginBottom: 10 }} />
+                                            <Card.Section
+                                                content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
+                                            />
+                                            <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                {
+                                                    tip.tags.map((tag, index) =>
+                                                        <Chip
+                                                            key={index}
+                                                            label={"#" + tag}
+                                                            labelStyle={{ color: Colors.darksecondary }}
+                                                            containerStyle={{ borderWidth: 0, width: 100 }}
+                                                        />
+                                                    )
+                                                }
+                                            </View>
+                                            <Button
+                                                label={<MaterialIcons name="delete" size={24} color={Colors.secondary} />}
+                                                onPress={() => remove(tip.id)}
+                                                style={{ backgroundColor: 'transparent' }}
+                                            />
+                                        </Card>
+                                    )
                             }
                         </View>
                         :
                         <View>
                             {
-                                userFitness.filter(f => f.approved === true).map(tip =>
-                                    <Card key={tip.id} style={styles.disapproved} elevation={12}>
-                                        <Card.Section
-                                            contentStyle={{ marginBottom: 10 }}
-                                            content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
-                                        />
-                                        <Card.Section
-                                            content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
-                                        />
-                                        <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start' }}>
-                                            {
-                                                tip.tags.map((tag, index) =>
-                                                    <Chip
-                                                        key={index}
-                                                        label={"#" + tag}
-                                                        labelStyle={{ color: Colors.darksecondary }}
-                                                        containerStyle={{ borderWidth: 0, width: 100 }}
-                                                    />
-                                                )
-                                            }
-                                        </View>
-                                    </Card>
-                                )
+                                userFitness.filter(f => f.approved === true).length === 0 ?
+                                    <View style={styles.bigMsgContainer}>
+                                        <Text style={[styles.bigMsg, { color: Colors.darkprimary }]}>
+                                            All of your approved posted tips will show here.
+                                        </Text>
+                                        <Text style={{ textAlign: 'center', margin: 5 }}>How will your tips be approved? Our team will review your tip and approve/disapprove it. View the policy.</Text>
+                                    </View>
+                                    :
+                                    userFitness.filter(f => f.approved === true).map(tip =>
+                                        <Card key={tip.id} style={styles.disapproved} elevation={12}>
+                                            <Card.Section
+                                                contentStyle={{ marginBottom: 10 }}
+                                                content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
+                                            />
+                                            <Fontisto name="quote-a-right" size={15} color={Colors.secondary} style={{ marginTop: 5, marginBottom: 10 }} />
+                                            <Card.Section
+                                                content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
+                                            />
+                                            <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'flex-start' }}>
+                                                {
+                                                    tip.tags.map((tag, index) =>
+                                                        <Chip
+                                                            key={index}
+                                                            label={"#" + tag}
+                                                            labelStyle={{ color: Colors.darksecondary }}
+                                                            containerStyle={{ borderWidth: 0, width: 100 }}
+                                                        />
+                                                    )
+                                                }
+                                            </View>
+                                        </Card>
+                                    )
                             }
                         </View>
             }
@@ -241,6 +274,7 @@ const styles = StyleSheet.create({
     },
     bigMsg: {
         textAlign: 'center',
+        margin: 10,
         marginTop: 100,
         marginBottom: 20,
         fontSize: 25,

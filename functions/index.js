@@ -229,3 +229,27 @@ exports.addSensor = functions.https.onCall(
     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
   }
 )
+
+exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
+  async (snap, context) => {
+    const { tipid } = context.params
+    const supportUsersData = await db.collection('users').where('role', '==', 'Support').get()
+    const supportUsers = supportUsersData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
+    const tip = reformat(tipDoc)
+    const tipUserDoc = await db.collection('users').doc(tip.userid).get()
+    const tipUser = reformat(tipUserDoc)
+    await Promise.all(
+      supportUsers.map(async user => {
+        await newNotification(user.id, `${tipUser.name} has submitted a fitness tip`, 'FitnessTips')
+      })
+    )
+  })
+
+  exports.sendTipStatusNotificationToUser = functions.firestore.document('fitnesstips/{tipid}').onUpdate(
+    async (snap, context) => {
+      const { tipid } = context.params
+      const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
+      const tip = reformat(tipDoc)
+      await newNotification(tip.userid, !tip.approved ? "Your fitness tip was disapproved as it didn't follow guidelines" : "Your fitness tip was approved to be posted", 'FitnessTips')
+    })

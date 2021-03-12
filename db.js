@@ -237,6 +237,9 @@ class FitnessTips extends DB {
     }
     listenToUserFitnessTips = (set, userid) =>
         db.collection(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToApprovedTips = (set) =>
+        db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 export default {

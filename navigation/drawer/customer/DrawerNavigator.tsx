@@ -27,6 +27,8 @@ import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
+// @ts-expect-error
+import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
@@ -103,6 +105,11 @@ function PublicHomeNavigator() {
         name="PaymentFormScreen"
         component={PaymentFormScreen}
         options={{ headerTitle: 'Payment Form' }}
+      />
+      <PublicHomeStack.Screen
+        name="ApprovedFitnessTipsScreen"
+        component={ApprovedFitnessTipsScreen}
+        options={{ headerTitle: 'Fitness Tips' }}
       />
     </PublicHomeStack.Navigator>
   )

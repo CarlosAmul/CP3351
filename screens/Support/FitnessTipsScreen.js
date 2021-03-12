@@ -9,6 +9,7 @@ import { Entypo } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import FitnessTip from './FitnessTip'
+import { Fontisto } from '@expo/vector-icons';
 
 export default function FitnessTipsScreen() {
 
@@ -35,7 +36,8 @@ export default function FitnessTipsScreen() {
 
     const approve = async (tip, approved) => {
         await db.FitnessTips.update({ ...tip, approved: approved, approvedby: user.id})
-        await db.Users.Notifications.newNotification(tip.userid, !approved ? "Your fitness tip was disapproved to be posted" : "Your fitness tip was approved to be posted", "FitnessTipsScreen")
+        //on the server side
+        //await db.Users.Notifications.newNotification(tip.userid, !approved ? "Your fitness tip was disapproved to be posted" : "Your fitness tip was approved to be posted", "FitnessTipsScreen")
     }
 
     const [allFitness, setAllFitness] = useState([])
@@ -74,6 +76,7 @@ export default function FitnessTipsScreen() {
                                 contentStyle={{ marginBottom: 10 }}
                                 content={[{ text: tip.title, text50M: true, color: Colors.darkprimary, margin: 20 }]}
                             />
+                            <Fontisto name="quote-a-right" size={15} color={Colors.secondary} style={{ marginTop: 5, marginBottom: 10 }} />
                             <Card.Section
                                 content={[{ text: tip.description, text65M: true, color: Colors.violet50, margin: 20 }]}
                             />
