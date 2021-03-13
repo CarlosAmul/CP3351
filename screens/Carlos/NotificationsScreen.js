@@ -8,6 +8,7 @@ import db from '../../db'
 import { Card } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Colors as CustomColors } from 'react-native-ui-lib';
 
 export default function NotificationsScreen() {
 
@@ -69,7 +70,7 @@ export default function NotificationsScreen() {
                                 style={{ padding: 20, flex: 1 }}
                             />
                             <TouchableOpacity onPress={() => removeNotif(notification.id)}>
-                                <Text>Dismiss</Text>
+                                <Text style={{color: CustomColors.grey20}}>Dismiss</Text>
                             </TouchableOpacity>
 
                         </Card>
