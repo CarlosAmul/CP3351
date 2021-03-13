@@ -15,7 +15,7 @@ import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 // @ts-expect-error
 import PendingFAQsScreen from '../../../screens/Carlos/PendingQuestionsScreen'
 // @ts-expect-error
-import DraftsScreen from '../../../screens/Carlos/DraftsScreen'
+import DraftsScreen from '../../../screens/Carlos/DraftsScreen.js'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
@@ -132,10 +132,11 @@ function FAQsNavigator() {
         component={PendingFAQsScreen}
         options={{headerTitle: 'Pending Questions'}}
       />
-      {/* <FAQsStack.Screen
+      <FAQsStack.Screen
         name="DraftsScreen"
         component={DraftsScreen}
-      /> */}
+        options={{headerTitle: 'Drafts'}}
+      />
     </FAQsStack.Navigator>
   )
 }

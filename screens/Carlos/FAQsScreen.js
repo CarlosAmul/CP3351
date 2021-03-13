@@ -65,15 +65,16 @@ export default function FAQsScreen() {
                             value={question}
                         />
                     </View>
+                    <Button
+                        backgroundColor={Colors.primary}
+                        label="Submit Question"
+                        labelStyle={{ fontWeight: '100' }}
+                        style={{ marginTop: 10, marginBottom: 10, borderRadius: 5 }}
+                        enableShadow
+                        onPress={submitQuestion}
+                    />
                 </View>
-                <Button
-                    backgroundColor={Colors.primary}
-                    label="Submit Question"
-                    labelStyle={{ fontWeight: '100' }}
-                    style={{ marginBottom: 10 }}
-                    enableShadow
-                    onPress={submitQuestion}
-                />
+
             </>
         )
     }
@@ -93,26 +94,26 @@ export default function FAQsScreen() {
                     </View>
                     :
                     <>
-                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
-                            <View style={styles.headerSection}>
-                                <Text style={styles.header}>Pending Questions</Text>
-                                <View style={styles.icon}>
-                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                            <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
+                                <View style={styles.headerSection}>
+                                    <Text style={styles.header}>Pending Questions</Text>
+                                    <View style={styles.icon}>
+                                        <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
-                            <View style={styles.headerSection}>
-                                <Text style={styles.header}>Drafts</Text>
-                                <View style={styles.icon}>
-                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                            <TouchableOpacity onPress={() => navigation.navigate('DraftsScreen', { screen: "DraftsScreen" })}>
+                                <View style={styles.headerSection}>
+                                    <Text style={styles.header}>Drafts</Text>
+                                    <View style={styles.icon}>
+                                        <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                                    </View>
                                 </View>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
+                            </TouchableOpacity>
+                        </View>
                     </>
             }
             {
@@ -163,7 +164,10 @@ const styles = StyleSheet.create({
     },
     textAreaContainer: {
         padding: 20,
-        backgroundColor: Colors.grey60
+        backgroundColor: Colors.grey60,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: Colors.grey40
     },
     container: {
         flex: 1,

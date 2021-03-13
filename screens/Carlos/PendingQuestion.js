@@ -24,12 +24,20 @@ export default function PendingQuestion({ faq }) {
 
     const submitAnswer = () => {
         db.FAQs.answerFAQ(faq.id, answer)
+        db.Users.Notifications.newNotification(faq.userid, 'Your Question has been answered: ' + faq.question, 'FAQs')
         console.log('question answered')
     }
-    
+
     const saveDraft = () => {
         db.FAQs.saveDraft(faq.id, answer)
+        setExpanded(false)
         console.log('Answer sent to drafts')
+    }
+
+    const deleteQuestion = () => {
+        db.FAQs.remove(faq.id)
+        db.Users.Notifications.newNotification(faq.userid, 'Your Question has been deleted by Support: ' + faq.question, 'FAQs')
+        console.log('question deleted')
     }
 
     return (
@@ -46,33 +54,38 @@ export default function PendingQuestion({ faq }) {
                             placeholder={"Answer this question"}
                             style={{ marginBottom: 20 }}
                             onChangeText={text => setAnswer(text)}
-                            value={answer}
+                            value={faq.status == "draft" ? faq.answer : answer}
+                        />
+                    </View>
+                    <View style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Button
+                            backgroundColor={Colors.grey30}
+                            label={faq.status == 'draft' ? 'Save' : 'Save as Draft'}
+                            labelStyle={{ fontWeight: '100' }}
+                            style={{borderRadius: 5}}
+                            enableShadow
+                            onPress={() => saveDraft()}
+                        />
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Button
+                            backgroundColor={Colors.primary}
+                            label="Submit"
+                            labelStyle={{ fontWeight: '100' }}
+                            style={[styles.button, { width: '39%' }]}
+                            enableShadow
+                            onPress={() => submitAnswer()}
+                        />
+                        <Button
+                            backgroundColor={Colors.red20}
+                            label="Remove Question"
+                            labelStyle={{ fontWeight: '100' }}
+                            style={[styles.button, {width: '60%'}]}
+                            enableShadow
+                            onPress={() => deleteQuestion()}
                         />
                     </View>
                 </View>
-                <Button
-                    backgroundColor={Colors.primary}
-                    label="Submit Answer"
-                    labelStyle={{ fontWeight: '100' }}
-                    style={{ marginBottom: 10 }}
-                    enableShadow
-                    onPress={() => submitAnswer()}
-                />
-                <Button
-                    backgroundColor={Colors.grey30}
-                    label="Save as Draft"
-                    labelStyle={{ fontWeight: '100' }}
-                    style={{ marginBottom: 10 }}
-                    enableShadow
-                    onPress={() => saveDraft()}
-                />
-                <Button
-                    backgroundColor={Colors.red20}
-                    label="Remove Question"
-                    labelStyle={{ fontWeight: '100' }}
-                    style={{ marginBottom: 10 }}
-                    enableShadow
-                />
             </ExpandableSection>
         </View>
 
@@ -86,7 +99,15 @@ const styles = StyleSheet.create({
     },
     textAreaContainer: {
         padding: 20,
-        backgroundColor: Colors.grey60
+        backgroundColor: Colors.grey60,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: Colors.grey40
+    },
+    button: {
+        marginBottom: 10,
+        width: '49%',
+        borderRadius: 5
     },
     text: {
         width: '100%'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import UserContext from '../../UserContext'
@@ -17,6 +17,11 @@ export default function NotificationsScreen() {
         navigation.setOptions({
             // @ts-expect-error
             headerLeft: () => (<MenuIcon />)
+            // headerRight: () => (
+            //     <TouchableOpacity>
+            //         <Text style={{marginRight: 25, fontFamily: 'Courier New', fontSize: 15}}>Clear</Text>
+            //     </TouchableOpacity>
+            // )
         });
     });
 
