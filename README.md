@@ -27,7 +27,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Expandable Section
 ## Carlos Tasks
 ### FAQs
-- [ ] Finished ❌
+- [X] Finished ✅
 * customer gets a form to ask a question. Support can see pending questions and answer them.
 * All support can remove or edit any question and they can choose to publish it or leave it as a draft.
 ### Ads
