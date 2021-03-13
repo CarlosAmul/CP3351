@@ -48,7 +48,9 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Notifications"
         component={NotificationsNavigator}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
+        options={{ 
+          drawerLabel: `Notifications (${notifCount})`
+        }}
       />
       <Drawer.Screen
         name="FAQs"
