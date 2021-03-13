@@ -13,21 +13,27 @@ import { createImportSpecifier } from 'typescript';
 
 export default function PendingQuestions() {
 
-    
+
     const navigation = useNavigation();
 
     const { user } = useContext(UserContext)
 
     const [faqs, setFaqs] = useState([])
     useEffect(() => db.FAQs.listenAllPending(setFaqs), [])
+    const [statusMessage, setStatusMessage] = useState('')
 
     return (
         <ScrollView contentContainerStyle={styles.helpContainer}>
-            <View style={{ marginTop: 20 }}>
+            {
+                <View style={{ backgroundColor: '#f2f2f2', marginBottom: 20 }}>
+                    <Text style={styles.statusMessage}>{statusMessage}</Text>
+                </View>
+            }
+            <View>
                 {
                     faqs.map(
                         faq =>
-                            <PendingQuestion key={faq.id} faq={faq}>
+                            <PendingQuestion key={faq.id} faq={faq} set={setStatusMessage}>
                             </PendingQuestion>
                     )
                 }

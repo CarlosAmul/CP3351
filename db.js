@@ -157,6 +157,10 @@ class Notifications extends DB {
 
     newNotification = async (userid, message, screen, extra) => await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, when: new Date(), extra: extra ? extra : {} })
 
+    remove = async (uid, id) => {
+        await db.collection(this.containing).doc(uid).collection(this.collection).doc(id).delete()
+    }
+
 }
 
 class Categories extends DB {

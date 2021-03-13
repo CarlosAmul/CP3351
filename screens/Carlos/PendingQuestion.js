@@ -6,7 +6,7 @@ import useColorScheme from '../../hooks/useColorScheme'
 import { Entypo } from '@expo/vector-icons';
 import db from '../../db'
 
-export default function PendingQuestion({ faq }) {
+export default function PendingQuestion({ faq, set }) {
 
     const [expanded, setExpanded] = useState(false)
     const [answer, setAnswer] = useState('')
@@ -25,19 +25,22 @@ export default function PendingQuestion({ faq }) {
     const submitAnswer = () => {
         db.FAQs.answerFAQ(faq.id, answer)
         db.Users.Notifications.newNotification(faq.userid, 'Your Question has been answered: ' + faq.question, 'FAQs')
-        console.log('question answered')
+        set('Question has been answered')
+        setTimeout(() => set(''), 3000)
     }
 
     const saveDraft = () => {
         db.FAQs.saveDraft(faq.id, answer)
         setExpanded(false)
-        console.log('Answer sent to drafts')
+        set('Draft saved')
+        setTimeout(() => set(''), 3000)
     }
 
     const deleteQuestion = () => {
         db.FAQs.remove(faq.id)
         db.Users.Notifications.newNotification(faq.userid, 'Your Question has been deleted by Support: ' + faq.question, 'FAQs')
-        console.log('question deleted')
+        set('Question has been deleted')
+        setTimeout(() => set(''), 3000)
     }
 
     return (
