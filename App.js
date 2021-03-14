@@ -34,7 +34,9 @@ export default function App() {
         let dbUnsubscribe = () => { } // initially, do nothing
 
         const findAndSetUser = async user => {
-            dbUnsubscribe()
+            if (dbUnsubscribe) {
+                dbUnsubscribe()
+            }
             if (user) {
                 dbUnsubscribe = db.Users.listenOne(setUser, user.uid)
             } else {
@@ -47,7 +49,9 @@ export default function App() {
 
         return () => {
             authUnsubscribe()
-            dbUnsubscribe()
+            if (dbUnsubscribe) {
+                dbUnsubscribe()
+            }
         }
     }, [])
 
