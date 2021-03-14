@@ -115,6 +115,9 @@ exports.createSampleData = functions.https.onCall(
     const result4 = await db.collection('users').doc(authId4).set({ name: "Fred", role: "Support" })
     functions.logger.info("result4", { result4 })
 
+    const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: false, approvedby: ""})
+    const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: ""})
+    
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
 
@@ -200,6 +203,14 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
   })
 
+  //this function will be different for every different sensor because there will be separate fields
+  exports.addSensor = functions.https.onCall(
+    async({location, userid, categoryid, min, max, alert, price, manufacturer}, context) => {
+      functions.logger.info("Done with it!!!!!!!")
+      
+      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, })
+    })
+    
 exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
   async (snap, context) => {
     const { userid } = context.params
@@ -218,3 +229,27 @@ exports.addSensor = functions.https.onCall(
     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
   }
 )
+
+exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
+  async (snap, context) => {
+    const { tipid } = context.params
+    const supportUsersData = await db.collection('users').where('role', '==', 'Support').get()
+    const supportUsers = supportUsersData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
+    const tip = reformat(tipDoc)
+    const tipUserDoc = await db.collection('users').doc(tip.userid).get()
+    const tipUser = reformat(tipUserDoc)
+    await Promise.all(
+      supportUsers.map(async user => {
+        await newNotification(user.id, `${tipUser.name} has submitted a fitness tip`, 'FitnessTips')
+      })
+    )
+  })
+
+  exports.sendTipStatusNotificationToUser = functions.firestore.document('fitnesstips/{tipid}').onUpdate(
+    async (snap, context) => {
+      const { tipid } = context.params
+      const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
+      const tip = reformat(tipDoc)
+      await newNotification(tip.userid, !tip.approved ? "Your fitness tip was disapproved as it didn't follow guidelines" : "Your fitness tip was approved to be posted", 'FitnessTips')
+    })

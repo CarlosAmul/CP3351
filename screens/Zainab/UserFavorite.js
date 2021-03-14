@@ -23,6 +23,7 @@ export default function UserFavorite({ categoryid }) {
         <Card
             borderRadius={10}
             style={styles.card}
+            elevation={12}
         >
             <View style={styles.leftCardView}>
                 <Card.Image

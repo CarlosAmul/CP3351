@@ -120,11 +120,13 @@ class SupportCenters extends DB {
 
 
 class Users extends DB {
-
     constructor() {
         super('users')
         this.Notifications = new Notifications(this.collection)
     }
+
+    listenToUsersByRole = (set, role) =>
+        db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
 }
 
@@ -229,6 +231,16 @@ class Manufacturers extends DB {
     }
 }
 
+class FitnessTips extends DB {
+    constructor() {
+        super('fitnesstips')
+    }
+    listenToUserFitnessTips = (set, userid) =>
+        db.collection(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToApprovedTips = (set) =>
+        db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
 
 export default {
     Categories: new Categories(),
@@ -236,5 +248,6 @@ export default {
     Users: new Users(),
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
-    SupportCenters: new SupportCenters()
+    SupportCenters: new SupportCenters(),
+    FitnessTips: new FitnessTips()
 }

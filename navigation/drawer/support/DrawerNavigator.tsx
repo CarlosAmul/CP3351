@@ -1,20 +1,34 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as React from 'react';
-
+import {useContext} from 'react'
+// @ts-expect-error
+import db from '../../../db.js'
+// @ts-expect-error
+import UserContext from '../../../UserContext';
 // @ts-expect-error
 import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
+// @ts-expect-error
+import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
+// @ts-expect-error
+import FitnessTipsScreen from '../../../screens/Support/FitnessTipsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
+
+  const { user } = useContext(UserContext)
+
+  const [notifCount, setNotifCount] = React.useState(0)
+  React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
+
   return (
     <Drawer.Navigator>
       <Drawer.Screen
@@ -29,6 +43,16 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationsNavigator}
+        options={{ drawerLabel: `Notifications (${notifCount})` }}
+      />
+      <Drawer.Screen
+        name="FitnessTips"
+        component={FitnessTipsNavigator}
+        options={{ drawerLabel: `Fitness Tips` }}
       />
     </Drawer.Navigator>
   );
@@ -73,6 +97,34 @@ function SettingsNavigator() {
         options={{ headerTitle: 'Settings' }}
       />
     </SettingsStack.Navigator>
+  )
+}
+
+const NotificationStack = createStackNavigator<TabFourParamList>();
+
+function NotificationsNavigator() {
+  return (
+    <NotificationStack.Navigator>
+      <NotificationStack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+        options={{ headerTitle: 'Notifications' }}
+      />
+    </NotificationStack.Navigator>
+  )
+}
+
+const FitnessTipsStack = createStackNavigator<TabFiveParamList>();
+
+function FitnessTipsNavigator() {
+  return (
+    <FitnessTipsStack.Navigator>
+      <FitnessTipsStack.Screen
+        name="FitnessTipsScreen"
+        component={FitnessTipsScreen}
+        options={{ headerTitle: 'Fitness Tips' }}
+      />
+    </FitnessTipsStack.Navigator>
   )
 }
 

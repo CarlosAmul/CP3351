@@ -1,35 +1,60 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
-import { Colors } from 'react-native-ui-lib'
-import Categories from './Categories'
-import MostFavorite from './MostFavorite'
-import FitnessTips from './FitnessTips'
+import React, { useState } from 'react';
+import { StyleSheet, ScrollView, Image } from 'react-native';
+import { Colors, Text, TextField } from 'react-native-ui-lib'
+import FitnessTip from './FitnessTip'
 
-export default function PublicHomeScreen(props) {
-    const stacknavigation = props.navigation
+export default function ApprovedFitnessTipsScreen({route}) {
 
-    const navigation = useNavigation();
-    useEffect(() => {
-        navigation.setOptions({
-            // @ts-expect-error
-            headerLeft: () => (<MenuIcon />)
-        });
-    }, [navigation]);
+    const {approvedTips} = route.params
 
     Colors.loadColors({
         primary: '#6874e2',
-		secondary: '#f9ce7f',
+        secondary: '#f9ce7f',
         mainbg: '#f5f6fa',
-		sidebg: '#ffffff',
+        sidebg: '#ffffff',
     });
+
+    const [search, setSearch] = useState("")
+    const [filtered, setFiltered] = useState(approvedTips)
+
+    const filterTips = (searched) => {
+        if(searched === "") {
+            setFiltered(approvedTips)
+        }
+        else {
+            let filteredList = []
+            setSearch(searched)
+            approvedTips.map(tip => {
+                if(tip.tags.includes(searched)) {
+                    filteredList.push(tip)
+                }
+            })
+            setFiltered(filteredList)
+        }
+    }
 
     return (
         <ScrollView style={styles.scrollcontainer}>
-            <Categories stacknavigation={stacknavigation}/>
-            <MostFavorite />
-            <FitnessTips navigation={navigation} />
+            <Text style={[styles.mainHeader, styles.title]}>
+                We like to keep you fit! See what tips our customers have to offer!
+            </Text>
+            <Image
+                width={150}
+                height={150}
+                source={{uri: 'https://i.pinimg.com/originals/54/2e/c6/542ec68513d564e12f422d96d739da49.png'}}
+            />
+            <TextField
+                onChangeText={text => filterTips(text)}
+                hideUnderline
+                placeholder="Search Tips by Tags..."
+                style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
+                value={search}
+            />
+            {
+                filtered.map(tip => 
+                    <FitnessTip key={tip.id} tip={tip} />
+                )
+            }
         </ScrollView>
     );
 }
@@ -106,6 +131,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
+        textAlign: 'center'
     },
     separator: {
         marginVertical: 30,
@@ -118,5 +144,12 @@ const styles = StyleSheet.create({
     mainHeader: {
         color: "#6874e2",
         margin: 40
-    }
+    },
+    inputText: {
+        backgroundColor: Colors.mainbg,
+        borderRadius: 20,
+        padding: 10,
+        width: '80%',
+        margin: 10
+    },
 });

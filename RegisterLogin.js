@@ -13,6 +13,10 @@ export default function RegisterLogin() {
 		secondary: '#f9ce7f',
 		mainbg: '#f5f6fa',
 		sidebg: '#ffffff',
+		darkprimary: '#ff466a',
+		darksecondary: '#0df5e3',
+		darkmainbg: '#201a31',
+		darksidebg: '#38304d'
 	});
 
 	const [email, setEmail] = useState("")

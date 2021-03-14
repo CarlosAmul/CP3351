@@ -37,7 +37,7 @@ export default {
               FAQsScreen: 'six'
             },
           },
-          UserFavorites: {
+          TabSeven: {
             screens: {
               UserFavoritesScreen: 'two',
             },

@@ -58,7 +58,10 @@ export default function PaymentFormScreen({ navigation, route }) {
             setAction(true)
             const addSensor = fb.functions().httpsCallable('addSensor')
             if(category.name === "Temperature") {
-                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer})
+                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: "no"})
+            }
+            else if(category.name === "Sleep Tracker") {
+                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: false})
             }
         }
         else {
