@@ -8,8 +8,9 @@ import useColorScheme from './hooks/useColorScheme';
 import DrawerAdmin from './navigation/drawer/admin';
 import DrawerCustomer from './navigation/drawer/customer';
 import DrawerSupport from './navigation/drawer/support';
+import DrawerService from './navigation/drawer/service'
 
-import { LogBox } from 'react-native'
+import { LogBox, View, Text } from 'react-native'
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
 import fb from './fb'
@@ -35,9 +36,12 @@ export default function App() {
         let dbUnsubscribe = () => { } // initially, do nothing
 
         const findAndSetUser = async user => {
-            dbUnsubscribe()
+            if(dbUnsubscribe) {
+                dbUnsubscribe()
+            }
             if (user) {
                 dbUnsubscribe = db.Users.listenOne(setUser, user.uid)
+                console.log("The user in app", dbUnsubscribe)
             } else {
                 dbUnsubscribe = () => { }
                 setUser(null)
@@ -48,7 +52,9 @@ export default function App() {
 
         return () => {
             authUnsubscribe()
-            dbUnsubscribe()
+            if(dbUnsubscribe) {
+                dbUnsubscribe()
+            }
         }
     }, [])
 
@@ -63,6 +69,8 @@ export default function App() {
             return <DrawerAdmin colorScheme={colorScheme} />
         } else if (user?.role === "Support") {
             return <DrawerSupport colorScheme={colorScheme} />
+        } else if (user?.role === "Service") {
+            return <DrawerService colorScheme={colorScheme} />
         } else {
             console.log('user role', user?.role)
             fb.auth().signOut()
@@ -74,11 +82,10 @@ export default function App() {
         isLoadingComplete
         &&
         <UserContext.Provider value={{ user }}>
-            <SafeAreaProvider>
+            <SafeAreaProvider style={{flex: 1}}>
                 {selectNavigation()}
                 <StatusBar />
             </SafeAreaProvider>
-
         </UserContext.Provider>
     )
 

@@ -161,6 +161,7 @@ class Categories extends DB {
     constructor() {
         super('categories')
         this.Favorites = new Favorites(this.collection)
+        this.SafetInstructions = new SafetInstructions(this.collection)
     }
 
     // max 10
@@ -187,25 +188,25 @@ class Favorites extends DB {
     }
 
     reformatFav(doc) {
-        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data(), when: doc.data().when.toDate() }    
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data(), when: doc.data().when.toDate() }
     }
 
-    listenToCategoryFavs = (set, catId) => 
+    listenToCategoryFavs = (set, catId) =>
         db.collection(this.containing).doc(catId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     listenToCatgoryFavsByUser = (set, catId, userId) =>
         db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
-    addFav = async (catId, like) => 
+    addFav = async (catId, like) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).add(like)
 
     removeFavs = async (catId, likeId) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).doc(likeId).delete()
-    
+
     listenToFavsByUser = (set, userid) =>
         db.collectionGroup(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
-    
-    listenToAllFavs = (set) => 
+
+    listenToAllFavs = (set) =>
         db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     findAllFavsWithCategories = async (set) => {
@@ -216,8 +217,8 @@ class Favorites extends DB {
         const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
 
         categories.map(c => {
-            if(favorites.length > 0) { 
-                caetgoriesFavs.push({category: c, favs: favorites.filter(f => f.parentId === c.id).length})
+            if (favorites.length > 0) {
+                caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
             }
         })
 
@@ -240,6 +241,26 @@ class FitnessTips extends DB {
 
     listenToApprovedTips = (set) =>
         db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class SafetInstructions extends DB {
+    constructor(containing) {
+        super('safetyinstructions')
+        this.containing = containing
+    }
+
+    listenToCategoryInstructions = (set, categoryid) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    createSafetyInstruction = async (categoryid, instruction) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).add(instruction)
+
+    updateSafetyInstruction = async (categoryid, id, instruction) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).doc(id).set(instruction)
+
+    removeInstruction = async (categoryid, id) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).doc(id).delete()
+
 }
 
 export default {

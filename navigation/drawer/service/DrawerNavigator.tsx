@@ -1,24 +1,22 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
-import * as React from 'react';
 import { View, SafeAreaView, Image } from 'react-native'
+import * as React from 'react';
 import {useContext} from 'react'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Admin/DashboardScreen'
+import DashboardScreen from '../../../screens/Service/DashboardScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen'
+import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error
-import SettingsScreen from '../../../screens/Admin/SettingsScreen'
+import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
-import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
-// @ts-expect-error
-import FitnessTipsScreen from '../../../screens/Support/FitnessTipsScreen'
+import SafetyInstructionsScreen from '../../../screens/Zainab/SafetyInstructionsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -65,16 +63,6 @@ export default function DrawerNavigator() {
         name="Settings"
         component={SettingsNavigator}
       />
-      <Drawer.Screen
-        name="Notifications"
-        component={NotificationsNavigator}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
-      />
-      <Drawer.Screen
-        name="FitnessTips"
-        component={FitnessTipsNavigator}
-        options={{ drawerLabel: `Fitness Tips` }}
-      />
     </Drawer.Navigator>
   );
 }
@@ -103,6 +91,11 @@ function ActionsNavigator() {
         component={ActionsScreen}
         options={{ headerTitle: 'Actions' }}
       />
+      <ActionsStack.Screen
+        name="SafetyInstructionsScreen"
+        component={SafetyInstructionsScreen}
+        options={{ headerTitle: 'SafetyInstructions' }}
+      />
     </ActionsStack.Navigator>
   )
 }
@@ -120,32 +113,3 @@ function SettingsNavigator() {
     </SettingsStack.Navigator>
   )
 }
-
-const NotificationStack = createStackNavigator<TabFourParamList>();
-
-function NotificationsNavigator() {
-  return (
-    <NotificationStack.Navigator>
-      <NotificationStack.Screen
-        name="NotificationsScreen"
-        component={NotificationsScreen}
-        options={{ headerTitle: 'Notifications' }}
-      />
-    </NotificationStack.Navigator>
-  )
-}
-
-const FitnessTipsStack = createStackNavigator<TabFiveParamList>();
-
-function FitnessTipsNavigator() {
-  return (
-    <FitnessTipsStack.Navigator>
-      <FitnessTipsStack.Screen
-        name="FitnessTipsScreen"
-        component={FitnessTipsScreen}
-        options={{ headerTitle: 'Fitness Tips' }}
-      />
-    </FitnessTipsStack.Navigator>
-  )
-}
-

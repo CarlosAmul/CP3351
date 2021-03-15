@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import { Colors } from 'react-native-ui-lib'
+import { Colors, Card, Carousel } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
 import FitnessTips from './FitnessTips'
@@ -20,14 +20,68 @@ export default function PublicHomeScreen(props) {
 
     Colors.loadColors({
         primary: '#6874e2',
-		secondary: '#f9ce7f',
+        secondary: '#f9ce7f',
         mainbg: '#f5f6fa',
-		sidebg: '#ffffff',
+        sidebg: '#ffffff',
+        darkprimary: '#ff466a',
+        darksecondary: '#0df5e3',
+        darkmainbg: '#201a31',
+        darksidebg: '#38304d'
     });
 
     return (
-        <ScrollView style={styles.scrollcontainer}>
-            <Categories stacknavigation={stacknavigation}/>
+        <ScrollView style={styles.scrollcontainer} contentContainerStyle={{ alignItems: 'center' }}>
+            <Card
+                borderRadius={20}
+                style={styles.card}
+                enableShadow={false}
+            >
+                <View style={styles.leftCardVew}>
+                    <Text style={[styles.title, { color: Colors.darkprimary }]}>Welcome to FitIoT</Text>
+                    <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Be smart in your fitness!</Text>
+                </View>
+                <View style={styles.rightCardView}>
+                    <Image
+                        source={require("../../assets/images/sensor-vector.png")}
+                        style={{ width: 150, height: 150 }}
+                    />
+                </View>
+            </Card>
+            <Carousel
+                containerStyle={{
+                    height: 250,
+                    width: "90%",
+                    margin: 20
+                }}
+                loop
+                pageControlProps={{
+                    size: 10,
+                    containerStyle: styles.loopCarousel
+                }}
+                pageControlPosition={Carousel.pageControlPositions.OVER}
+                autoplay={true}
+                containerPaddingVertical={10}
+            >
+                <View centerV key={0}>
+                    <Image
+                        style={{ width: "100%", height: "100%" }}
+                        source={require("../../assets/images/fitness-tracker1.jpg")}
+                    />
+                </View>
+                <View centerV key={1}>
+                    <Image
+                        style={{ width: "100%", height: "100%"}}
+                        source={require("../../assets/images/fitness-tracker2.jpg")}
+                    />
+                </View>
+                <View centerV key={2}>
+                    <Image
+                        style={{ width: "100%", height: "100%"}}
+                        source={require("../../assets/images/fitness-tracker3.jpg")}
+                    />
+                </View>
+            </Carousel>
+            <Categories stacknavigation={stacknavigation} />
             <MostFavorite />
             <FitnessTips navigation={navigation} />
         </ScrollView>
@@ -105,7 +159,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     separator: {
         marginVertical: 30,
@@ -118,5 +172,17 @@ const styles = StyleSheet.create({
     mainHeader: {
         color: "#6874e2",
         margin: 40
-    }
+    },
+    card: {
+        padding: 20,
+        backgroundColor: "#ff467720",
+        margin: 20,
+        width: 380,
+        textAlign: "center",
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
 });

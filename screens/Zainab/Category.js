@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons'
 import UserContext from '../../UserContext'
 import db from '../../db'
 
-export default function Category({ category, onPressFav, onPressBuy }) {
+export default function Category({ category, onPressFav, onPressBuy, onPressSafety }) {
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -56,7 +56,7 @@ export default function Category({ category, onPressFav, onPressBuy }) {
                     label={
                         userCatFavs.length > 0 ?
                             <AntDesign name="heart" size={24} color="#fa1a65" />
-                        :
+                            :
                             <AntDesign name="hearto" size={24} color="#fa1a65" />
                     }
                 />
@@ -69,9 +69,16 @@ export default function Category({ category, onPressFav, onPressBuy }) {
             <View style={styles.rightCardView}>
                 <Text>{category.description} </Text>
                 <Button
-                    label="Buy this sensor"
-                    backgroundColor={Colors.darkprimary}
+                    label="Buy sensor"
+                    labelStyle={{ color: "#ff466a" }}
+                    style={[styles.transparentButton]}
                     onPress={onPressBuy}
+                />
+                <Button
+                    label="Safety Instructions"
+                    style={[styles.transparentButton, { backgroundColor: '#f9ce7f49' }]}
+                    labelStyle={{ color: Colors.secondary }}
+                    onPress={onPressSafety}
                 />
             </View>
         </Card>
@@ -108,5 +115,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fa1a65'
-    }
+    },
+    transparentButton: {
+        backgroundColor: "#ff467725",
+        color: "#ff466a"
+    },
 })

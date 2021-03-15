@@ -1,8 +1,8 @@
 import { useContext } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator, DrawerGestureContext } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerGestureContext, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import { View, SafeAreaView, Image } from 'react-native'
 import * as React from 'react';
-
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
@@ -28,6 +28,8 @@ import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
 // @ts-expect-error
 import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
 // @ts-expect-error
+import CustomerSafetyInstructionsScreen from '../../../screens/Zainab/CustomerSafetyInstructionsScreen'
+// @ts-expect-error
 import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
@@ -43,44 +45,64 @@ export default function DrawerNavigator() {
   React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
 
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerContent={ (props) => {
+        return (
+          <SafeAreaView>
+            <View
+              style={ {
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center",
+              } }
+            >
+              <Image
+                source={ require("../../../assets/images/logo.png") }
+                style={{width: 110, height: 120}}
+              />
+            </View>
+            <DrawerItemList {...props} />
+          </SafeAreaView>
+        );
+      } }
+    >
       <Drawer.Screen
         name="PublicHome"
-        component={PublicHomeNavigator}
-        options={{ drawerLabel: "Home" }}
+        component={ PublicHomeNavigator }
+        options={ { drawerLabel: "Home" } } 
       />
       <Drawer.Screen
         name="Notifications"
-        component={NotificationsNavigator}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
+        component={ NotificationsNavigator }
+        options={ { drawerLabel: `Notifications (${notifCount})` } }
       />
       <Drawer.Screen
         name="FAQs"
-        component={FAQsNavigator}
-        options={{ drawerLabel: 'FAQ' }}
+        component={ FAQsNavigator }
+        options={ { drawerLabel: 'FAQ' } }
       />
       <Drawer.Screen
         name="Actions"
-        component={ActionsNavigator}
+        component={ ActionsNavigator }
       />
       <Drawer.Screen
         name="Sensors"
-        component={SensorsNavigator}
+        component={ SensorsNavigator }
       />
       <Drawer.Screen
         name="Settings"
-        component={SettingsNavigator}
-        options={{ drawerLabel: "Settings" }}
+        component={ SettingsNavigator }
+        options={ { drawerLabel: "Settings" } }
       />
       <Drawer.Screen
         name="UserFavorites"
-        component={UserFavoritesNavigator}
-        options={{ drawerLabel: "My Favorites" }}
+        component={ UserFavoritesNavigator }
+        options={ { drawerLabel: "My Favorites" } }
       />
       <Drawer.Screen
         name="FitnessTips"
-        component={FitnessTipsNavigator}
-        options={{ drawerLabel: "My Fitness Tips" }}
+        component={ FitnessTipsNavigator }
+        options={ { drawerLabel: "My Fitness Tips" } }
       />
     </Drawer.Navigator>
   );
@@ -93,23 +115,28 @@ function PublicHomeNavigator() {
     <PublicHomeStack.Navigator>
       <PublicHomeStack.Screen
         name="PublicHomeScreen"
-        component={PublicHomeScreen}
-        options={{ headerTitle: 'Home' }}
+        component={ PublicHomeScreen }
+        options={ { headerTitle: 'Home' } }
       />
       <PublicHomeStack.Screen
         name="CategoryFavsScreen"
-        component={CategoryFavsScreen}
-        options={{ headerTitle: 'Category Favorites' }}
+        component={ CategoryFavsScreen }
+        options={ { headerTitle: 'Category Favorites' } }
       />
       <PublicHomeStack.Screen
         name="PaymentFormScreen"
-        component={PaymentFormScreen}
-        options={{ headerTitle: 'Payment Form' }}
+        component={ PaymentFormScreen }
+        options={ { headerTitle: 'Payment Form' } }
+      />
+      <PublicHomeStack.Screen
+        name="CustomerSafetyInstructionsScreen"
+        component={ CustomerSafetyInstructionsScreen }
+        options={ { headerTitle: 'Safety Instructions' } }
       />
       <PublicHomeStack.Screen
         name="ApprovedFitnessTipsScreen"
-        component={ApprovedFitnessTipsScreen}
-        options={{ headerTitle: 'Fitness Tips' }}
+        component={ ApprovedFitnessTipsScreen }
+        options={ { headerTitle: 'Fitness Tips' } }
       />
     </PublicHomeStack.Navigator>
   )
@@ -122,8 +149,8 @@ function SettingsNavigator() {
     <SettingsStack.Navigator>
       <SettingsStack.Screen
         name="SettingsScreen"
-        component={SettingsScreen}
-        options={{ headerTitle: 'Settings' }}
+        component={ SettingsScreen }
+        options={ { headerTitle: 'Settings' } }
       />
     </SettingsStack.Navigator>
   )
@@ -136,8 +163,8 @@ function ActionsNavigator() {
     <ActionsStack.Navigator>
       <ActionsStack.Screen
         name="ActionsScreen"
-        component={ActionsScreen}
-        options={{ headerTitle: 'Actions' }}
+        component={ ActionsScreen }
+        options={ { headerTitle: 'Actions' } }
       />
     </ActionsStack.Navigator>
   )
@@ -150,8 +177,8 @@ function SensorsNavigator() {
     <SensorsStack.Navigator>
       <SensorsStack.Screen
         name="SensorsScreen"
-        component={SensorsScreen}
-        options={{ headerTitle: 'Sensors' }}
+        component={ SensorsScreen }
+        options={ { headerTitle: 'Sensors' } }
       />
     </SensorsStack.Navigator>
   )
@@ -164,8 +191,8 @@ function NotificationsNavigator() {
     <NotificationStack.Navigator>
       <NotificationStack.Screen
         name="NotificationsScreen"
-        component={NotificationsScreen}
-        options={{ headerTitle: 'Notifications' }}
+        component={ NotificationsScreen }
+        options={ { headerTitle: 'Notifications' } }
       />
     </NotificationStack.Navigator>
   )
@@ -178,8 +205,8 @@ function FAQsNavigator() {
     <FAQsStack.Navigator>
       <FAQsStack.Screen
         name="FAQsScreen"
-        component={FAQsScreen}
-        options={{ headerTitle: 'Frequently Asked Questions' }}
+        component={ FAQsScreen }
+        options={ { headerTitle: 'Frequently Asked Questions' } }
       />
     </FAQsStack.Navigator>
   )
@@ -191,8 +218,8 @@ function UserFavoritesNavigator() {
     <UserFavoritesStack.Navigator>
       <UserFavoritesStack.Screen
         name="UserFavoritesScreen"
-        component={UserFavoritesScreen}
-        options={{ headerTitle: 'My Favorites' }}
+        component={ UserFavoritesScreen }
+        options={ { headerTitle: 'My Favorites' } }
       />
     </UserFavoritesStack.Navigator>
   )
@@ -205,8 +232,8 @@ function FitnessTipsNavigator() {
     <FitnessTipsStack.Navigator>
       <FitnessTipsStack.Screen
         name="FitnessTipsScreen"
-        component={FitnessTipsScreen}
-        options={{ headerTitle: 'My Fitness Tips' }}
+        component={ FitnessTipsScreen }
+        options={ { headerTitle: 'My Fitness Tips' } }
       />
     </FitnessTipsStack.Navigator>
   )

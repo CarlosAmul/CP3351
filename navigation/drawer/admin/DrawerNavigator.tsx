@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
 import * as React from 'react';
-
+import { View, SafeAreaView, Image } from 'react-native'
 // @ts-expect-error
 import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 // @ts-expect-error
@@ -16,7 +16,27 @@ import {Text} from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      drawerContent={ (props) => {
+        return (
+          <SafeAreaView>
+            <View
+              style={ {
+                height: 200,
+                alignItems: "center",
+                justifyContent: "center",
+              } }
+            >
+              <Image
+                source={ require("../../../assets/images/logo.png") }
+                style={{width: 110, height: 120}}
+              />
+            </View>
+            <DrawerItemList {...props} />
+          </SafeAreaView>
+        );
+      } }
+    >
       <Drawer.Screen
         name="Dashboard"
         component={DashboardNavigator}
