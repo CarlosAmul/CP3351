@@ -66,7 +66,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * A customer can see a list of their favorite in a separate tab.
 * For the public, total favorites can be displayed for a category, as well as most favorited.
 ### Safety Instructions
-- [ ] Finished ❌
+- [x] Finished ✅
 * Service can write instructions step by step safety instructions for the usage of sensors.
 * Every instruction will have an image.
 * Support will be able to do all CRUD.
