@@ -78,6 +78,15 @@ exports.createSampleData = functions.https.onCall(
       )
     )
 
+    const ads = await findAll('ads')
+    await Promise.all(
+      ads.map(
+        async ad =>
+          await removeOne('ads', ad.id)
+      )
+    )
+
+
     const authUsers = (await admin.auth().listUsers()).users
     await Promise.all(
       authUsers.map(
@@ -103,6 +112,9 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId4 } = await admin.auth().createUser({ email: "fred@fred.com", password: "fredfred" })
     functions.logger.info("authId4", { authId4 })
 
+    const { uid: authId5 } = await admin.auth().createUser({ email: "bita@bita.com", password: "bitabita" })
+    functions.logger.info("authId5", { authId5 })
+
     const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer" })
     functions.logger.info("result1", { result1 })
 
@@ -114,6 +126,9 @@ exports.createSampleData = functions.https.onCall(
 
     const result4 = await db.collection('users').doc(authId4).set({ name: "Fred", role: "Support" })
     functions.logger.info("result4", { result4 })
+
+    const result5 = await db.collection('users').doc(authId5).set({ name: "Bita", role: "Marketing" })
+    functions.logger.info("result5", { result5 })
 
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
@@ -129,6 +144,12 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false })
     functions.logger.info("sensorId2", { sensorId2 })
+
+    const { id: adId1 } = await db.collection('ads').add({ 
+      title: 'New motion sensor', 
+      image: 'https://www.ikea.com/qa/en/images/products/tradfri-wireless-motion-sensor-white__0725849_pe735071_s5.jpg', 
+      description: 'There is new sensor by company click to see' 
+    })
 
     // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
   }

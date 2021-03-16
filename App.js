@@ -8,6 +8,7 @@ import useColorScheme from './hooks/useColorScheme';
 import DrawerAdmin from './navigation/drawer/admin';
 import DrawerCustomer from './navigation/drawer/customer';
 import DrawerSupport from './navigation/drawer/support';
+import DrawerMarketing from './navigation/drawer/marketing';
 
 import { LogBox } from 'react-native'
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -35,7 +36,9 @@ export default function App() {
         let dbUnsubscribe = () => { } // initially, do nothing
 
         const findAndSetUser = async user => {
-            dbUnsubscribe()
+            if(dbUnsubscribe) {
+                dbUnsubscribe()
+            }
             if (user) {
                 dbUnsubscribe = db.Users.listenOne(setUser, user.uid)
             } else {
@@ -63,7 +66,9 @@ export default function App() {
             return <DrawerAdmin colorScheme={colorScheme} />
         } else if (user?.role === "Support") {
             return <DrawerSupport colorScheme={colorScheme} />
-        } 
+        } else if (user?.role === "Marketing") {
+            return <DrawerMarketing colorScheme={colorScheme} />
+        }
         
         else {
             console.log('user role', user?.role)

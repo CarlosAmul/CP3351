@@ -78,6 +78,9 @@ class Sensors extends DB {
     listenByCategory = (set, categoryid) =>
         db.collection(this.collection).where("categoryid", "==", categoryid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
+    listenByCategoryCount = (set, categoryid) => {
+        return db.collection(this.collection).where("categoryid", "==", categoryid).onSnapshot(snap => set(snap.size))
+    }
     listenByUser = (set, userid) =>
         db.collection(this.collection).where("userid", "==", userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
@@ -174,6 +177,7 @@ class Categories extends DB {
     listenInIds = (set, ids) =>
         db.collection(this.collection).where(db.FieldPath.documentId(), "in", ids).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
+    
 }
 
 class FAQs extends DB {
@@ -246,11 +250,21 @@ class Favorites extends DB {
 
         set(caetgoriesFavs)
     }
+
+    listenCategoryFavCount = (set, id) => {
+        return db.collection(this.containing).doc(id).collection(this.collection).onSnapshot(snap => set(snap.size))
+    }
 }
 
 class Manufacturers extends DB {
     constructor() {
         super('manufacturers')
+    }
+}
+
+class Ads extends DB {
+    constructor() {
+        super('ads')
     }
 }
 
@@ -261,5 +275,6 @@ export default {
     Users: new Users(),
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
-    SupportCenters: new SupportCenters()
+    SupportCenters: new SupportCenters(),
+    Ads: new Ads()
 }

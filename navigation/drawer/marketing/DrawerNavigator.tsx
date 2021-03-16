@@ -3,25 +3,17 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as React from 'react';
 
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Admin/DashboardScreen'
+import DashboardScreen from '../../../screens/Carlos/Marketing/DashboardScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen'
+import ActionsScreen from '../../../screens/Carlos/Marketing/ActionsScreen'
 // @ts-expect-error
-import SettingsScreen from '../../../screens/Admin/SettingsScreen'
-// @ts-expect-error
-import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
-// @ts-expect-error
-import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
-// @ts-expect-error
-import PendingFAQsScreen from '../../../screens/Carlos/PendingQuestionsScreen'
-// @ts-expect-error
-import DraftsScreen from '../../../screens/Carlos/DraftsScreen.js'
+import SettingsScreen from '../../../screens/Carlos/Marketing/SettingsScreen'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import { Text } from 'react-native-ui-lib'
@@ -40,17 +32,8 @@ export default function DrawerNavigator() {
         options={{ drawerLabel: "Dashboard" }}
       />
       <Drawer.Screen
-        name="Notifications"
-        component={NotificationsNavigation}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
-      />
-      <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
-      />
-      <Drawer.Screen
-        name="FAQs"
-        component={FAQsNavigator}
       />
       <Drawer.Screen
         name="Settings"
@@ -103,56 +86,5 @@ function SettingsNavigator() {
   )
 }
 
-const NotificationsStack = createStackNavigator<TabFourParamList>();
-
-function NotificationsNavigation() {
-  return (
-    <NotificationsStack.Navigator>
-      <NotificationsStack.Screen
-        name="NotificationsScreen"
-        component={NotificationsScreen}
-        options={{ headerTitle: 'Notifications' }}
-      />
-    </NotificationsStack.Navigator>
-  )
-}
-
-const FAQsStack = createStackNavigator<TabFiveParamList>();
-
-function FAQsNavigator() {
-  return (
-    <FAQsStack.Navigator>
-      <FAQsStack.Screen
-        name="FAQsScreen"
-        component={FAQsScreen}
-        options={{ headerTitle: 'FAQ' }}
-      />
-      <FAQsStack.Screen
-        name="PendingQuestions"
-        component={PendingFAQsScreen}
-        options={{headerTitle: 'Pending Questions'}}
-      />
-      <FAQsStack.Screen
-        name="DraftsScreen"
-        component={DraftsScreen}
-        options={{headerTitle: 'Drafts'}}
-      />
-    </FAQsStack.Navigator>
-  )
-}
-
-// const PendingFAQsStack = createStackNavigator<TabSixParamList>();
-
-// function PendingFAQsNavigator() {
-//   return (
-//     <PendingFAQsStack.Navigator>
-//       <PendingFAQsStack.Screen
-//         name="PendingFAQsScreen"
-//         component={PendingFAQsScreen}
-//         options={{ headerTitle: 'Pending FAQs' }}
-//       />
-//     </PendingFAQsStack.Navigator>
-//   )
-// }
 
 

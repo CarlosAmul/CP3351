@@ -18,22 +18,7 @@ export default {
           },
           TabThree: {
             screens: {
-              SettingsScreen: 'three',
-            },
-          },
-          TabFour: {
-            screens: {
-              NotificationsScreen: 'four',
-            },
-          },
-          TabFive: {
-            screens: {
-              FAQsScreen: 'five',
-            },
-          },
-          TabSix: {
-            screens: {
-              PendingFAQsScreen: 'five',
+              SettingsScreen: 'one',
             },
           },
         },
