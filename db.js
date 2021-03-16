@@ -242,6 +242,14 @@ class FitnessTips extends DB {
         db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
+class Simulator extends DB {
+    
+    constructor() {
+        super('simulator')
+    }
+
+}
+
 export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
@@ -249,5 +257,6 @@ export default {
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
-    FitnessTips: new FitnessTips()
+    FitnessTips: new FitnessTips(),
+    Simulator: new Simulator()
 }
