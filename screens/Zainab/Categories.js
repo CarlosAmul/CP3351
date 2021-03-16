@@ -38,6 +38,10 @@ export default function Categories({stacknavigation}) {
         stacknavigation.navigate("PaymentFormScreen", {category: category})
     }
 
+    const onPressSafety = (category) => {
+        stacknavigation.navigate("CustomerSafetyInstructionsScreen", {categoryid: category.id})
+    }
+
     return (
         <View style={styles.container}>
             <Text style={[styles.title, styles.mainHeader]}>
@@ -46,7 +50,7 @@ export default function Categories({stacknavigation}) {
             <ScrollView style={styles.subcontainer}>
                 {
                     categories.map(category =>
-                        <Category key={category.id} category={category} onPressFav={() => onPress(category)} onPressBuy={() => onPressBuy(category)}/>
+                        <Category key={category.id} category={category} onPressFav={() => onPress(category)} onPressBuy={() => onPressBuy(category)} onPressSafety={() => onPressSafety(category)} />
                     )
                 }
             </ScrollView>

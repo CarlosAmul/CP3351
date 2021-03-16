@@ -22,6 +22,7 @@ export type TabOneParamList = {
   CategoryFavsScreen: undefined;
   PaymentFormScreen: undefined;
   ApprovedFitnessTipsScreen: undefined;
+  CustomerSafetyInstructionsScreen: undefined;
 };
 
 export type TabTwoParamList = {

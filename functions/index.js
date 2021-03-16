@@ -103,6 +103,9 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId4 } = await admin.auth().createUser({ email: "fred@fred.com", password: "fredfred" })
     functions.logger.info("authId4", { authId4 })
 
+    const { uid: authId5 } = await admin.auth().createUser({ email: "service@service.com", password: "serviceservice" })
+    functions.logger.info("authId5", { authId5 })
+
     const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer" })
     functions.logger.info("result1", { result1 })
 
@@ -115,8 +118,11 @@ exports.createSampleData = functions.https.onCall(
     const result4 = await db.collection('users').doc(authId4).set({ name: "Fred", role: "Support" })
     functions.logger.info("result4", { result4 })
 
-    const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: false, approvedby: ""})
-    const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: ""})
+    const result5 = await db.collection('users').doc(authId5).set({ name: "Service", role: "Service" })
+    functions.logger.info("result5", { result5 })
+
+    const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: true, approvedby: authId4})
+    const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: authId4})
     
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
@@ -127,6 +133,9 @@ exports.createSampleData = functions.https.onCall(
     const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All Temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     functions.logger.info("categoryId2", { categoryId2 })
 
+    await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg'})
+    await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg'})
+    
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false })
     functions.logger.info("sensorId1", { sensorId1 })
 
