@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { View } from '../../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
@@ -28,12 +28,15 @@ export default function DashboardScreen() {
   const [ads, setAds] = useState([])
   useEffect(() => db.Ads.listenAll(setAds), [])
 
-  const [newAd, setNewAd] = useState(false)
+ 
+  const catCarousel = createRef();
+  const adCarousel = createRef();
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}
+    >
       <View style={styles.container}>
-
+        
         {/* Categories */}
         <Text text60 style={{ marginTop: 30, marginBottom: 10, color: Colors.primary }}>Categories</Text>
         <Card
@@ -42,8 +45,11 @@ export default function DashboardScreen() {
           style={styles.card}
         >
           <Carousel
+            ref={catCarousel}
             pageControlProps={{
-              size: 8
+              size: 8,
+              enlargeActive: true,
+              onPagePress: page => catCarousel.current.goToPage(page)
             }}
             pageControlPosition={Carousel.pageControlPositions.UNDER}
           >
@@ -58,15 +64,23 @@ export default function DashboardScreen() {
 
         {/* Ads */}
         <Text text60 style={{ marginTop: 20, marginBottom: 10, color: Colors.primary }}>Ads</Text>
+        <Button size={Button.sizes.xSmall} onPress={() => navigation.navigate('AdForm', { screen: "AdForm" })}>
+          <Text style={{color: 'white', margin: 5, fontWeight: 'bold'}}>Add</Text>
+          <AntDesign name="pluscircle" size={25} color='white' style={{marginLeft: 4 }}/>
+        </Button>
         <Card
           row
           enableShadow
           style={styles.card}
         >
           <Carousel
+            ref={adCarousel}
             pageControlProps={{
-              size: 8
+              size: 8,
+              enlargeActive: true,
+              onPagePress: page => adCarousel.current.goToPage(page)
             }}
+            pageWidth={300}
             pageControlPosition={Carousel.pageControlPositions.UNDER}
           >
             {
@@ -74,73 +88,12 @@ export default function DashboardScreen() {
                 <DashboardAd key={ad.id} ad={ad} />
               )
             }
-            {
-              newAd ?
-                <View style={{ alignItems: 'center' }}>
-                  <Text text70 style={{ color: Colors.primary, marginBottom: 10 }}>Title</Text>
-                  <TextInput style={styles.input} placeholder='Enter title here...' />
-                  <Text text70 style={{ color: Colors.primary, marginTop: 10 }}>Description</Text>
-                  <View style={[styles.textAreaContainer, { margin: 10, height: 150 }] }>
-                    <TextArea
-                      style={{ marginBottom: 20 }}
-                      placeholder="Enter description here.."
-                    />
-                  </View>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Button
-                      backgroundColor={Colors.primary}
-                      label="Submit"
-                      labelStyle={{ fontWeight: '100' }}
-                      style={{ borderRadius: 5 }}
-                      enableShadow
-                      onPress={() => setNewAd(false)}
-                    />
-                    <Button
-                      backgroundColor={Colors.primary}
-                      label="Cancel"
-                      labelStyle={{ fontWeight: '100' }}
-                      style={{ borderRadius: 5 }}
-                      enableShadow
-                      onPress={() => setNewAd(false)}
-                    />
-                  </View>
-                </View>
-                :
-                <View style={{ alignItems: 'center', marginTop: 65 }}>
-                  <AntDesign name="pluscircle" size={100} color={Colors.primary} onPress={() => setNewAd(true)} />
-                  <Text text40 style={{ marginTop: 20, color: Colors.primary }}>New Ad</Text>
-                </View>
-            }
-
-            {/* <View style={{ alignItems: 'center' }}>
-              <View>
-                <Image
-                  cover
-                  style={{ alignSelf: 'center', borderRadius: 10 }}
-                  source={{ uri: 'https://www.sekkeistudio.com/blog/wp-content/uploads/2015/05/big1.jpg' }}
-                />
-              </View>
-              <View style={{ alignItems: 'center', marginTop: 10 }}>
-                <Text text70 >Time set</Text>
-                <Text text80>1/3/2021-1/4/2021</Text>
-                <Text text70>URL</Text>
-                <Text text80>??</Text>
-              </View>
-            </View>
-            <View style={{ alignItems: 'center' }}>
-              <View>
-                <Image
-                  cover
-                  style={{ alignSelf: 'center', borderRadius: 10 }}
-                  source={{ uri: 'https://adpitch.files.wordpress.com/2011/05/hp.jpg' }}
-                />
-              </View>
-              <View style={{ alignItems: 'center', marginTop: 10 }}>
-                <Text text70>Time set</Text>
-                <Text text80>1/3/2021-1/4/2021</Text>
-                <Text text70>URL</Text>
-                <Text text80>??</Text>
-              </View>
+            {/* <View style={{ alignItems: 'center', marginTop: 65 }}>
+              <AntDesign name="pluscircle" size={100}
+                color={Colors.primary}
+                onPress={() => navigation.navigate('AdForm', { screen: "AdForm" })}
+              />
+              <Text text40 style={{ marginTop: 20, color: Colors.primary }}>New Ad</Text>
             </View> */}
 
           </Carousel>
@@ -151,6 +104,11 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginBottom: 10,
+    width: '45%',
+    borderRadius: 0
+  },
   textAreaContainer: {
     width: 250,
     padding: 20,

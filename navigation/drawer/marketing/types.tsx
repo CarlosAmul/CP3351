@@ -13,6 +13,7 @@ export type DrawerParamList = {
 
 export type TabOneParamList = {
   DashboardScreen: undefined;
+  AdForm: undefined;
 };
 
 export type TabTwoParamList = {

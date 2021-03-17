@@ -9,11 +9,13 @@ import ActionsScreen from '../../../screens/Carlos/Marketing/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Carlos/Marketing/SettingsScreen'
 // @ts-expect-error
+import AdForm from '../../../screens/Carlos/Marketing/AdForm'
+// @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from './types';
+import { DrawerParamList, TabOneParamList,  TabTwoParamList, TabThreeParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import { Text } from 'react-native-ui-lib'
@@ -53,6 +55,11 @@ function DashboardNavigator() {
         name="DashboardScreen"
         component={DashboardScreen}
         options={{ headerTitle: 'Dashboard' }}
+      />
+       <DashboardStack.Screen
+        name="AdForm"
+        component={AdForm}
+        options={{ headerTitle: 'Create ad' }}
       />
     </DashboardStack.Navigator>
   )

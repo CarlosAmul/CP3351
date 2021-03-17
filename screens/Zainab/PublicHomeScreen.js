@@ -5,6 +5,10 @@ import MenuIcon from '../../components/MenuIcon'
 import { Colors } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
+import Ad from '../Carlos/Ad'
+import db from '../../db';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 
 export default function PublicHomeScreen(props) {
     const stacknavigation = props.navigation
@@ -19,14 +23,29 @@ export default function PublicHomeScreen(props) {
 
     Colors.loadColors({
         primary: '#6874e2',
-		secondary: '#f9ce7f',
+        secondary: '#f9ce7f',
         mainbg: '#f5f6fa',
-		sidebg: '#ffffff',
+        sidebg: '#ffffff',
     });
+
+    const [ads, setAds] = useState([])
+    useEffect(() => db.Ads.listenAll(setAds), [])
+    console.log(Math.floor(Math.random() * ads.length))
+    const onPress = () => {
+        // navigation.navigate(screen, { screen: screen + "Screen", params: { extra: extra ? extra : null } })
+    }
 
     return (
         <ScrollView style={styles.scrollcontainer}>
-            <Categories stacknavigation={stacknavigation}/>
+            {
+                ads.length > 0 ?
+                <TouchableOpacity onPress={onPress}>
+                    <Ad ad={ads[Math.floor(Math.random() * ads.length)]} styling={{margin: 20, marginBottom: 0 }} onPress={onPress}/> 
+                </TouchableOpacity>
+                :
+                null
+            }
+            <Categories stacknavigation={stacknavigation} />
             <MostFavorite />
         </ScrollView>
     );

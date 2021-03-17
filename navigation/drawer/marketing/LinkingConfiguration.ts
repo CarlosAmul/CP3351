@@ -9,6 +9,7 @@ export default {
           TabOne: {
             screens: {
               DashboardScreen: 'one',
+              AdForm: 'two'
             },
           },
           TabTwo: {
