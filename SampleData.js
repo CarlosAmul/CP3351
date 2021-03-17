@@ -12,5 +12,15 @@ const createSampleCenters = async () => {
   console.log(response)
 }
 
-createSampleData()
-createSampleCenters()
+const createHistoricReadingsSample = async () => {
+  const init = fb.functions().httpsCallable('createHistoricReadingsSample');
+  const response = await init()
+  console.log(response)
+}
+
+const init = async () => {
+  await createSampleData()
+  await createSampleCenters()
+  await createHistoricReadingsSample()
+}
+init()

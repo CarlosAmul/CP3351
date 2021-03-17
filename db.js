@@ -109,6 +109,24 @@ class Readings extends DB {
     listenLatestOne = (set, sensorId) =>
         db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when", "desc").limit(1).onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
 
+    findOldestOne = async (sensorId) => {
+        const doc = await db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when").limit(1).get() 
+        return doc.docs[0].data()
+        
+    }
+}
+class Reports extends DB {
+
+    constructor(containing) {
+        super('reports')
+        this.containing = containing
+    }
+
+    createReport = (userId, report) =>
+        db.collection(this.containing).doc(userId).collection(this.collection).add(report)
+
+    listenByUser = (set, userId) =>
+        db.collection(this.containing).doc(userId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class SupportCenters extends DB {
@@ -123,6 +141,7 @@ class Users extends DB {
     constructor() {
         super('users')
         this.Notifications = new Notifications(this.collection)
+        this.Reports = new Reports(this.collection)
     }
 
     listenToUsersByRole = (set, role) =>

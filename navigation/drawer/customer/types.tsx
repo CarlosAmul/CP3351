@@ -53,4 +53,8 @@ export type TabEightParamList = {
   FitnessTipsScreen: undefined;
 };
 
+export type TabNineParamList = {
+  ReportsScreen: undefined;
+};
+
 export type onPressFunc = (event: GestureResponderEvent) => void;

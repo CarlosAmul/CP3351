@@ -1,11 +1,16 @@
 import React, { useContext, useEffect} from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
+import { View } from '../../components/Themed';
+import { Button, Colors } from 'react-native-ui-lib'
 import UserContext from '../../UserContext'
 import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
+
+Colors.loadColors({
+  primary: '#6874e2',
+  basic: '#f5f6fa',
+});
 
 export default function SettingsScreen() {
 
@@ -28,9 +33,12 @@ export default function SettingsScreen() {
   return (
     <View>
       <View style={styles.getStartedContainer}>
-        <TouchableOpacity onPress={logout} style={styles.title}>
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>Logout</Text>
-        </TouchableOpacity>
+      <Button label="Logout"
+					style={{ width: '80%' }}
+					backgroundColor={Colors.primary}
+					onPress={logout}
+					marginT-15
+				/>
       </View>
     </View>
   );

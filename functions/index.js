@@ -4,9 +4,14 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+//Omar
 const createSampleCenters = require('./createSampleCenters')
+const createHistoricReadingsSample = require('./createHistoricReadingsSample')
 
 exports.createSampleCenters = functions.https.onCall(createSampleCenters)
+exports.createHistoricReadingsSample = functions.https.onCall(createHistoricReadingsSample)
+
+//
 
 exports.findAuthUser = functions.https.onCall(
   async (uid, context) => {
@@ -150,26 +155,26 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
 
   async (snap, context) => {
     const reading = snap.data();
-    functions.logger.info("reading", { reading })
+    // functions.logger.info("reading", { reading })
 
     const { sensorid, readingid } = context.params
-    functions.logger.info("sensorid", { sensorid })
-    functions.logger.info("readingid", { readingid })
+    // functions.logger.info("sensorid", { sensorid })
+    // functions.logger.info("readingid", { readingid })
 
     const sensorDoc = await db.collection('sensors').doc(sensorid).get()
     const sensor = { id: sensorDoc.id, ...sensorDoc.data() }
 
-    functions.logger.info("sensor object", { sensor })
+    // functions.logger.info("sensor object", { sensor })
     const categoryDoc = await db.collection('categories').doc(sensor.categoryid).get()
     const category = { id: categoryDoc.id, ...categoryDoc.data() }
-    functions.logger.info("category", { category })
+    // functions.logger.info("category", { category })
 
     if (category.name === "Motion") {
       const readingData = await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when", "desc").limit(2).get()
       const readings = readingData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
 
-      functions.logger.info("readings.length", { readingslength: readings.length })
-      functions.logger.info("readings", { readings })
+      // functions.logger.info("readings.length", { readingslength: readings.length })
+      // functions.logger.info("readings", { readings })
 
       if (readings.length >= 2) {
         const latestImageURL = readings[0].url
@@ -179,7 +184,8 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         //   -- change the blobs to base64 strings
         // 2 -- compare the strings
         // 3 -- update db with true/false (motiondetected field)
-        functions.logger.info("checkMotion", { sensor, previousImageURL, latestImageURL })
+        
+        // functions.logger.info("checkMotion", { sensor, previousImageURL, latestImageURL })
 
         const response1 = await fetch(latestImageURL)
         const buffer1 = await response1.buffer()
@@ -206,9 +212,9 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
       if (isAlert) {
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
-      functions.logger.info("temp alert update", { alert: isAlert });
+      // functions.logger.info("temp alert update", { alert: isAlert });
     } else {
-      functions.logger.info("No such category", { category });
+      // functions.logger.info("No such category", { category });
     }
   })
 

@@ -8,12 +8,15 @@ module.exports = createSampleCenters = async (data, context) => {
     const findOneSubAll = async (collection, id, subcollection) => (await db.collection(collection).doc(id).collection(subcollection).get()).docs.map(reformat)
     const removeOneSubOne = async (collection, id, subcollection, subId) => await db.collection(collection).doc(id).collection(subcollection).doc(subId).delete()
     const removeOne = async (collection, id) => await db.collection(collection).doc(id).delete()
-    //   functions.logger.info("uid", { uid })
 
-    //   const authUser = await admin.auth().getUser(uid)
-    //   functions.logger.info("authUser", { authUser })
 
-    //   return authUser
+    let allCenters = await findAll('supportcenters')
+
+    if(allCenters.length > 0) {
+        await Promise.all(
+            allCenters.map(e => removeOne('supportcenters', e.id))
+        )
+    }
 
     await Promise.all([
         await db.collection('supportcenters').add({

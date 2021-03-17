@@ -31,6 +31,8 @@ import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
 import CustomerSafetyInstructionsScreen from '../../../screens/Zainab/CustomerSafetyInstructionsScreen'
 // @ts-expect-error
 import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
+// @ts-expect-error
+import ReportsScreen from '../../../screens/Customer/ReportsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
@@ -86,7 +88,7 @@ export default function DrawerNavigator() {
         component={ ActionsNavigator }
       />
       <Drawer.Screen
-        name="Sensors"
+        name="My Sensors"
         component={ SensorsNavigator }
       />
       <Drawer.Screen
@@ -103,6 +105,11 @@ export default function DrawerNavigator() {
         name="FitnessTips"
         component={ FitnessTipsNavigator }
         options={ { drawerLabel: "My Fitness Tips" } }
+      />
+      <Drawer.Screen
+        name="Reports"
+        component={ ReportsNavigator }
+        options={ { drawerLabel: "My Reports" } }
       />
     </Drawer.Navigator>
   );
@@ -236,5 +243,19 @@ function FitnessTipsNavigator() {
         options={ { headerTitle: 'My Fitness Tips' } }
       />
     </FitnessTipsStack.Navigator>
+  )
+}
+
+const ReportsStack = createStackNavigator<TabNineParamList>();
+
+function ReportsNavigator() {
+  return (
+    <ReportsStack.Navigator>
+      <ReportsStack.Screen
+        name="SettingsScreen"
+        component={ ReportsScreen }
+        options={ { headerTitle: 'Reports' } }
+      />
+    </ReportsStack.Navigator>
   )
 }
