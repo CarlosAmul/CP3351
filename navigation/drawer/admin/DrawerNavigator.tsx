@@ -8,8 +8,10 @@ import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
+// @ts-expect-error
+import RewardsScreen from '../../../screens/Admin/RewardsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -45,6 +47,10 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
+      />
+      <Drawer.Screen
+        name="Rewards"
+        component={RewardsNavigator}
       />
       <Drawer.Screen
         name="Settings"
@@ -96,3 +102,16 @@ function SettingsNavigator() {
   )
 }
 
+const RewardsStack = createStackNavigator<TabFourParamList>();
+
+function RewardsNavigator() {
+  return (
+    <RewardsStack.Navigator>
+      <RewardsStack.Screen
+        name="RewardsScreen"
+        component={RewardsScreen}
+        options={{ headerTitle: 'Rewards' }}
+      />
+    </RewardsStack.Navigator>
+  )
+}

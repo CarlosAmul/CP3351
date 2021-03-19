@@ -123,7 +123,13 @@ class Users extends DB {
     constructor() {
         super('users')
         this.Notifications = new Notifications(this.collection)
+        this.CustomerRewards = new CustomerRewards(this.collection)
     }
+
+    updatePoints = async (userid, points) => {
+        db.collection(this.collection).doc(userid).set({ points: points }, { merge: true })
+    }
+
 
     listenToUsersByRole = (set, role) =>
         db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
@@ -263,6 +269,32 @@ class SafetInstructions extends DB {
 
 }
 
+class Rewards extends DB {
+    constructor() {
+        super('rewards')
+    }
+
+    listenToRewardsByType = (set, type) => 
+        db.collection(this.collection).where('type', '==', type).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class CustomerRewards extends DB {
+
+    constructor(containing) {
+        super('customerrewards')
+        this.containing = containing
+    }
+
+    createReward = (userid, reward) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).add(reward)
+
+    listenToUserRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToUnRedeemCustomerRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('redeem', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+}
 export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
@@ -270,5 +302,6 @@ export default {
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
-    FitnessTips: new FitnessTips()
+    FitnessTips: new FitnessTips(),
+    Rewards: new Rewards()
 }

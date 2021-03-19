@@ -31,8 +31,12 @@ import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
 import CustomerSafetyInstructionsScreen from '../../../screens/Zainab/CustomerSafetyInstructionsScreen'
 // @ts-expect-error
 import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
+// @ts-expect-error
+import CustomerRewardsScreen from '../../../screens/Zainab/CustomerRewardsScreen'
+// @ts-expect-error
+import RewardsHistoryScreen from '../../../screens/Zainab/RewardsHistoryScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -103,6 +107,11 @@ export default function DrawerNavigator() {
         name="FitnessTips"
         component={ FitnessTipsNavigator }
         options={ { drawerLabel: "My Fitness Tips" } }
+      />
+      <Drawer.Screen
+        name="CustomerRewards"
+        component={ CustomerRewardsNavigator }
+        options={ { drawerLabel: "Rewards" } }
       />
     </Drawer.Navigator>
   );
@@ -236,5 +245,24 @@ function FitnessTipsNavigator() {
         options={ { headerTitle: 'My Fitness Tips' } }
       />
     </FitnessTipsStack.Navigator>
+  )
+}
+
+const CustomerRewardsStack = createStackNavigator<TabNineParamList>();
+
+function CustomerRewardsNavigator() {
+  return (
+    <CustomerRewardsStack.Navigator>
+      <CustomerRewardsStack.Screen
+        name="CustomerRewardsScreen"
+        component={ CustomerRewardsScreen }
+        options={ { headerTitle: 'Rewards' } }
+      />
+      <CustomerRewardsStack.Screen
+        name="RewardsHistoryScreen"
+        component={ RewardsHistoryScreen }
+        options={ { headerTitle: 'Rewards History' } }
+      />
+    </CustomerRewardsStack.Navigator>
   )
 }

@@ -8,7 +8,8 @@ export type RootStackParamList = {
 export type DrawerParamList = {
   Dashboard: undefined,
   Actions: undefined,
-  Settings: undefined
+  Settings: undefined,
+  Rewards: undefined
 };
 
 export type TabOneParamList = {
@@ -22,6 +23,11 @@ export type TabTwoParamList = {
 export type TabThreeParamList = {
   SettingsScreen: undefined;
 };
+
+export type TabFourParamList = {
+  RewardsScreen: undefined;
+};
+
 
 
 export type onPressFunc = (event: GestureResponderEvent) => void;

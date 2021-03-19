@@ -2,10 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, Text, View, Platform, Image } from 'react-native';
 import { Colors, TextField } from 'react-native-ui-lib'
 import db from '../../db'
-import fb from '../../fb'
 
-import * as ImagePicker from 'expo-image-picker';
-import { Entypo } from '@expo/vector-icons';
 import SafetyInstruction from './SafetyInstruction'
 
 export default function CustomerSafetyInstructionsScreen({ route }) {
