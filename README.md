@@ -31,7 +31,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * customer gets a form to ask a question. Support can see pending questions and answer them.
 * All support can remove or edit any question and they can choose to publish it or leave it as a draft.
 ### Ads
-- [ ] Finished ❌
+- [X] Finished ✅
 * Ads show up on homepage for customers and public.
 * Ads can have images, a set time to appear, and a url to the sensor page. Ads are added by marketing.
 ### UserTrackings
