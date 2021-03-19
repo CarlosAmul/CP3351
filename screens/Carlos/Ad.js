@@ -19,9 +19,6 @@ export default function Ad({ ad, styling, onPress }) {
             <View style={{ width: '50%', margin: 5, padding: 5, textAlign: 'center'}}>
                 <Text text60 style={{ color: Colors.primary }}>{ad.title}</Text>
                 <Text text80 style={{ color: Colors.grey20 }}>{ad.description}</Text>
-                {/* <Button onPress={onPress}>
-                    <Text>View</Text>
-                </Button> */}
             </View>
 
         </View>

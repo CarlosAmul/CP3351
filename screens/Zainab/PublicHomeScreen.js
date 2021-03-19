@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
+import { Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import { Colors } from 'react-native-ui-lib'
@@ -8,7 +9,6 @@ import MostFavorite from './MostFavorite'
 import Ad from '../Carlos/Ad'
 import db from '../../db';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { TouchableWithoutFeedback } from 'react-native';
 
 export default function PublicHomeScreen(props) {
     const stacknavigation = props.navigation
@@ -29,21 +29,30 @@ export default function PublicHomeScreen(props) {
     });
 
     const [ads, setAds] = useState([])
-    useEffect(() => db.Ads.listenAll(setAds), [])
-    console.log(Math.floor(Math.random() * ads.length))
+    const [ad, setAd] = useState(null)
+
+    useEffect(() => db.Ads.listenAllActive(setAds), [])
+    useEffect(() => setAd(ads[Math.floor(Math.random() * ads.length)]), [ads]
+    )
+    ad && console.log(ad.endDate.toDate() > new Date())
+
     const onPress = () => {
-        // navigation.navigate(screen, { screen: screen + "Screen", params: { extra: extra ? extra : null } })
+        navigation.navigate(ad.screen, { screen: ad.screen + "Screen" })
     }
 
     return (
         <ScrollView style={styles.scrollcontainer}>
             {
-                ads.length > 0 ?
-                <TouchableOpacity onPress={onPress}>
-                    <Ad ad={ads[Math.floor(Math.random() * ads.length)]} styling={{margin: 20, marginBottom: 0 }} onPress={onPress}/> 
-                </TouchableOpacity>
-                :
-                null
+                ad ?
+                    <TouchableOpacity onPress={onPress}>
+                        <Ad ad={ad} styling={{ margin: 20, marginBottom: 0 }} />
+                    </TouchableOpacity>
+                    :
+                    <View style={[{ borderWidth: 1, borderColor: 'black', alignItems: 'center', borderRadius: 10, margin: 20, marginBottom: 0  }]} >
+                        <View style={{ width: '50%', margin: 5, padding: 5, textAlign: 'center' }}>
+                            <Text text40 style={{ color: Colors.grey20, alignSelf: 'center' }}>No Ad Available</Text>
+                        </View>
+                    </View>
             }
             <Categories stacknavigation={stacknavigation} />
             <MostFavorite />

@@ -35,9 +35,15 @@ export default function DashboardAd({ ad }) {
                 <Text text80>{ad.title}</Text>
                 <Text text70 style={{ color: Colors.primary }}>Description</Text>
                 <Text text80>{ad.description}</Text>
+                <Text text70 style={{ color: Colors.primary }}>Screen</Text>
+                <Text text80>{ad.screen}</Text>
+                <Text text70 style={{ color: Colors.primary }}>Start Date</Text>
+                <Text text80>{ad.startDate.toDate('MM/dd/yyyy').toString().slice(0, 24)}</Text>
+                <Text text70 style={{ color: Colors.primary }}>End Date</Text>
+                <Text text80>{ad.endDate.toDate('MM/dd/yyyy').toString().slice(0, 24)}</Text>
             </View>
             <Button
-                backgroundColor={Colors.grey40}
+                backgroundColor={Colors.primary}
                 label={showAd ? 'Hide Ad' : "Show Ad"}
                 labelStyle={{ fontWeight: '100' }}
                 style={[styles.button, { width: '100%', marginTop: 20 }]}

@@ -266,6 +266,18 @@ class Ads extends DB {
     constructor() {
         super('ads')
     }
+
+    listenAllByStartDate = (set) => {
+        db.collection(this.collection).orderBy("startDate", "asc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+    
+    listenAllActive = (set) => {
+        db.collection(this.collection).where('startDate', '<=', new Date())
+        .onSnapshot(snap => {
+            const array = snap.docs.map(doc => this.reformat(doc))
+            set(array.filter(a => a.endDate.toDate() > new Date()))
+        })
+    }
 }
 
 

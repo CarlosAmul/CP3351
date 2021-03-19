@@ -2,7 +2,7 @@ import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { View } from '../../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import { Card, Text, Button, Carousel, TextArea } from 'react-native-ui-lib'
+import { Card, Text, Button, Carousel, TextArea, Image } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
 import MenuIcon from '../../../components/MenuIcon'
 import DashboardCategory from './DashboardCategory'
@@ -28,7 +28,7 @@ export default function DashboardScreen() {
   const [ads, setAds] = useState([])
   useEffect(() => db.Ads.listenAll(setAds), [])
 
- 
+
   const catCarousel = createRef();
   const adCarousel = createRef();
 
@@ -36,7 +36,7 @@ export default function DashboardScreen() {
     <ScrollView style={{ flex: 1 }}
     >
       <View style={styles.container}>
-        
+
         {/* Categories */}
         <Text text60 style={{ marginTop: 30, marginBottom: 10, color: Colors.primary }}>Categories</Text>
         <Card
@@ -44,29 +44,43 @@ export default function DashboardScreen() {
           enableShadow
           style={styles.card}
         >
-          <Carousel
-            ref={catCarousel}
-            pageControlProps={{
-              size: 8,
-              enlargeActive: true,
-              onPagePress: page => catCarousel.current.goToPage(page)
-            }}
-            pageControlPosition={Carousel.pageControlPositions.UNDER}
-          >
-            {
-              categories.map(category =>
-                <DashboardCategory key={category.id} category={category} />
-              )
-            }
+          {
+            categories.length > 0 ?
+              <Carousel
+                ref={catCarousel}
+                pageControlProps={{
+                  size: 8,
+                  enlargeActive: true,
+                  onPagePress: page => catCarousel.current.goToPage(page)
+                }}
+                pageControlPosition={Carousel.pageControlPositions.UNDER}
+              >
+                {
+                  categories.map(category =>
+                    <DashboardCategory key={category.id} category={category} />
+                  )
+                }
+              </Carousel>
+              :
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                <Image
+                  cover
+                  source={{ uri: 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' }}
+                />
+                <Text text60>
+                  Loading...
+                </Text>
+              </View>
+          }
 
-          </Carousel>
+
         </Card>
 
         {/* Ads */}
         <Text text60 style={{ marginTop: 20, marginBottom: 10, color: Colors.primary }}>Ads</Text>
         <Button size={Button.sizes.xSmall} onPress={() => navigation.navigate('AdForm', { screen: "AdForm" })}>
-          <Text style={{color: 'white', margin: 5, fontWeight: 'bold'}}>Add</Text>
-          <AntDesign name="pluscircle" size={25} color='white' style={{marginLeft: 4 }}/>
+          <Text style={{ color: 'white', margin: 5, fontWeight: 'bold' }}>Add</Text>
+          <AntDesign name="pluscircle" size={25} color='white' style={{ marginLeft: 4 }} />
         </Button>
         <Card
           row
@@ -84,17 +98,21 @@ export default function DashboardScreen() {
             pageControlPosition={Carousel.pageControlPositions.UNDER}
           >
             {
-              ads.map(ad =>
-                <DashboardAd key={ad.id} ad={ad} />
-              )
+              ads.length > 0 ?
+                ads.map(ad =>
+                  <DashboardAd key={ad.id} ad={ad} />
+                )
+                :
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                  <Image
+                    cover
+                    source={{ uri: 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' }}
+                  />
+                  <Text text60>
+                    Loading...
+              </Text>
+                </View>
             }
-            {/* <View style={{ alignItems: 'center', marginTop: 65 }}>
-              <AntDesign name="pluscircle" size={100}
-                color={Colors.primary}
-                onPress={() => navigation.navigate('AdForm', { screen: "AdForm" })}
-              />
-              <Text text40 style={{ marginTop: 20, color: Colors.primary }}>New Ad</Text>
-            </View> */}
 
           </Carousel>
         </Card>

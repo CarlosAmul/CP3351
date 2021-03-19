@@ -148,7 +148,10 @@ exports.createSampleData = functions.https.onCall(
     const { id: adId1 } = await db.collection('ads').add({ 
       title: 'New motion sensor', 
       image: 'https://www.ikea.com/qa/en/images/products/tradfri-wireless-motion-sensor-white__0725849_pe735071_s5.jpg', 
-      description: 'There is new sensor by company click to see' 
+      description: 'There is new sensor by company click to see' ,
+      screen: 'PublicHome',
+      startDate: new Date(),
+      endDate: new Date('2021-04-19T12:00:00-06:30')
     })
 
     // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
