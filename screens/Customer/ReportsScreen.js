@@ -1,9 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { Button, View, Colors, Card } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import { ScrollView } from 'react-native-gesture-handler';
+
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+} from "react-native-chart-kit";
 
 import UserContext from '../../UserContext'
 import fb from '../../fb'
@@ -33,8 +42,9 @@ export default function SettingsScreen() {
         basic: '#f5f6fa',
     });
 
-    const showReport = () => {
+    const showReport = (picked) => {
         open(!isOpen)
+        setReport(picked)
     }
 
     const typeToString = (type) => {
@@ -54,27 +64,78 @@ export default function SettingsScreen() {
             {
                 !isOpen && reports.map(
                     report =>
-                    <Card
-                        row
-                        enableShadow
-                        key={report.id}
-                        containerStyle={ 'white' }
-                        style={styles.card}
-                        onPress={showReport}>
-                        <Card.Section
-                            content={[
-                                { text: typeToString(report.type), text60: true, grey10: true },
-                                { text: report.when.toDate('MM/dd/yyyy').toString().slice(0,24), text70: true, grey30: true}
-                            ]}
-                            style={{ padding: 10 }}
-                        />
-                    </Card>
+                        <Card
+                            row
+                            enableShadow
+                            key={report.id}
+                            containerStyle={'white'}
+                            style={styles.card}
+                            onPress={() => showReport(report)}>
+                            <Card.Section
+                                content={[
+                                    { text: typeToString(report.type), text60: true, grey10: true },
+                                    { text: report.when.toDate('MM/dd/yyyy').toString().slice(0, 24), text70: true, grey30: true }
+                                ]}
+                                style={{ padding: 10 }}
+                            />
+                        </Card>
                 )
             }
             {
                 isOpen &&
-                <>
-                </>
+                <View style={styles.getStartedContainer}>
+                    <LineChart
+                        data={{
+                            labels: ["January", "February", "March", "April", "May", "June"],
+                            datasets: [
+                                {
+                                    data: [
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100
+                                    ]
+                                }
+                            ]
+                        }}
+                        width={Dimensions.get("window").width} // from react-native
+                        height={220}
+                        // yAxisLabel=""
+                        yAxisSuffix="C"
+                        yAxisInterval={1} // optional, defaults to 1
+                        chartConfig={{
+                            // backgroundColor: "#e26a00",
+                            // backgroundColor: `${Colors.primary}`,
+                            backgroundGradientFrom: `${Colors.primary}`,
+                            backgroundGradientTo: `${Colors.primary}`,
+                            decimalPlaces: 2, // optional, defaults to 2dp
+                            // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            color: () => `${Colors.basic}`,
+                            labelColor: () => `${Colors.basic}`,
+                            style: {
+                                borderRadius: 16
+                            },
+                            propsForDots: {
+                                r: "6",
+                                strokeWidth: "2",
+                                stroke: "#ffa726"
+                            }
+                        }}
+                        bezier
+                        style={{
+                            marginVertical: 8,
+                            // borderRadius: 16
+                        }}
+                    />
+                    <Button label="Back"
+                        style={{ width: '60%' }}
+                        backgroundColor={Colors.primary}
+                        onPress={() => open(!isOpen)}
+                        marginT-15
+                    />
+                </View>
             }
         </ScrollView>
     );
