@@ -52,7 +52,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Also, on service reaching a location.
 ## Zainab Tasks
 ### Rewards & customer rewards
-- [ ] Finished ❌
+- [x] Finished ✅
 * Each user will have points. Every purchase earns them more.
 * As soon as points reach a certain amount the user becomes elligble for a reward.
 * The customer can redeem the reward whenever they wish.
