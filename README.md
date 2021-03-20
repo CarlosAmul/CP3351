@@ -25,6 +25,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Tabbar and Tabs
 * Dialog
 * Expandable Section
+* Carousel
 ## Carlos Tasks
 ### FAQs
 - [X] Finished ✅
