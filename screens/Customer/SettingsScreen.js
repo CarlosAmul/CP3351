@@ -30,7 +30,7 @@ export default function SettingsScreen() {
 
 	// User settings for profile editing
 	const [userLocation, setUserLocation] = useState(null)
-	const [name, setName] = useState("")
+	const [name, setName] = useState(user.name)
 
 	Colors.loadColors({
 		primary: '#6874e2',
@@ -38,9 +38,11 @@ export default function SettingsScreen() {
 	});
 
 	const save = () => {
-		let location = [userLocation.latitude, userLocation.longitude]
-		db.Users.update({ ...user, name: name, address: location })
-		open(!isOpen)
+		(async () => {
+			let location = [userLocation.latitude, userLocation.longitude]
+			await db.Users.update({ ...user, name: name, address: location })
+			open(!isOpen)
+		})()
 	}
 
 	const validate = () =>

@@ -33,6 +33,8 @@ import CustomerSafetyInstructionsScreen from '../../../screens/Zainab/CustomerSa
 import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
 // @ts-expect-error
 import ReportsScreen from '../../../screens/Customer/ReportsScreen'
+// @ts-expect-error
+import InstallationsFormScreen from '../../../screens/Customer/SensorsComponents/InstallationsFormScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
@@ -88,7 +90,7 @@ export default function DrawerNavigator() {
         component={ ActionsNavigator }
       />
       <Drawer.Screen
-        name="My Sensors"
+        name="Sensors"
         component={ SensorsNavigator }
       />
       <Drawer.Screen
@@ -187,6 +189,15 @@ function SensorsNavigator() {
         component={ SensorsScreen }
         options={ { headerTitle: 'Sensors' } }
       />
+      <SensorsStack.Screen
+        name="InstallationsFormScreen"
+        component={ InstallationsFormScreen }
+        options={ {
+           headerTitle: 'Installation Form'
+
+           } }
+      />
+      
     </SensorsStack.Navigator>
   )
 }

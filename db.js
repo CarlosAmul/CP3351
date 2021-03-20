@@ -2,19 +2,6 @@ import firebase from './fb'
 import fetch from 'node-fetch'
 const db = firebase.firestore()
 
-// const a = async () => {
-//     const response = await fetch('https://10.0.2.2:8080',
-//         {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             }
-//         }
-//     )
-//     console.log(response.ok)
-// }
-// a()
-
 // all database functionality here
 class DB {
 
@@ -42,7 +29,7 @@ class DB {
 
     listenOne = (set, id) => {
         console.log('received id ', id)
-        id === ""
+        return id === ""
             ?
             set(null)
             :
@@ -72,6 +59,7 @@ class Sensors extends DB {
     constructor() {
         super('sensors')
         this.Readings = new Readings(this.collection)
+        this.Installations = new Installations(this.collection)
     }
 
     listenByCategory = (set, categoryid) =>
@@ -134,6 +122,22 @@ class SupportCenters extends DB {
     constructor() {
         super('supportcenters')
     }
+}
+
+class Installations extends DB {
+
+    constructor(containing) {
+        super('installations')
+        this.containing = containing
+    }
+
+    createInstallation = async (item, sensorId) => {
+        const { id, ...rest } = item
+        return await db.collection(this.containing).doc(sensorId).collection(this.collection).add(rest)
+    }
+
+    listenByUninstalled = (set, sensorId) => 
+        db.collection(this.containing).doc(sensorId).collection(this.collection).where("install", "==", "no").onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 
@@ -241,7 +245,7 @@ class Favorites extends DB {
             }
         })
 
-        set(caetgoriesFavs)
+        return set(caetgoriesFavs)
     }
 }
 

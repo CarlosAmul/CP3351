@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View, Dimensions } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Assets, Image, Colors } from 'react-native-ui-lib';
 
@@ -36,7 +36,7 @@ export default function UserMapComponent({ set, location }) {
     return (
 
         <View style={styles.container}>
-            {/* <MapView
+            <MapView
                 provider={PROVIDER_GOOGLE}
                 style={styles.map}
                 zoomEnabled={true}
@@ -48,11 +48,11 @@ export default function UserMapComponent({ set, location }) {
                 }}
                 onRegionChangeComplete={savePan}
                 onLongPress={placeMarker}
-            > */}
+            >
                 {/* Adding markers as images and not
                 icons causes some serious performance
                 issues */}
-                {/* {
+                {
                     centers.map((e, i) =>
                         <Marker
                             coordinate={new LatLng(e.address[0], e.address[1])}
@@ -73,7 +73,7 @@ export default function UserMapComponent({ set, location }) {
                     </Marker>
                 }
 
-            </MapView> */}
+            </MapView>
         </View >
 
     );
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         marginTop: "80%",
         height: 400,
-        width: 400,
+        width: Dimensions.get("window").width,
         alignItems: 'center',
     },
     map: {

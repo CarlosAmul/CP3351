@@ -34,6 +34,8 @@ export default function SensorsScreen({ route }) {
 	const [openReportForm, setOpenReportForm] = useState(false)
 	const [report, setReport] = useState(null)
 
+	const [openInstallationForm, setOpenInstallationForm] = useState(false)
+
 	const renderDrawerView = () =>
 		<View>
 			<Text>Home</Text>
@@ -49,6 +51,10 @@ export default function SensorsScreen({ route }) {
 	const sendRequestForm = () => {
 		db.Users.Reports.createReport(user.id,{type:report, when:new Date(), sensorId:sensor.id})
 		setOpenReportForm(!openReportForm)
+	}
+
+	const sendInstallationRequest = () => {
+		db.Sensors.Installations.createInstallation({status: "Processing", })
 	}
 
 	const validateSubmit = () =>
@@ -109,6 +115,15 @@ export default function SensorsScreen({ route }) {
 									marginT-15
 								/>
 							</>
+						}
+						{
+							sensor.install === "no" &&
+								<Button label="Request Service"
+									style={{ width: '60%' }}
+									backgroundColor={Colors.primary}
+									onPress={()=>{navigation.navigate({name:'InstallationsFormScreen',params:{sensor:sensor}})}}
+									marginT-15
+								/>
 						}
 						{/* // */}
 					</>

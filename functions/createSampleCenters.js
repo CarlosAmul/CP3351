@@ -21,19 +21,13 @@ module.exports = createSampleCenters = async (data, context) => {
     await Promise.all([
         await db.collection('supportcenters').add({
             name: "Al Khor FitIot Support Center",
-            range: 5,
+            range: 20,
             techs: 3,
             address: [25.65652281955624, 51.48174101849702]
         }),
         await db.collection('supportcenters').add({
-            name: "Al Wakrah FitIot Support Center",
-            range: 3,
-            techs: 3,
-            address: [25.17945613230937, 51.567740666723196]
-        }),
-        await db.collection('supportcenters').add({
-            name: "Ar Rayyan FitIot Support Center",
-            range: 4,
+            name: "Doha FitIot Support Center",
+            range: 30,
             techs: 7,
             address: [25.28625331405168, 51.42407464959876]
         })

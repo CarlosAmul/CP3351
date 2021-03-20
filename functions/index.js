@@ -144,7 +144,7 @@ exports.createSampleData = functions.https.onCall(
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false })
     functions.logger.info("sensorId1", { sensorId1 })
 
-    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false })
+    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install:"no" })
     functions.logger.info("sensorId2", { sensorId2 })
 
     // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
@@ -220,10 +220,10 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
 
   //this function will be different for every different sensor because there will be separate fields
   exports.addSensor = functions.https.onCall(
-    async({location, userid, categoryid, min, max, alert, price, manufacturer}, context) => {
+    async({location, userid, categoryid, min, max, alert, price, manufacturer, install}, context) => {
       functions.logger.info("Done with it!!!!!!!")
       
-      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, })
+      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, install})
     })
     
 exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
@@ -239,9 +239,9 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
   })
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install }, context) => {
     functions.logger.info("Done with it!!!!!!!")
-    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install })
   }
 )
 

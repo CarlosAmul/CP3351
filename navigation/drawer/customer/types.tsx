@@ -14,7 +14,8 @@ export type DrawerParamList = {
   FAQs: undefined,
   UserFavorites: undefined,
   PaymentForm: undefined,
-  FitnessTips: undefined
+  FitnessTips: undefined,
+  Reports: undefined
 };
 
 export type TabOneParamList = {
@@ -35,6 +36,7 @@ export type TabThreeParamList = {
 
 export type TabFourParamList = {
   SensorsScreen: undefined;
+  InstallationsFormScreen: undefined;
 };
 
 export type TabFiveParamList = {
