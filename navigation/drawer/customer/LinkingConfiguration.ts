@@ -42,6 +42,11 @@ export default {
               UserFavoritesScreen: 'two',
             },
           },
+          TabEight: {
+            screens: {
+              InstallationsScreen: 'two',
+            },
+          },
           NotFound: '*',
         },
       },

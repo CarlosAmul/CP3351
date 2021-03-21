@@ -33,8 +33,9 @@ export default function SensorsScreen({ route }) {
 	//Omar
 	const [openReportForm, setOpenReportForm] = useState(false)
 	const [report, setReport] = useState(null)
+	const [installations, setInstallations] = useState([])
 
-	const [openInstallationForm, setOpenInstallationForm] = useState(false)
+	useEffect(() => db.Sensors.Installations.listenByCustomer(setInstallations,user.id), [sensor])
 
 	const renderDrawerView = () =>
 		<View>
@@ -49,17 +50,22 @@ export default function SensorsScreen({ route }) {
 	});
 
 	const sendRequestForm = () => {
-		db.Users.Reports.createReport(user.id,{type:report, when:new Date(), sensorId:sensor.id})
+		db.Users.Reports.createReport(user.id, { type: report, when: new Date(), sensorId: sensor.id })
 		setOpenReportForm(!openReportForm)
-	}
-
-	const sendInstallationRequest = () => {
-		db.Sensors.Installations.createInstallation({status: "Processing", })
 	}
 
 	const validateSubmit = () =>
 		report === null ||
 		report === ""
+	
+	console.log(installations)
+
+	const isLastRequestActive = () => {
+		return sensor.request === "yes" ? true : false
+	}
+
+	console.log("installations", installations)
+
 	//
 
 	return (
@@ -94,6 +100,8 @@ export default function SensorsScreen({ route }) {
 						{
 							category.name === "Temperature"
 							&&
+							sensor.install === "yes"
+							&&
 							<TemperatureInfo user={user} category={category} sensor={sensor} />
 						}
 						{/* Omar */}
@@ -117,13 +125,18 @@ export default function SensorsScreen({ route }) {
 							</>
 						}
 						{
-							sensor.install === "no" &&
+							sensor.install === "no" || sensor.install === "yes" ?
+							<>
+							{
+							!isLastRequestActive() &&
 								<Button label="Request Service"
 									style={{ width: '60%' }}
 									backgroundColor={Colors.primary}
-									onPress={()=>{navigation.navigate({name:'InstallationsFormScreen',params:{sensor:sensor}})}}
+									onPress={() => { navigation.navigate({ name: 'InstallationsFormScreen', params: { sensor: sensor } }) }}
 									marginT-15
 								/>
+							}
+							</>: undefined
 						}
 						{/* // */}
 					</>

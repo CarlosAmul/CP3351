@@ -49,7 +49,6 @@ export default function SettingsScreen() {
 		name.length === 0 ||
 		userLocation === null
 
-
 	return (
 		<View>
 			<View style={styles.getStartedContainer}>
@@ -77,7 +76,7 @@ export default function SettingsScreen() {
 			</View>
 			{
 				isOpen &&
-				<UserMapComponent set={setUserLocation} location={userLocation} />
+				<UserMapComponent set={setUserLocation} location={userLocation} userAddress={user.address} />
 			}
 		</View>
 	);

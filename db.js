@@ -79,6 +79,9 @@ class Sensors extends DB {
 
     toggleAlert = sensor =>
         db.collection(this.collection).doc(sensor.id).set({ alert: !sensor.alert }, { merge: true })
+    
+    listenByUninstalled = (set, sensorId) => 
+        db.collection(this.collection).doc(sensorId).where("install", "==", "no").onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class Readings extends DB {
@@ -131,13 +134,56 @@ class Installations extends DB {
         this.containing = containing
     }
 
+    reformat(doc){
+        return { id: doc.id, parent: doc.ref.parent.parent.id, ...doc.data() }
+    }
+
+    updateSub = async (item, sensorid) => {
+        const { id, ...rest } = item
+        return await db.collection(this.containing).doc(sensorid).collection(this.collection).doc(id).set(rest)
+    }
+
     createInstallation = async (item, sensorId) => {
         const { id, ...rest } = item
         return await db.collection(this.containing).doc(sensorId).collection(this.collection).add(rest)
     }
 
-    listenByUninstalled = (set, sensorId) => 
-        db.collection(this.containing).doc(sensorId).collection(this.collection).where("install", "==", "no").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    listenByPending = (set, centerid) => 
+        db.collectionGroup(this.collection)
+        .where("userid", "==", null)
+        .where("centerid", "==", centerid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenByAssigned = (set, userid) => 
+        db.collectionGroup(this.collection)
+        .where("userid", "==", userid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    listenByFinished = (set, userid) => 
+        db.collectionGroup(this.collection)
+        .where("status", "==", "Finished")
+        .where("userid", "==", userid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    findByCustomerSensor = async (sensorid) => {
+        const data = await db.collection(this.containing)
+        .doc(sensorid)
+        .collection(this.collection)
+        .get()
+        return data.docs.map(this.reformat)
+    }
+
+    listenByCustomer = (set, customerid) => 
+        db.collectionGroup(this.collection)
+        .where("customerid", "==", customerid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    removeInstallation = (id, sensorid) =>
+        db.collection(this.containing)
+        .doc(sensorid)
+        .collection(this.collection)
+        .doc(id)
+        .delete()
 }
 
 

@@ -27,7 +27,7 @@ export default function InstallationsFormScreen({ route }) {
     const [type, setType] = useState("")
     const [operationMessage, setOperationMessage] = useState(null)
     const [centers, setCenters] = useState([])
-    const [requestDate, setRequestDate] = useState(null)
+    const [requestDate, setRequestDate] = useState(new Date())
 
     useEffect(() => db.SupportCenters.listenAll(setCenters), [])
     useEffect(() => {
@@ -129,6 +129,8 @@ export default function InstallationsFormScreen({ route }) {
         }
     }
 
+    useEffect(() => {handleFees()},[requestDate, closest])
+
     const validateSubmit = () =>
         !requestDate
 
@@ -142,17 +144,26 @@ export default function InstallationsFormScreen({ route }) {
             let item = {
                 type:type,
                 when:requestDate,
+                on:new Date(),
                 status:"Processing",
                 fee:fee,
+                note: note,
+                centerid: closest.id,
+                centername: closest.name,
+                from: closest.address,
+                to: user.address,
+                customerid: user.id,
                 userid:null
             }
             await db.Sensors.Installations.createInstallation(item, sensor.id)
+            let newSensor = {...sensor, request:"yes"}
+            await db.Sensors.update(newSensor)
             navigation.goBack()
         })()
     }
 
-    console.log("req date", requestDate)
-    console.log("type", type)
+    // console.log("req date", requestDate)
+    // console.log("type", type)
 
     return (
         <>
@@ -173,13 +184,6 @@ export default function InstallationsFormScreen({ route }) {
                         {operationMessage}
                     </Text>
                 }
-                <Button label="Calculate fee"
-                    style={{ width: '60%', alignSelf: "center" }}
-                    backgroundColor={Colors.primary}
-                    onPress={handleFees}
-                    disabled={validateSubmit()}
-                    marginT-15
-                />
                 <Text style={[styles.subtitle, { color: "black" }]}>
                     Notes:
                 </Text>
@@ -232,6 +236,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         paddingHorizontal: 15,
+        paddingBottom: 10,
     },
     subtitle: {
         fontSize: 15,

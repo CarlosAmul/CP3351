@@ -8,7 +8,8 @@ export type RootStackParamList = {
 export type DrawerParamList = {
   Dashboard: undefined,
   Actions: undefined,
-  Settings: undefined
+  Settings: undefined,
+  InstallationsService: undefined
 };
 
 export type TabOneParamList = {

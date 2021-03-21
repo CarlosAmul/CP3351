@@ -15,7 +15,8 @@ export type DrawerParamList = {
   UserFavorites: undefined,
   PaymentForm: undefined,
   FitnessTips: undefined,
-  Reports: undefined
+  Reports: undefined,
+  Installations: undefined
 };
 
 export type TabOneParamList = {
