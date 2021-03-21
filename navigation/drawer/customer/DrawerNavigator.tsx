@@ -35,6 +35,10 @@ import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTi
 import CustomerRewardsScreen from '../../../screens/Zainab/CustomerRewardsScreen'
 // @ts-expect-error
 import RewardsHistoryScreen from '../../../screens/Zainab/RewardsHistoryScreen'
+// @ts-expect-error
+import VacancyScreen from '../../../screens/Zainab/VacancyScreen'
+// @ts-expect-error
+import ApplicationScreen from '../../../screens/Zainab/ApplicationScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList } from './types';
 
@@ -146,6 +150,16 @@ function PublicHomeNavigator() {
         name="ApprovedFitnessTipsScreen"
         component={ ApprovedFitnessTipsScreen }
         options={ { headerTitle: 'Fitness Tips' } }
+      />
+      <PublicHomeStack.Screen
+        name="VacancyScreen"
+        component={ VacancyScreen }
+        options={ { headerTitle: 'Vacancies' } }
+      />
+      <PublicHomeStack.Screen
+        name="ApplicationScreen"
+        component={ ApplicationScreen }
+        options={ { headerTitle: 'Apply Now' } }
       />
     </PublicHomeStack.Navigator>
   )

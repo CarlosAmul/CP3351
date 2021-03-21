@@ -264,3 +264,27 @@ exports.sendTipStatusNotificationToUser = functions.firestore.document('fitnesst
     const tip = reformat(tipDoc)
     await newNotification(tip.userid, !tip.approved ? "Your fitness tip was disapproved as it didn't follow guidelines" : "Your fitness tip was approved to be posted", 'FitnessTips')
   })
+
+exports.notifyAdminForApplication = functions.https.onCall(
+  async ({ username }, context) => {
+    const adminUsersData = await db.collection('users').where('role', '==', 'Admin').get()
+    const adminUsers = adminUsersData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    await Promise.all(
+      adminUsers.map(async user => {
+        await newNotification(user.id, `${username} has submitted an application`, 'Applications')
+      })
+    )
+  }
+)
+
+exports.notifyUserForApplication = functions.https.onCall(
+  async ({ userid, status, vacancy }, context) => {
+    if(status === "rejected") {
+      await newNotification(userid, `Sorry, your application for ${vacancy.role} was rejected. Apply again next time`, 'VacancyScreen')
+    } else {
+      await newNotification(userid, `Congratulations! You have been hired!`, 'Settings')
+      await db.collection('users').doc(userid).set({role: vacancy.role}, {merge: true})
+      await db.collection('vacancies').doc(vacancy.id).set({spaces: vacancy.spaces - 1}, {merge: true})
+    }
+  }
+)

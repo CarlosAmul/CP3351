@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { Card, Colors, Button, View, Text, Chip } from 'react-native-ui-lib'
 import db from '../../db'
 import FitnessTip from './FitnessTip'
@@ -19,19 +19,19 @@ export default function FitnessTips({ navigation }) {
     return (
         <View>
             <Text style={[styles.title, styles.mainHeader]}>See valuable fitness tips given by our customers</Text>
-            <View>
+            <ScrollView horizontal={true}>
                 {
                     approvedTips.slice(0, 2).map(tip =>
                         <FitnessTip key={tip.id} tip={tip} />
                     )
                 }
-            </View>
-            <Button
-                onPress={() => navigation.navigate('ApprovedFitnessTipsScreen', {approvedTips: approvedTips})}
-                label="View All"
-                labelStyle={{ color: "#ff466a" }}
-                style={[styles.transparentButton, { margin: 20 }]}
-            />
+                <Button
+                    onPress={() => navigation.navigate('ApprovedFitnessTipsScreen', { approvedTips: approvedTips })}
+                    label="View All"
+                    labelStyle={{ color: "#ff466a" }}
+                    style={[styles.transparentButton, { margin: 20, height: 50, marginTop: 120, marginLeft: 0}]}
+                />
+            </ScrollView>
         </View>
     )
 }

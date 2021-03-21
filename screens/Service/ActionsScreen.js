@@ -59,7 +59,7 @@ export default function ActionsScreen() {
                     style={{ width: 350, height: 350 }}
                 />
                 <Text style={styles.subtitle}>Manage Safety Instructions</Text>
-                <ScrollView contentContainerStyle={styles.horizontalView}>
+                <ScrollView horizontal={true}>
                     {
                         categories.map(category =>
                             <Card
@@ -111,10 +111,6 @@ const styles = StyleSheet.create({
         marginVertical: 30,
         height: 1,
         width: '80%',
-    },
-    horizontalView: {
-        flex: 1,
-        flexDirection: 'row'
     },
     card: {
         padding: 10,

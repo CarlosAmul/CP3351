@@ -7,7 +7,6 @@ import db from '../../db';
 import * as ImagePicker from 'expo-image-picker';
 import Reward from './Reward'
 import fb from '../../fb'
-import { useRef } from 'react';
 
 export default function RewardsScreen() {
 

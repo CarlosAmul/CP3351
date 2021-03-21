@@ -63,6 +63,12 @@ export default function PaymentFormScreen({ navigation, route }) {
     const validateAndSetAction = async () => {
         if(validate()) {
             setAction(true)
+            const creward = userRewards.find(ur => ur.id === promoCode)
+            if(creward) {
+                if(rewards.map(r => r.id).includes(creward.rewardid)) {
+                    await db.Users.CustomerRewards.setRedeemToTrue(user.id, creward.id)
+                }
+            }
             const addSensor = fb.functions().httpsCallable('addSensor')
             if(category.name === "Temperature") {
                 await addSensor({location, user, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: "no", quantity: quantity*1})
