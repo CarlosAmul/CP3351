@@ -83,7 +83,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Once approved will be shown to other people
 * ~Again may be the other people can post their likes for these tips
 ### Hiring
-- [ ] Finished ❌
+- [x] Finished ✅
 * Customer submits an application for (service, support and marketing roles) stating his skills and abilities.
 * The admin sees all these applications and reviews them and approves/rejects.
 * Once approved, the customer's role will be updated.
