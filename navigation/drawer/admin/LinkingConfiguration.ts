@@ -21,6 +21,11 @@ export default {
               SettingsScreen: 'three',
             },
           },
+          TabFour: {
+            screens: {
+              UserTrackingsScreen: 'four'
+            },
+          }
         },
       },
       NotFound: '*',

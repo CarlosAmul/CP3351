@@ -130,8 +130,8 @@ class Users extends DB {
         this.Notifications = new Notifications(this.collection)
     }
 
-    listenByRole(role) {
-        return db.Users.collection(this.containing).where('role', '==', role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    listenByRole(role, set) {
+        return db.collection(this.collection).where('role', '==', role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
 
 }

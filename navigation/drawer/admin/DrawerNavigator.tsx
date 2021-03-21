@@ -8,8 +8,10 @@ import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
+// @ts-expect-error
+import UserTrackingsScreen from '../../../screens/Carlos/UserTrackingsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -25,6 +27,11 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
+      />
+      <Drawer.Screen
+        name="UserTrackings"
+        component={TrackingsNavigator}
+        options={{ drawerLabel: "User Trackings" }}
       />
       <Drawer.Screen
         name="Settings"
@@ -76,3 +83,16 @@ function SettingsNavigator() {
   )
 }
 
+const TrackingsStack = createStackNavigator<TabFourParamList>();
+
+function TrackingsNavigator() {
+  return (
+    <TrackingsStack.Navigator>
+      <TrackingsStack.Screen
+        name="UserTrackingsScreen"
+        component={UserTrackingsScreen}
+        options={{ headerTitle: 'User Trackings' }}
+      />
+    </TrackingsStack.Navigator>
+  )
+}
