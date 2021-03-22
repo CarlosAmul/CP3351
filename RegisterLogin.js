@@ -5,6 +5,7 @@ import { StyleSheet, Image } from 'react-native';
 import LoginPicker from './screens/pickers/LoginPicker'
 import { Button, TextField, View } from 'react-native-ui-lib';
 import { Colors } from 'react-native-ui-lib'
+import UserContext from './UserContext'
 
 export default function RegisterLogin() {
 
@@ -15,14 +16,18 @@ export default function RegisterLogin() {
 		sidebg: '#ffffff',
 	});
 
+
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
 	const login = async () => {
-		email !== "" && password !== "" ?
+		if(email !== "" && password !== ""){
 			await fb.auth().signInWithEmailAndPassword(email, password)
-			:
-			undefined
+			await db.UserTrackings.addTrack(fb.auth().currentUser.uid, 'login')
+		}
+			// await fb.auth().signInWithEmailAndPassword(email, password)
+			// :
+			// undefined
 	}
 
 	const register = async () => {

@@ -95,6 +95,10 @@ class Sensors extends DB {
 
     toggleAlert = sensor =>
         db.collection(this.collection).doc(sensor.id).set({ alert: !sensor.alert }, { merge: true })
+
+    listenUserSensorCount = (id, set) => {
+        db.collection(this.collection).where('userid', '==', id).onSnapshot(snap => set(snap.size))
+    }
 }
 
 class Readings extends DB {
@@ -177,7 +181,7 @@ class Categories extends DB {
     listenInIds = (set, ids) =>
         db.collection(this.collection).where(db.FieldPath.documentId(), "in", ids).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
-    
+
 }
 
 class FAQs extends DB {
@@ -199,11 +203,11 @@ class FAQs extends DB {
     }
 
     answerFAQ = (id, answer) => {
-        db.collection(this.collection).doc(id).set({ answer, status: 'answered' }, {merge:true})
+        db.collection(this.collection).doc(id).set({ answer, status: 'answered' }, { merge: true })
     }
 
     saveDraft = (id, answer) => {
-        db.collection(this.collection).doc(id).set({ answer, status: 'draft' }, {merge:true})
+        db.collection(this.collection).doc(id).set({ answer, status: 'draft' }, { merge: true })
     }
 }
 
@@ -214,25 +218,28 @@ class Favorites extends DB {
     }
 
     reformatFav(doc) {
-        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data(), when: doc.data().when.toDate() }    
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data(), when: doc.data().when.toDate() }
     }
 
-    listenToCategoryFavs = (set, catId) => 
+    listenToCategoryFavs = (set, catId) =>
         db.collection(this.containing).doc(catId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     listenToCatgoryFavsByUser = (set, catId, userId) =>
         db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
-    addFav = async (catId, like) => 
+    listenUserLikesCount = (set, userid) =>
+        db.collectionGroup(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.size))
+
+    addFav = async (catId, like) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).add(like)
 
     removeFavs = async (catId, likeId) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).doc(likeId).delete()
-    
+
     listenToFavsByUser = (set, userid) =>
         db.collectionGroup(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
-    
-    listenToAllFavs = (set) => 
+
+    listenToAllFavs = (set) =>
         db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
     findAllFavsWithCategories = async (set) => {
@@ -243,8 +250,8 @@ class Favorites extends DB {
         const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
 
         categories.map(c => {
-            if(favorites.length > 0) { 
-                caetgoriesFavs.push({category: c, favs: favorites.filter(f => f.parentId === c.id).length})
+            if (favorites.length > 0) {
+                caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
             }
         })
 
@@ -270,14 +277,40 @@ class Ads extends DB {
     listenAllByStartDate = (set) => {
         db.collection(this.collection).orderBy("startDate", "asc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
-    
+
     listenAllActive = (set) => {
         db.collection(this.collection).where('startDate', '<=', new Date())
-        .onSnapshot(snap => {
-            const array = snap.docs.map(doc => this.reformat(doc))
-            set(array.filter(a => a.endDate.toDate() > new Date()))
-        })
+            .onSnapshot(snap => {
+                const array = snap.docs.map(doc => this.reformat(doc))
+                set(array.filter(a => a.endDate.toDate() > new Date()))
+            })
     }
+}
+
+class UserTrackings extends DB {
+    constructor() {
+        super('usertrackings')
+    }
+
+    addTrack = async (id, operation) => {
+        await db.collection(this.collection).add({ operation, when: new Date(), userid: id })
+    }
+
+    lastTrack = (id, operation, set) => {
+        db.collection(this.collection).where('userid', '==', id).where('operation', '==', operation).orderBy('when', 'desc').onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
+    }
+
+    listenTrackings = (id, set, startDate, endDate) => {
+        db.collection(this.collection).where('userid', '==', id)
+        .where('when', '>=', startDate).where('when', '<=', endDate)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenTrackingsByDate = (id, operation, set, date) => {
+        db.collection(this.collection).where('userid', '==', id).where('operation', '==', operation).where('when', '==', date).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+
 }
 
 
@@ -288,5 +321,6 @@ export default {
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
-    Ads: new Ads()
+    Ads: new Ads(),
+    UserTrackings: new UserTrackings()
 }

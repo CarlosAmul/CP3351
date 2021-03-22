@@ -94,6 +94,14 @@ exports.createSampleData = functions.https.onCall(
       )
     )
 
+    const userTrackings = await findAll('usertrackings')
+    await Promise.all(
+      userTrackings.map(
+        async tracking =>
+          await removeOne('usertrackings', tracking.id)
+      )
+    )
+
     // auth and db should be completely empty now
 
     const { uid: authId1 } = await admin.auth().createUser({ email: "joe@joe.com", password: "joejoe" })
@@ -224,11 +232,13 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
   })
 
-exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
+exports.newRegistration = functions.firestore.document('users/{userid}').onCreate(
   async (snap, context) => {
     const { userid } = context.params
     const userDoc = await db.collection('users').doc(userid).get()
     const user = { id: userDoc.id, ...userDoc.data() }
+    const tracking = db.collection('usertrackings').add({operation: 'register', when: new Date(), userid: userid})
+    console.log('registration tracked', tracking)
 
     if (user.role == "Customer") {
       const notif = newNotification(userid, 'Welcome to FitIoT!', 'PublicHome')
