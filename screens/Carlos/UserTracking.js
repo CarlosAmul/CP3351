@@ -148,9 +148,6 @@ export default function UserTracking({ user }) {
                     borderRadius: 16
                 }}
             />
-            <Button style={styles.button}>
-                <Text text70 style={{ color: Colors.white }}>Create Report</Text>
-            </Button>
         </>
     );
 }
