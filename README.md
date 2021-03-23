@@ -36,7 +36,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Ads show up on homepage for customers and public.
 * Ads can have images, a set time to appear, and a url to the sensor page. Ads are added by marketing.
 ### UserTrackings
-- [ ] Finished ❌
+- [X] Finished ✅
 * Track aggregate user data over periods of time to show on graphs
 * Each time a user logins or registers or logs out, a new track is recorded. 
 * The time is given, and a type name is given so it can be picked from a list of specific reports.
