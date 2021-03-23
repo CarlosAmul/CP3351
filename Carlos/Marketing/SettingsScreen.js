@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import Colors from '../../constants/Colors';
 import UserContext from '../../UserContext'
+import db from '../../db'
 import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
