@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, View, ScrollView, Text, Image } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import { Colors, Card, Carousel } from 'react-native-ui-lib'
+import { Colors, Card, Carousel, Button } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
 import FitnessTips from './FitnessTips'
+import CustomerHiring from './CustomerHiring'
 
 export default function PublicHomeScreen(props) {
     const stacknavigation = props.navigation
@@ -70,19 +71,20 @@ export default function PublicHomeScreen(props) {
                 </View>
                 <View centerV key={1}>
                     <Image
-                        style={{ width: "100%", height: "100%"}}
+                        style={{ width: "100%", height: "100%" }}
                         source={require("../../assets/images/fitness-tracker2.jpg")}
                     />
                 </View>
                 <View centerV key={2}>
                     <Image
-                        style={{ width: "100%", height: "100%"}}
+                        style={{ width: "100%", height: "100%" }}
                         source={require("../../assets/images/fitness-tracker3.jpg")}
                     />
                 </View>
             </Carousel>
             <Categories stacknavigation={stacknavigation} />
             <MostFavorite />
+            <CustomerHiring navigation={navigation}/>
             <FitnessTips navigation={navigation} />
         </ScrollView>
     );
@@ -103,7 +105,6 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     scrollcontainer: {
-        flex: 1,
         backgroundColor: '#ffffff',
     },
     developmentModeText: {

@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from 'react-native'
 import {
     Card, Colors, Button, View,
     Text, TextField, RadioGroup, RadioButton,
-    DateTimePicker, Stepper, Dialog
+    Stepper, Dialog
 } from 'react-native-ui-lib'
 import db from '../../db'
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -27,41 +27,54 @@ export default function PaymentFormScreen({ navigation, route }) {
     const { category } = route.params
     const { user } = useContext(UserContext)
 
+    const [userRewards, setUserRewards] = useState([])
+    useEffect(() => db.Users.CustomerRewards.listenToUnRedeemCustomerRewards(setUserRewards, user?.id || ""), [user])
+
+    const [rewards, setRewards] = useState([])
+    useEffect(() => db.Rewards.listenToRewardsByType(setRewards, 'Discount'), [])
+
     const [manufacturers, setManufacturers] = useState([])
     useEffect(() => db.Manufacturers.listenAll(setManufacturers), [])
 
     const [location, setLocation] = useState("")
     const [cardno, setCardno] = useState("")
     const [pin, setPin] = useState("")
-    const [expiryDate, setExpiryDate] = useState(null)
     const [manufacturer, setManufacturer] = useState("")
-    const [quantity, setQuantity] = useState("")
+    const [quantity, setQuantity] = useState(1)
     const [price, setPrice] = useState(category.price)
+    const [promoCode, setPromoCode] = useState("")
+    const [promoCodeStatus, setPromoCodeStatus] = useState("")
 
     const setManufacturerAndPrice = (value) => {
-        setPrice(category.price * 1 + manufacturers.find(m => m.id === value).price * 1)
+        quantity ? 
+            setPrice((category.price * 1 + manufacturers.find(m => m.id === value).price * 1) * (quantity * 1))
+        :
+            setPrice(category.price * 1 + manufacturers.find(m => m.id === value).price * 1)
         setManufacturer(value)
+        validatePromoCode(promoCode, quantity, value)
     }
-
-    console.log("seeeeeeeeeeeeeeeeeeee", manufacturer)
     
     const validate = () =>
         location !== "" &&
         cardno.match(/^[0-9]{16}$/) &&
         pin.match(/^[0-9]{4}$/) &&
-        expiryDate !== null &&
-        expiryDate > new Date() &&
         manufacturer !== ""
 
     const validateAndSetAction = async () => {
         if(validate()) {
             setAction(true)
+            const creward = userRewards.find(ur => ur.id === promoCode)
+            if(creward) {
+                if(rewards.map(r => r.id).includes(creward.rewardid)) {
+                    await db.Users.CustomerRewards.setRedeemToTrue(user.id, creward.id)
+                }
+            }
             const addSensor = fb.functions().httpsCallable('addSensor')
             if(category.name === "Temperature") {
-                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: "no"})
+                await addSensor({location, user, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: "no", quantity: quantity*1})
             }
             else if(category.name === "Sleep Tracker") {
-                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: false})
+                await addSensor({location, user, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: false, quantity: quantity*1})
             }
         }
         else {
@@ -69,6 +82,40 @@ export default function PaymentFormScreen({ navigation, route }) {
         }
     }
 
+    const setQuantityAndPrice = (value) => {
+        manufacturer ? 
+            setPrice((category.price * 1 + manufacturers.find(m => m.id === manufacturer).price * 1) * value)
+        :
+            setPrice(category.price * 1  * value)
+        setQuantity(value)
+        validatePromoCode(promoCode, value, manufacturer)
+    }
+
+    const validatePromoCode = async (value, quantity, manufacturer) => {
+        setPromoCode(value)
+        const creward = userRewards.find(ur => ur.id === value)
+        if(creward) {
+            if(rewards.map(r => r.id).includes(creward.rewardid)) {
+                setPromoCodeStatus("Promo Code Applied")
+                const reward = await db.Rewards.findOne(creward.rewardid)
+                let previousPrice = category.price
+                if(manufacturers.find(m => m.id === manufacturer)) {
+                    previousPrice += manufacturers.find(m => m.id === manufacturer).price
+                }
+                let totalPrice = previousPrice * quantity * 1
+                totalPrice = totalPrice - (reward.discount / 100 * totalPrice)
+                setPrice(totalPrice)
+            }
+        } else {
+            let previousPrice = category.price
+            if(manufacturers.find(m => m.id === manufacturer)) {
+                previousPrice += manufacturers.find(m => m.id === manufacturer).price
+            }
+            let totalPrice = previousPrice * quantity * 1
+            setPrice(totalPrice)
+            setPromoCodeStatus("Invalid Code")
+        }
+    }
 
     const [action, setAction] = useState(false)
     return (
@@ -98,7 +145,7 @@ export default function PaymentFormScreen({ navigation, route }) {
                     initialValue={1}
                     min={1}
                     label="Quantity"
-                    onValueChange={value => setQuantity(value)}
+                    onValueChange={value => setQuantityAndPrice(value)}
                     containerStyle={styles.inputText}
                 />
                 <View style={[styles.radioGroup, { backgroundColor: Colors.mainbg }]}>
@@ -135,13 +182,14 @@ export default function PaymentFormScreen({ navigation, route }) {
                     style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
                     value={pin}
                 />
-                <DateTimePicker
-                    placeholder="Expiry Date"
-                    style={[styles.inputText, {backgroundColor: Colors.mainbg}]}
+                <TextField
+                    onChangeText={text => validatePromoCode(text, quantity, manufacturer)}
                     hideUnderline
-                    value={expiryDate}
-                    onChange={setExpiryDate}
+                    placeholder="Promo Code (optional)"
+                    style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
+                    value={promoCode}
                 />
+                <Text style={{color: Colors.red20, marginBottom: 20, marginTop: -10, marginLeft: 5}}>{promoCodeStatus}</Text>
                 <Button
                     label="Confirm Payment"
                     backgroundColor={Colors.darkprimary}

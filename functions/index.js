@@ -26,6 +26,17 @@ exports.findAuthUser = functions.https.onCall(
 )
 
 const db = admin.firestore()
+
+//this function will be different for every different sensor because there will be separate fields
+exports.addSensor = functions.https.onCall(
+  async ({ location, user, categoryid, min, max, alert, price, manufacturer, category, install, quantity }, context) => {
+    for (let k = 0; k < quantity; k++) {
+      await db.collection('sensors').add({ location, userid: user.id, categoryid, min, max, alert, price, manufacturer, install })
+      await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })
+    }
+  }
+)
+
 const reformat = doc => ({ id: doc.id, ...doc.data() })
 const findAll = async collection => (await db.collection(collection).get()).docs.map(reformat)
 const findOneSubAll = async (collection, id, subcollection) => (await db.collection(collection).doc(id).collection(subcollection).get()).docs.map(reformat)
@@ -129,10 +140,10 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId6 } = await admin.auth().createUser({ email: "kareem@kareem.com", password: "kareemkareem" })
     // functions.logger.info("authId6", { authId6 })
 
-    const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer" })
+    const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer", points: 0 })
     // functions.logger.info("result1", { result1 })
 
-    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", address: [25.213983211544196,51.30470898002386]})
+    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", points: 0, address: [25.213983211544196,51.30470898002386]})
     // functions.logger.info("result2", { result2 })
 
     const result3 = await db.collection('users').doc(authId3).set({ name: "Admin", role: "Admin" })
@@ -147,9 +158,12 @@ exports.createSampleData = functions.https.onCall(
     const result6 = await db.collection('users').doc(authId6).set({ name: "Kareem", role: "Service", centerid: alKhor.id })
     // functions.logger.info("result6", { result6 })
 
-    const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: true, approvedby: authId4})
-    const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: authId4})
-    
+    const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: true, approvedby: authId4 })
+    const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: authId4 })
+
+    const { id: reward1 } = await db.collection('rewards').add({ title: 'Get 20% Off', description: 'Get 20% Off on your next purchase', points: 2000, type: "Discount", discount: 20, image: 'https://thumbs.dreamstime.com/b/discount-pink-brush-new-vector-watercolor-background-colorful-abstract-texture-design-elements-vintage-splash-card-110234831.jpg' })
+    const { id: reward2 } = await db.collection('rewards').add({ title: 'Voucher from Adidas', description: 'Get the voucher from adidas and buy your favorite things', points: 1500, type: "Voucher", image: 'https://giftcardcorner.net/wp-content/uploads/2019/09/Free-Adidas-Promo-Code-Adias-Coupon-Code-AND-Voucer-Free-Adidas-Shoes.jpg' })
+
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
 
@@ -159,9 +173,9 @@ exports.createSampleData = functions.https.onCall(
     const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All Temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     // functions.logger.info("categoryId2", { categoryId2 })
 
-    await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg'})
-    await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg'})
-    
+    await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
+    await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
+
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false })
     // functions.logger.info("sensorId1", { sensorId1 })
 
@@ -241,14 +255,8 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
   })
 
-  //this function will be different for every different sensor because there will be separate fields
-  exports.addSensor = functions.https.onCall(
-    async({location, userid, categoryid, min, max, alert, price, manufacturer, install}, context) => {
-      functions.logger.info("Done with it!!!!!!!")
-      
-      await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, install})
-    })
-    
+//this function will be different for every different sensor because there will be separate fields
+
 exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
   async (snap, context) => {
     const { userid } = context.params
@@ -260,13 +268,6 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
       functions.logger.info("notification sent", notif)
     }
   })
-//this function will be different for every different sensor because there will be separate fields
-exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install }, context) => {
-    functions.logger.info("Done with it!!!!!!!")
-    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install })
-  }
-)
 
 exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
   async (snap, context) => {
@@ -284,10 +285,34 @@ exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnes
     )
   })
 
-  exports.sendTipStatusNotificationToUser = functions.firestore.document('fitnesstips/{tipid}').onUpdate(
-    async (snap, context) => {
-      const { tipid } = context.params
-      const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
-      const tip = reformat(tipDoc)
-      await newNotification(tip.userid, !tip.approved ? "Your fitness tip was disapproved as it didn't follow guidelines" : "Your fitness tip was approved to be posted", 'FitnessTips')
-    })
+exports.sendTipStatusNotificationToUser = functions.firestore.document('fitnesstips/{tipid}').onUpdate(
+  async (snap, context) => {
+    const { tipid } = context.params
+    const tipDoc = await db.collection('fitnesstips').doc(tipid).get()
+    const tip = reformat(tipDoc)
+    await newNotification(tip.userid, !tip.approved ? "Your fitness tip was disapproved as it didn't follow guidelines" : "Your fitness tip was approved to be posted", 'FitnessTips')
+  })
+
+exports.notifyAdminForApplication = functions.https.onCall(
+  async ({ username }, context) => {
+    const adminUsersData = await db.collection('users').where('role', '==', 'Admin').get()
+    const adminUsers = adminUsersData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    await Promise.all(
+      adminUsers.map(async user => {
+        await newNotification(user.id, `${username} has submitted an application`, 'Applications')
+      })
+    )
+  }
+)
+
+exports.notifyUserForApplication = functions.https.onCall(
+  async ({ userid, status, vacancy }, context) => {
+    if(status === "rejected") {
+      await newNotification(userid, `Sorry, your application for ${vacancy.role} was rejected. Apply again next time`, 'VacancyScreen')
+    } else {
+      await newNotification(userid, `Congratulations! You have been hired!`, 'Settings')
+      await db.collection('users').doc(userid).set({role: vacancy.role}, {merge: true})
+      await db.collection('vacancies').doc(vacancy.id).set({spaces: vacancy.spaces - 1}, {merge: true})
+    }
+  }
+)

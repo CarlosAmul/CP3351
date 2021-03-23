@@ -39,8 +39,16 @@ import InstallationsFormScreen from '../../../screens/Customer/SensorsComponents
 import InstallationsScreen from '../../../screens/Customer/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Customer/DetailsScreen'
+// @ts-expect-error
+import CustomerRewardsScreen from '../../../screens/Zainab/CustomerRewardsScreen'
+// @ts-expect-error
+import RewardsHistoryScreen from '../../../screens/Zainab/RewardsHistoryScreen'
+// @ts-expect-error
+import VacancyScreen from '../../../screens/Zainab/VacancyScreen'
+// @ts-expect-error
+import ApplicationScreen from '../../../screens/Zainab/ApplicationScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -122,6 +130,11 @@ export default function DrawerNavigator() {
         component={InstallationsNavigator}
         options={{ drawerLabel: "My Installations" }}
       />
+      <Drawer.Screen
+        name="CustomerRewards"
+        component={ CustomerRewardsNavigator }
+        options={ { drawerLabel: "Rewards" } }
+      />
     </Drawer.Navigator>
   );
 }
@@ -155,6 +168,16 @@ function PublicHomeNavigator() {
         name="ApprovedFitnessTipsScreen"
         component={ApprovedFitnessTipsScreen}
         options={{ headerTitle: 'Fitness Tips' }}
+      />
+      <PublicHomeStack.Screen
+        name="VacancyScreen"
+        component={ VacancyScreen }
+        options={ { headerTitle: 'Vacancies' } }
+      />
+      <PublicHomeStack.Screen
+        name="ApplicationScreen"
+        component={ ApplicationScreen }
+        options={ { headerTitle: 'Apply Now' } }
       />
     </PublicHomeStack.Navigator>
   )
@@ -296,5 +319,24 @@ function InstallationsNavigator() {
         options={{ headerTitle: 'Details' }}
       />
     </InstallationsStack.Navigator>
+  )
+}
+
+const CustomerRewardsStack = createStackNavigator<TabNineParamList>();
+
+function CustomerRewardsNavigator() {
+  return (
+    <CustomerRewardsStack.Navigator>
+      <CustomerRewardsStack.Screen
+        name="CustomerRewardsScreen"
+        component={ CustomerRewardsScreen }
+        options={ { headerTitle: 'Rewards' } }
+      />
+      <CustomerRewardsStack.Screen
+        name="RewardsHistoryScreen"
+        component={ RewardsHistoryScreen }
+        options={ { headerTitle: 'Rewards History' } }
+      />
+    </CustomerRewardsStack.Navigator>
   )
 }

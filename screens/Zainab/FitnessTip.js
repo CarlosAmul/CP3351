@@ -88,6 +88,8 @@ const styles = StyleSheet.create({
     },
     approved: {
         margin: 30,
-        padding: 20
+        padding: 20,
+        width: 350,
+        height: 250
     }
 })

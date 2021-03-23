@@ -192,7 +192,14 @@ class Users extends DB {
         super('users')
         this.Notifications = new Notifications(this.collection)
         this.Reports = new Reports(this.collection)
+        this.CustomerRewards = new CustomerRewards(this.collection)
+        this.Applications = new Applications(this.collection)
     }
+
+    updatePoints = async (userid, points) => {
+        db.collection(this.collection).doc(userid).set({ points: points }, { merge: true })
+    }
+
 
     listenToUsersByRole = (set, role) =>
         db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
@@ -339,6 +346,75 @@ class SafetInstructions extends DB {
 
 }
 
+class Vacancies extends DB {
+    constructor() {
+        super('vacancies')
+    }
+}
+
+class Rewards extends DB {
+    constructor() {
+        super('rewards')
+    }
+
+    listenToRewardsByType = (set, type) => 
+        db.collection(this.collection).where('type', '==', type).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class CustomerRewards extends DB {
+
+    constructor(containing) {
+        super('customerrewards')
+        this.containing = containing
+    }
+
+    createReward = (userid, reward) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).add(reward)
+
+    setRedeemToTrue = (userid, id) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(id).set({redeem: true}, {merge: true})
+
+    listenToUserRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToUnRedeemCustomerRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('redeem', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class Applications extends DB {
+
+    constructor(containing) {
+        super('applications')
+        this.containing = containing
+    }
+
+    reformatApplication(doc) {
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data() }
+    }
+
+    updateUserApplication = (userid, applicationid, application) => 
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(applicationid).set(application)
+
+    createApplication = (userid, application) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).add(application)
+
+    listenToUserApplication = (set, userid, applicationid) => 
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(applicationid).onSnapshot(snap => set(this.reformat(snap)))
+
+    listenToUserApplications = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToUsersCreatedApplication = (set, userid, vacancyid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('approved', '==', 'created').where('vacancyid', '==', vacancyid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    listenToUserSubmittedApplication = (set, userid, vacancyid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('approved', '==', 'submitted').where('vacancyid', '==', vacancyid).onSnapshot(snap => set(snap.docs.map(this.reformatApplication)))
+
+    listenToUsersSubmittedApplication = (set) =>
+        db.collectionGroup(this.collection).where('approved', '==', 'submitted').onSnapshot(snap => set(snap.docs.map(this.reformatApplication)))
+
+}
+
 export default {
     Categories: new Categories(),
     Sensors: new Sensors(),
@@ -347,5 +423,7 @@ export default {
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
     FitnessTips: new FitnessTips(),
-    Simulator: new Simulator()
+    Simulator: new Simulator(),
+    Rewards: new Rewards(),
+    Vacancies: new Vacancies()
 }

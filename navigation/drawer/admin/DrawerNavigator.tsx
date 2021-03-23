@@ -8,8 +8,14 @@ import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
+// @ts-expect-error
+import RewardsScreen from '../../../screens/Admin/RewardsScreen'
+// @ts-expect-error
+import VacancyScreen from '../../../screens/Admin/VacancyScreen'
+// @ts-expect-error
+import ApplicationsScreen from '../../../screens/Admin/ApplicationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -47,8 +53,20 @@ export default function DrawerNavigator() {
         component={ActionsNavigator}
       />
       <Drawer.Screen
+        name="Rewards"
+        component={RewardsNavigator}
+      />
+      <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
+      />
+      <Drawer.Screen
+        name="Vacancy"
+        component={VacancyNavigator}
+      />
+      <Drawer.Screen
+        name="Applications"
+        component={ApplicationsNavigator}
       />
     </Drawer.Navigator>
   );
@@ -96,3 +114,44 @@ function SettingsNavigator() {
   )
 }
 
+const RewardsStack = createStackNavigator<TabFourParamList>();
+
+function RewardsNavigator() {
+  return (
+    <RewardsStack.Navigator>
+      <RewardsStack.Screen
+        name="RewardsScreen"
+        component={RewardsScreen}
+        options={{ headerTitle: 'Rewards' }}
+      />
+    </RewardsStack.Navigator>
+  )
+}
+
+const ApplicationsStack = createStackNavigator<TabSixParamList>();
+
+function ApplicationsNavigator() {
+  return (
+    <ApplicationsStack.Navigator>
+      <ApplicationsStack.Screen
+        name="ApplicationsScreen"
+        component={ApplicationsScreen}
+        options={{ headerTitle: 'Applications' }}
+      />
+    </ApplicationsStack.Navigator>
+  )
+}
+
+const VacancyStack = createStackNavigator<TabFiveParamList>();
+
+function VacancyNavigator() {
+  return (
+    <VacancyStack.Navigator>
+      <VacancyStack.Screen
+        name="VacancyScreen"
+        component={VacancyScreen}
+        options={{ headerTitle: 'Vacancy' }}
+      />
+    </VacancyStack.Navigator>
+  )
+}
