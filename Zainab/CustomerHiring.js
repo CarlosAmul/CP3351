@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
-import { Colors, Button, Card } from 'react-native-ui-lib'
-import db from '../../db'
-import Vacancy from './Vacancy'
+import React, {useContext} from 'react';
+import { StyleSheet,  Text, View, } from 'react-native';
+import { Colors, Button } from 'react-native-ui-lib'
+import UserContext from '../UserContext'
 
-export default function VacancyScreen({ navigation }) {
+export default function CustomerHiring({navigation}) {
+
+    const {user} = useContext(UserContext)
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -17,39 +18,15 @@ export default function VacancyScreen({ navigation }) {
         darksidebg: '#38304d'
     });
 
-    const [vacancies, setVacancies] = useState([])
-    useEffect(() => db.Vacancies.listenAll(setVacancies), [])
-
     return (
-        <View style={styles.container}>
-            <Card
-                borderRadius={20}
-                style={styles.card}
-                enableShadow={false}
-            >
-                <View style={styles.leftCardVew}>
-                    <Text style={[styles.title, { color: Colors.darkprimary }]}>We are Hiring!</Text>
-                    <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Apply For Vacancies</Text>
-                </View>
-                <View style={styles.rightCardView}>
-                    <Image
-                        source={require("../../assets/images/hiring2.png")}
-                        style={{ width: 170, height: 170 }}
-                    />
-                </View>
-            </Card>
-            <Text style={[styles.title, styles.mainHeader]}>We have the following vacancies</Text>
-            <View style={{ width: "80%", justifyContent: 'center', alignItems: 'center' }}>
-                {
-                    vacancies.map(vacancy =>
-                        <Vacancy
-                            key={vacancy.id}
-                            vacancy={vacancy}
-                            navigation={navigation}
-                        />
-                    )
-                }
-            </View>
+        <View>
+            <Text style={[styles.title, styles.mainHeader]}>Looking for work at FitIoT?</Text>
+            <Button 
+                label={"View Vacancies"}
+                backgroundColor={Colors.blue80}
+                color={Colors.blue10}
+                onPress={() => user ? navigation.navigate('VacancyScreen') : navigation.navigate('LoginRegister')}
+            />
         </View>
     );
 }
@@ -63,9 +40,9 @@ const styles = StyleSheet.create({
         margin: 20
     },
     container: {
+        flex: 1,
         backgroundColor: '#ffffff',
         alignItems: "center",
-        flex: 1
     },
     subcontainer: {
         display: 'flex',
@@ -157,16 +134,5 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-around"
-    },
-    card: {
-        padding: 20,
-        backgroundColor: "#f9ce7f49",
-        margin: 20,
-        width: 380,
-        textAlign: "center",
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between'
     },
 });

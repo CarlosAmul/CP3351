@@ -1,54 +1,62 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Colors } from 'react-native-ui-lib'
 import { View } from 'react-native'
-import { Text, Card, Button, } from 'react-native-ui-lib'
-import { StyleSheet } from 'react-native';
-import UserContext from '../../UserContext'
-import * as Progress from 'react-native-progress';
-import db from '../../db'
+import { Button, Text, Card } from 'react-native-ui-lib'
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import UserContext from '../UserContext'
 
-export default function CustomerAddedReward({ customerreward }) {
+export default function SafetInstruction({ instruction, edit, remove }) {
 
-    Colors.loadColors({
-        primary: '#6874e2',
-        secondary: '#f9ce7f',
-        mainbg: '#f5f6fa',
-        sidebg: '#ffffff',
-        darkprimary: '#ff466a',
-        darksecondary: '#0df5e3',
-        darkmainbg: '#201a31',
-        darksidebg: '#38304d'
-    });
+    useEffect(() => {
+        Colors.loadColors({
+            primary: '#6874e2',
+            secondary: '#f9ce7f',
+            mainbg: '#f5f6fa',
+            sidebg: '#ffffff',
+        });
+    }, [Colors])
 
     const { user } = useContext(UserContext)
 
-    const [reward, setReward] = useState("")
-    useEffect(() => db.Rewards.listenOne(setReward, customerreward?.rewardid || ""), [customerreward])
-    
     return (
         <Card
             borderRadius={12}
             style={styles.card}
-            elevation={15}
+            elevation={12}
         >
             <View style={styles.leftCardView}>
                 <Card.Image
                     style={styles.cardimg}
-                    source={{ uri: reward.image }}
+                    source={{ uri: instruction.image }}
                 />
             </View>
             <View style={styles.rightCardView}>
-                <Text style={[styles.title, styles.cardText, { textAlign: 'left', fontSize: 16 }]}>{reward.title}</Text>
-                <Text style={styles.cardText}>{reward.description}</Text>
-                <Text style={{fontSize: 15, marginBottom: 20, color: Colors.dark10}}>Present the code 👏</Text>
+                <Card.Section
+                    content={[{ text: instruction.title, text60M: true, color: Colors.primary }]}
+                    backgroundColor={Colors.white}
+                />
+                <Card.Section
+                    contentStyle={{marginTop: 10}}
+                    content={[{ text: instruction.description, text55M: true, dark10: true }]}
+                    backgroundColor={Colors.white}
+                />
                 {
-                    customerreward.redeem ? 
-                        <Text style={{fontSize: 17, color: Colors.green30}}>Redeemed</Text>
-                    :
-                        <Text style={{fontSize: 17, color: Colors.green30}}>{customerreward.id}</Text>
+                    user 
+                    &&
+                    user.role === "Service"
+                    &&
+                    <View style={styles.buttonGroup}>
+                        <TouchableOpacity onPress={() => edit(instruction)}>
+                            <MaterialIcons name="mode-edit" size={30} color={Colors.darkprimary} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => remove(instruction.id)}>
+                            <MaterialIcons name="delete" size={30} color={Colors.darkprimary} />
+                        </TouchableOpacity>
+                    </View>
                 }
             </View>
-        </Card>
+        </Card >
     );
 }
 
@@ -60,7 +68,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.mainbg
     },
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
         textAlign: "center"
     },
@@ -79,6 +87,7 @@ const styles = StyleSheet.create({
         width: '80%'
     },
     buttonGroup: {
+        flex: 1,
         flexDirection: "row",
         justifyContent: "center"
     },
@@ -105,6 +114,7 @@ const styles = StyleSheet.create({
     rightCardView: {
         width: "50%",
         textAlign: "center",
+        flex: 1,
         alignItems: "center",
         justifyContent: 'space-around',
         alignContent: 'center'
@@ -118,13 +128,5 @@ const styles = StyleSheet.create({
         width: 50,
         backgroundColor: Colors.secondary,
         marginBottom: 10
-    },
-    cardText: {
-        marginBottom: 30
-    },
-    points: {
-        padding: 5,
-        borderRadius: 15,
-        margin: 10
     }
 });

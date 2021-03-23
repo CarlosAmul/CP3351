@@ -176,6 +176,7 @@ exports.createSampleData = functions.https.onCall(
     await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
     await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
 
+<<<<<<< HEAD
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false })
     // functions.logger.info("sensorId1", { sensorId1 })
 
@@ -183,6 +184,13 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install:"yes", request: "no" })
     // functions.logger.info("sensorId2", { sensorId2 })
+=======
+    const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false, price: 500 })
+    functions.logger.info("sensorId1", { sensorId1 })
+
+    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, price: 400 })
+    functions.logger.info("sensorId2", { sensorId2 })
+>>>>>>> a1cbcf44bc6dc10bf34a73660b5df2646fba72e8
 
     // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
   }

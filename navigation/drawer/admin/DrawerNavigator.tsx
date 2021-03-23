@@ -3,7 +3,7 @@ import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import * as React from 'react';
 import { View, SafeAreaView, Image } from 'react-native'
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Admin/DashboardScreen'
+import DashboardScreen from '../../../Zainab/Admin/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error

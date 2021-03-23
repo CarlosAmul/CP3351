@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Colors, Button, Card, TextArea } from 'react-native-ui-lib'
-import db from '../../db'
-import fb from '../../fb'
-import UserContext from '../../UserContext'
+import db from '../db'
+import fb from '../fb'
+import UserContext from '../UserContext'
 import { AntDesign } from '@expo/vector-icons';
 
 export default function ApplicationScreen({ route }) {

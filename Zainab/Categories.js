@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { View } from '../../components/Themed';
-import UserContext from '../../UserContext'
+import { View } from '../components/Themed';
+import UserContext from '../UserContext'
 import { Text } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
-import db from '../../db'
+import MenuIcon from '../components/MenuIcon'
+import db from '../db'
 import { Colors } from 'react-native-ui-lib'
 import Category from './Category'
 
@@ -31,11 +31,17 @@ export default function Categories({stacknavigation}) {
     useEffect(() => db.Categories.listenAll(setCategories), [])
 
     const onPress = (category) => {
-        stacknavigation.navigate("CategoryFavsScreen", {category: category})
+        user ? 
+            stacknavigation.navigate("CategoryFavsScreen", {category: category})
+        :
+            stacknavigation.navigate("LoginRegisterScreen")
     }
 
     const onPressBuy = (category) => {
-        stacknavigation.navigate("PaymentFormScreen", {category: category})
+        user ? 
+            stacknavigation.navigate("PaymentFormScreen", {category: category})
+        :
+            stacknavigation.navigate("LoginRegisterScreen")
     }
 
     const onPressSafety = (category) => {

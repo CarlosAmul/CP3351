@@ -4,7 +4,7 @@ import { View } from 'react-native'
 import { Button, Text, Card } from 'react-native-ui-lib'
 import { StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import db from '../../db';
+import db from '../db';
 
 export default function AdminCategory({ category, edit, remove }) {
 

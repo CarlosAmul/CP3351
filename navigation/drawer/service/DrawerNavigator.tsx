@@ -14,11 +14,12 @@ import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
-import SafetyInstructionsScreen from '../../../screens/Zainab/SafetyInstructionsScreen'
+import SafetyInstructionsScreen from '../../../Zainab/SafetyInstructionsScreen'
 // @ts-expect-error
 import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
+
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
 
