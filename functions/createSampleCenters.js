@@ -22,13 +22,13 @@ module.exports = createSampleCenters = async (data, context) => {
         await db.collection('supportcenters').add({
             name: "Al Khor FitIot Support Center",
             range: 20,
-            techs: 3,
+            techs: 1,
             address: [25.65652281955624, 51.48174101849702]
         }),
         await db.collection('supportcenters').add({
             name: "Doha FitIot Support Center",
             range: 30,
-            techs: 7,
+            techs: 2,
             address: [25.28625331405168, 51.42407464959876]
         })
     ])
