@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Colors, Button, View, Text } from 'react-native-ui-lib'
 import { AntDesign } from '@expo/vector-icons'
-import UserContext from '../../UserContext'
-import db from '../../db'
+import UserContext from '../UserContext'
+import db from '../db'
 
 export default function UserFavorite({ categoryid }) {
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text, Alert } from 'react-native';
-import UserContext from '../../UserContext'
+import UserContext from '../UserContext'
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
-import db from '../../db'
+import MenuIcon from '../components/MenuIcon'
+import db from '../db'
 import { Colors, TabBar, TextField, TextArea, ChipsInput, Button, Card, Chip } from 'react-native-ui-lib'
 import { MaterialIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';

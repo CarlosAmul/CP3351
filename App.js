@@ -16,7 +16,7 @@ LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 import fb from './fb'
 import db from './db'
 import UserContext from './UserContext'
-import RegisterLogin from './RegisterLogin'
+
 import './SampleData'
 
 export default function App() {
@@ -58,11 +58,11 @@ export default function App() {
         }
     }, [])
 
-    console.log('user', user)
+    console.log('user******', user)
 
     const selectNavigation = () => {
         if (!user) {
-            return <RegisterLogin />
+            return <DrawerCustomer colorScheme={colorScheme} />
         } else if (user?.role === "Customer") {
             return <DrawerCustomer colorScheme={colorScheme} />
         } else if (user?.role === "Admin") {

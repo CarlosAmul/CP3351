@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, Text, Image } from 'react-native';
 import { View, Colors, Card } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
-import db from '../../db';
+import MenuIcon from '../components/MenuIcon'
+import db from '../db';
 import CustomerAddedReward from './CustomerAddedReward'
-import UserContext from '../../UserContext'
+import UserContext from '../UserContext'
 
 export default function RewardsHistoryScreen() {
 

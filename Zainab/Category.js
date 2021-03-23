@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Colors, Button, View, Text } from 'react-native-ui-lib'
 import { AntDesign } from '@expo/vector-icons'
-import UserContext from '../../UserContext'
-import db from '../../db'
+import UserContext from '../UserContext'
+import db from '../db'
 
 export default function Category({ category, onPressFav, onPressBuy, onPressSafety }) {
 
@@ -50,16 +50,20 @@ export default function Category({ category, onPressFav, onPressBuy, onPressSafe
                     content={[{ text: category.name + " QAR " + category.price, text60M: true, dark10: true }]}
                     backgroundColor={Colors.white}
                 />
-                <Button
-                    style={styles.iconButton}
-                    onPress={() => favCat()}
-                    label={
-                        userCatFavs.length > 0 ?
-                            <AntDesign name="heart" size={24} color="#fa1a65" />
-                            :
-                            <AntDesign name="hearto" size={24} color="#fa1a65" />
-                    }
-                />
+                {
+                    user
+                    &&
+                    <Button
+                        style={styles.iconButton}
+                        onPress={() => favCat()}
+                        label={
+                            userCatFavs.length > 0 ?
+                                <AntDesign name="heart" size={24} color="#fa1a65" />
+                                :
+                                <AntDesign name="hearto" size={24} color="#fa1a65" />
+                        }
+                    />
+                }
                 <Button
                     style={styles.iconButton}
                     onPress={onPressFav}

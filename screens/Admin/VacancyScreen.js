@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#ffffff',
         alignItems: "center",
+        flex: 1
     },
     subcontainer: {
         display: 'flex',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
+import MenuIcon from '../components/MenuIcon'
 import { Colors, Card, Carousel, Button } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
@@ -43,7 +43,7 @@ export default function PublicHomeScreen(props) {
                 </View>
                 <View style={styles.rightCardView}>
                     <Image
-                        source={require("../../assets/images/sensor-vector.png")}
+                        source={require("../assets/images/sensor-vector.png")}
                         style={{ width: 150, height: 150 }}
                     />
                 </View>
@@ -66,19 +66,19 @@ export default function PublicHomeScreen(props) {
                 <View centerV key={0}>
                     <Image
                         style={{ width: "100%", height: "100%" }}
-                        source={require("../../assets/images/fitness-tracker1.jpg")}
+                        source={require("../assets/images/fitness-tracker1.jpg")}
                     />
                 </View>
                 <View centerV key={1}>
                     <Image
                         style={{ width: "100%", height: "100%" }}
-                        source={require("../../assets/images/fitness-tracker2.jpg")}
+                        source={require("../assets/images/fitness-tracker2.jpg")}
                     />
                 </View>
                 <View centerV key={2}>
                     <Image
                         style={{ width: "100%", height: "100%" }}
-                        source={require("../../assets/images/fitness-tracker3.jpg")}
+                        source={require("../assets/images/fitness-tracker3.jpg")}
                     />
                 </View>
             </Carousel>

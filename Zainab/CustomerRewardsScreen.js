@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, Text, Image } from 'react-native';
 import { View, Colors, Card, Button } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
-import db from '../../db';
+import MenuIcon from '../components/MenuIcon'
+import db from '../db';
 import CustomerReward from './CustomerReward'
-import UserContext from '../../UserContext'
+import UserContext from '../UserContext'
 
 export default function CustomerRewardsScreen() {
 
@@ -43,22 +43,30 @@ export default function CustomerRewardsScreen() {
                 <View style={styles.leftCardVew}>
                     <Text style={[styles.title, { color: Colors.darkprimary }]}>FitIoT Rewards</Text>
                     <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Our customers enjoy rewards!</Text>
-                    <Text style={{ color: Colors.secondary, fontWeight: 'bold', fontSize: 16 }}>{user.points} points in wallet</Text>
+                    {
+                        user
+                        &&
+                        <Text style={{ color: Colors.secondary, fontWeight: 'bold', fontSize: 16 }}>{user.points} points in wallet</Text>
+                    }
                 </View>
                 <View style={styles.rightCardView}>
                     <Image
-                        source={require("../../assets/images/admin-reward.png")}
+                        source={require("../assets/images/admin-reward.png")}
                         style={{ width: 100, height: 150 }}
                     />
                 </View>
             </Card>
             <Text style={[styles.title, styles.mainHeader, { marginTop: -5, marginBottom: 15 }]}>Buy from us and get the rewards</Text>
-            <Button
-                label="My Rewards"
-                labelStyle={{ color: "#ff466a" }}
-                style={[styles.transparentButton]}
-                onPress={() => navigation.navigate('RewardsHistoryScreen')}
-            />
+            {
+                user
+                &&
+                <Button
+                    label="My Rewards"
+                    labelStyle={{ color: "#ff466a" }}
+                    style={[styles.transparentButton]}
+                    onPress={() => navigation.navigate('RewardsHistoryScreen')}
+                />
+            }
             {
                 rewards.map(reward =>
                     <CustomerReward

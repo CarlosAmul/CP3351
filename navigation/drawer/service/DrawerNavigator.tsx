@@ -14,7 +14,7 @@ import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
-import SafetyInstructionsScreen from '../../../screens/Zainab/SafetyInstructionsScreen'
+import SafetyInstructionsScreen from '../../../Zainab/SafetyInstructionsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
 

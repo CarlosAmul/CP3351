@@ -1,8 +1,11 @@
-import React from 'react';
-import { StyleSheet,  Text, View, } from 'react-native';
-import { Colors, Button } from 'react-native-ui-lib'
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, ScrollView, Text, View, Platform, Image } from 'react-native';
+import { Colors, TextField } from 'react-native-ui-lib'
+import db from '../db'
 
-export default function CustomerHiring({navigation}) {
+import SafetyInstruction from './SafetyInstruction'
+
+export default function CustomerSafetyInstructionsScreen({ route }) {
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -15,16 +18,44 @@ export default function CustomerHiring({navigation}) {
         darksidebg: '#38304d'
     });
 
+    const { categoryid } = route.params
+    const [category, setCategory] = useState([])
+    useEffect(() => db.Categories.listenOne(setCategory, categoryid), [categoryid])
+
+    const [instructions, setInstructions] = useState([])
+    useEffect(() => db.Categories.SafetInstructions.listenToCategoryInstructions(setInstructions, categoryid), [categoryid])
+
+    const [search, setSearch] = useState("")
+
     return (
-        <View>
-            <Text style={[styles.title, styles.mainHeader]}>Looking for work at FitIoT?</Text>
-            <Button 
-                label={"View Vacancies"}
-                backgroundColor={Colors.blue80}
-                color={Colors.blue10}
-                onPress={() => navigation.navigate('VacancyScreen')}
-            />
-        </View>
+        <ScrollView style={styles.scrollcontainer} contentContainerStyle={{justifyContent: 'center'}}>   
+            <Text style={[styles.title, styles.mainHeader]}>Safety Instructions for {category.name}</Text>
+            <View style={styles.searchField}>
+                <TextField
+                    onChangeText={text => setSearch(text)}
+                    hideUnderline
+                    placeholder="Search Instructions ..."
+                    style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
+                />
+            </View>
+            {
+                instructions.map(instruction => 
+                    search !== "" ? 
+                        instruction.title.toLowerCase().includes(search.toLowerCase()) || instruction.description.toLowerCase().includes(search.toLowerCase()) ? 
+                            <SafetyInstruction
+                                key={instruction.id}
+                                instruction={instruction}
+                            />
+                        :
+                            null
+                    :
+                        <SafetyInstruction
+                            key={instruction.id}
+                            instruction={instruction}
+                        />
+                )
+            }
+        </ScrollView>
     );
 }
 
@@ -47,7 +78,7 @@ const styles = StyleSheet.create({
     },
     scrollcontainer: {
         flex: 1,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff'
     },
     developmentModeText: {
         marginBottom: 20,
@@ -131,5 +162,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         justifyContent: "space-around"
+    },
+    searchField: {
+        marginLeft: 20,
+        marginRight: 20
     },
 });

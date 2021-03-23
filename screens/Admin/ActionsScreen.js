@@ -7,10 +7,10 @@ import TemperatureActions from './TemperatureActions'
 import MotionActions from './MotionActions'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import AdminTabs from '../Zainab/AdminTabs'
+import AdminTabs from '../../Zainab/AdminTabs'
 import { Colors } from 'react-native-ui-lib'
-import AdminCategories from '../Zainab/AdminCategories'
-import Manufacturers from '../Zainab/Manufacturers'
+import AdminCategories from '../../Zainab/AdminCategories'
+import Manufacturers from '../../Zainab/Manufacturers'
 
 export default function ActionsScreen() {
 

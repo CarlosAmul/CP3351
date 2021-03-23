@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import UserContext from '../../UserContext'
-import db from '../../db'
+import UserContext from '../UserContext'
+import db from '../db'
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
+import MenuIcon from '../components/MenuIcon'
 import UserFavorite from './UserFavorite'
 
 export default function UserFavoritesScreen() {

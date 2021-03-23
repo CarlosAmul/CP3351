@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { ListItem } from 'react-native-ui-lib'
-import UserContext from '../../UserContext'
-import db from '../../db'
+import UserContext from '../UserContext'
+import db from '../db'
 import {Avatar} from 'react-native-ui-lib'
 import { Colors } from 'react-native-ui-lib'
 

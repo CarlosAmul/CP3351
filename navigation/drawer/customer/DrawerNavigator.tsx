@@ -8,11 +8,11 @@ import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import PublicHomeScreen from '../../../screens/Zainab/PublicHomeScreen'
+import PublicHomeScreen from '../../../Zainab/PublicHomeScreen'
 // @ts-expect-error
-import UserFavoritesScreen from '../../../screens/Zainab/UserFavoritesScreen'
+import UserFavoritesScreen from '../../../Zainab/UserFavoritesScreen'
 // @ts-expect-error
-import PaymentFormScreen from '../../../screens/Zainab/PaymentFormScreen'
+import PaymentFormScreen from '../../../Zainab/PaymentFormScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
@@ -24,33 +24,34 @@ import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
 // @ts-expect-error
 import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 // @ts-expect-error
-import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
+import CategoryFavsScreen from '../../../Zainab/CategoryFavsScreen'
 // @ts-expect-error
-import FitnessTipsScreen from '../../../screens/Zainab/FitnessTipsScreen'
+import FitnessTipsScreen from '../../../Zainab/FitnessTipsScreen'
 // @ts-expect-error
-import CustomerSafetyInstructionsScreen from '../../../screens/Zainab/CustomerSafetyInstructionsScreen'
+import CustomerSafetyInstructionsScreen from '../../../Zainab/CustomerSafetyInstructionsScreen'
 // @ts-expect-error
-import ApprovedFitnessTipsScreen from '../../../screens/Zainab/ApprovedFitnessTipsScreen'
+import ApprovedFitnessTipsScreen from '../../../Zainab/ApprovedFitnessTipsScreen'
 // @ts-expect-error
-import CustomerRewardsScreen from '../../../screens/Zainab/CustomerRewardsScreen'
+import CustomerRewardsScreen from '../../../Zainab/CustomerRewardsScreen'
 // @ts-expect-error
-import RewardsHistoryScreen from '../../../screens/Zainab/RewardsHistoryScreen'
+import RewardsHistoryScreen from '../../../Zainab/RewardsHistoryScreen'
 // @ts-expect-error
-import VacancyScreen from '../../../screens/Zainab/VacancyScreen'
+import VacancyScreen from '../../../Zainab/VacancyScreen'
 // @ts-expect-error
-import ApplicationScreen from '../../../screens/Zainab/ApplicationScreen'
+import ApplicationScreen from '../../../Zainab/ApplicationScreen'
+// @ts-expect-error
+import RegisterLogin from '../../../RegisterLogin'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-
 
 export default function DrawerNavigator() {
 
   const { user } = useContext(UserContext)
 
   const [notifCount, setNotifCount] = React.useState(0)
-  React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
+  React.useEffect(() => user? db.Users.Notifications.unreadCount(user.id, setNotifCount) : undefined, [user])
 
   return (
     <Drawer.Navigator
@@ -79,44 +80,78 @@ export default function DrawerNavigator() {
         component={ PublicHomeNavigator }
         options={ { drawerLabel: "Home" } } 
       />
-      <Drawer.Screen
-        name="Notifications"
-        component={ NotificationsNavigator }
-        options={ { drawerLabel: `Notifications (${notifCount})` } }
-      />
+      {
+        user 
+        &&
+        <Drawer.Screen
+          name="Notifications"
+          component={ NotificationsNavigator }
+          options={ { drawerLabel: `Notifications (${notifCount})` } }
+        />
+      }
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="Actions"
+          component={ ActionsNavigator }
+        />
+      }
       <Drawer.Screen
         name="FAQs"
         component={ FAQsNavigator }
         options={ { drawerLabel: 'FAQ' } }
       />
-      <Drawer.Screen
-        name="Actions"
-        component={ ActionsNavigator }
-      />
-      <Drawer.Screen
-        name="Sensors"
-        component={ SensorsNavigator }
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={ SettingsNavigator }
-        options={ { drawerLabel: "Settings" } }
-      />
-      <Drawer.Screen
-        name="UserFavorites"
-        component={ UserFavoritesNavigator }
-        options={ { drawerLabel: "My Favorites" } }
-      />
-      <Drawer.Screen
-        name="FitnessTips"
-        component={ FitnessTipsNavigator }
-        options={ { drawerLabel: "My Fitness Tips" } }
-      />
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="Sensors"
+          component={ SensorsNavigator }
+        />
+      }
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="Settings"
+          component={ SettingsNavigator }
+          options={ { drawerLabel: "Settings" } }
+        />
+      }
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="UserFavorites"
+          component={ UserFavoritesNavigator }
+          options={ { drawerLabel: "My Favorites" } }
+        />
+      }
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="FitnessTips"
+          component={ FitnessTipsNavigator }
+          options={ { drawerLabel: "My Fitness Tips" } }
+        />
+      }
+      
       <Drawer.Screen
         name="CustomerRewards"
         component={ CustomerRewardsNavigator }
         options={ { drawerLabel: "Rewards" } }
       />
+      {
+        !user
+        &&
+        <Drawer.Screen
+          name="LoginRegister"
+          component={ LoginRegisterNavigator }
+          options={ { drawerLabel: "Login" } }
+        />
+      }
     </Drawer.Navigator>
   );
 }
@@ -278,5 +313,19 @@ function CustomerRewardsNavigator() {
         options={ { headerTitle: 'Rewards History' } }
       />
     </CustomerRewardsStack.Navigator>
+  )
+}
+
+const LoginRegisterStack = createStackNavigator<TabTenParamList>();
+
+function LoginRegisterNavigator() {
+  return (
+    <LoginRegisterStack.Navigator>
+      <LoginRegisterStack.Screen
+        name="LoginRegisterScreen"
+        component={ RegisterLogin }
+        options={ { headerTitle: 'Login/Register' } }
+      />
+    </LoginRegisterStack.Navigator>
   )
 }
