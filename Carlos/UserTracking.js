@@ -13,8 +13,6 @@ import { LineChart } from 'react-native-chart-kit';
 
 export default function UserTracking({ user }) {
 
-    console.log(user)
-
     const navigation = useNavigation();
     useEffect(() => {
         navigation.setOptions({
@@ -22,6 +20,8 @@ export default function UserTracking({ user }) {
             headerLeft: () => (<MenuIcon />)
         });
     });
+
+    const TabRouter = ['login', 'logout', 'buy']
 
     const [trackings, setTrackings] = useState([])
     useEffect(() => db.UserTrackings.listenTrackings(user.id, setTrackings, getDay(0), getDay(7)), [user])
@@ -68,7 +68,7 @@ export default function UserTracking({ user }) {
                         <Text text70 style={{ textAlign: 'center', justifyContent: 'center', color: Colors.primary }}>{user.id}</Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                        <View style={{ padding: 15, alignSelf: 'center', alignItems: 'center', width: '44%', borderWidth: 1, borderRightWidth: 0, borderColor: Colors.primary, backgroundColor: Colors.purple80, borderRadius: 10 }}>
+                        <View style={{ padding: 15, alignSelf: 'center', alignItems: 'center', width: '50%', borderWidth: 1, borderRightWidth: 0, borderColor: Colors.primary, backgroundColor: Colors.purple80, borderRadius: 10 }}>
                             <Text text70 style={{ color: Colors.primary }}>Name</Text>
                             <Text text80 style={{ color: Colors.black }}>{user.name}</Text>
                             <Text text70 style={{ color: Colors.primary }}>Registered</Text>
@@ -76,7 +76,7 @@ export default function UserTracking({ user }) {
                             <Text text70 style={{ color: Colors.primary }}>Role</Text>
                             <Text text80 style={{ color: Colors.black }}>{user.role}</Text>
                         </View>
-                        <View style={{ paddingTop: 15, paddingBottom: 15, alignSelf: 'center', alignItems: 'center', width: '55%', borderWidth: 1, borderColor: Colors.primary, borderRadius: 10 }}>
+                        <View style={{ paddingTop: 15, paddingBottom: 15, alignSelf: 'center', alignItems: 'center', width: '50%', borderWidth: 1, borderColor: Colors.primary, borderRadius: 10 }}>
                             <Text text70 style={{ color: Colors.primary }}>Logins This Week</Text>
                             <Text text80 style={{ color: Colors.black }}>{trackings.filter(tracking => tracking.operation == 'login').length}</Text>
                             <Text text70 style={{ color: Colors.primary }}>Last Login</Text>
@@ -92,7 +92,7 @@ export default function UserTracking({ user }) {
             <Text text60 style={{ marginTop: 20, marginBottom: 10, color: Colors.primary }}>Graph</Text>
             <TabBar
                 backgroundColor={Colors.sidebg}
-                onTabSelected={(value) => setFilter(value==0? 'login' : 'logout')}
+                onTabSelected={(value) => setFilter(TabRouter[value])}
                 enableShadow
             >
                 <TabBar.Item

@@ -153,10 +153,10 @@ exports.createSampleData = functions.https.onCall(
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false })
     functions.logger.info("sensorId2", { sensorId2 })
 
-    const { id: adId1 } = await db.collection('ads').add({ 
-      title: 'New motion sensor', 
-      image: 'https://www.ikea.com/qa/en/images/products/tradfri-wireless-motion-sensor-white__0725849_pe735071_s5.jpg', 
-      description: 'There is new sensor by company click to see' ,
+    const { id: adId1 } = await db.collection('ads').add({
+      title: 'New motion sensor',
+      image: 'https://www.ikea.com/qa/en/images/products/tradfri-wireless-motion-sensor-white__0725849_pe735071_s5.jpg',
+      description: 'There is new sensor by company click to see',
       screen: 'PublicHome',
       startDate: new Date(),
       endDate: new Date('2021-04-19T12:00:00-06:30')
@@ -237,7 +237,7 @@ exports.newRegistration = functions.firestore.document('users/{userid}').onCreat
     const { userid } = context.params
     const userDoc = await db.collection('users').doc(userid).get()
     const user = { id: userDoc.id, ...userDoc.data() }
-    const tracking = db.collection('usertrackings').add({operation: 'register', when: new Date(), userid: userid})
+    const tracking = db.collection('usertrackings').add({ operation: 'register', when: new Date(), userid: userid })
     console.log('registration tracked', tracking)
 
     if (user.role == "Customer") {
@@ -263,3 +263,19 @@ exports.addSensor = functions.https.onCall(
     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
   }
 )
+
+exports.newPurchase = functions.firestore.document('sensors/{sensorid}').onCreate(
+  async (snap, context) => {
+    const { sensorid } = context.params
+    const sensorDoc = await db.collection('sensors').doc(sensorid).get()
+    const sensor = { id: sensorDoc.id, ...sensorDoc.data() }
+    const categoryDoc = await db.collection('categories').doc(sensor.categoryid).get()
+    const category = { id: categoryDoc.id, ...categoryDoc.data() }
+    functions.logger.info("category", { category })
+    const tracking = await db.collection('usertrackings').add({ operation: 'buy', when: new Date(), userid: sensor.userid })
+    console.log('purchase tracked', tracking)
+
+    const notif = newNotification(sensor.userid, 'Thank you for your purchase! Click here to view your new sensor', 'Sensors', { catId: category.id, sensorId: sensor.id })
+    functions.logger.info("notification sent", notif)
+
+  })

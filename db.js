@@ -32,6 +32,11 @@ class DB {
         return data.docs.map(this.reformat)
     }
 
+    findAllSize = async () => {
+        const data = await db.collection(this.collection).get()
+        return data.docs.length
+    }
+
     listenAll = set =>
         db.collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 

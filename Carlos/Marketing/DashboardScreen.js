@@ -1,14 +1,16 @@
 import React, { useState, useEffect, createRef } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import { Card, Text, Button, Carousel, TextArea, Image } from 'react-native-ui-lib'
+import { Card, Text, Button, Carousel, TabBar, Image } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
 import MenuIcon from '../../components/MenuIcon'
 import DashboardCategory from './DashboardCategory'
 import DashboardAd from './DashboardAd'
 import { AntDesign } from '@expo/vector-icons';
 import { Colors } from 'react-native-ui-lib'
+import { PieChart } from 'react-native-chart-kit'
+import reformatData from './reformatData'
 import db from '../../db';
 
 
@@ -22,12 +24,38 @@ export default function DashboardScreen() {
     });
   });
 
+  const tabRouter = ['purchases', 'likes']
+
+  const [sensors, setSensors] = useState([])
+  useEffect(() => db.Sensors.listenAll(setSensors), [])
+
+  const [favs, setFavs] = useState([])
+  useEffect(() => db.Categories.Favorites.listenToAllFavs(setFavs), [])
+  console.log(favs)
+
   const [categories, setCategories] = useState([])
   useEffect(() => db.Categories.listenAll(setCategories), [])
 
   const [ads, setAds] = useState([])
   useEffect(() => db.Ads.listenAll(setAds), [])
 
+  const [filter, setFilter] = useState('')
+  console.log(filter)
+
+  const [data, setData] = useState([])
+  useEffect(() => setData(categories.map(reformatData)), [categories])
+  console.log('real data', data)
+
+  const reformatData = (category) => {
+    const color = '#' + Math.floor(Math.random()*16777215).toString(16)
+    return {
+      name: `(${category.name})`,
+      data: sensors.filter(sensor => sensor.categoryid == category.id).length,
+      color: color,
+      legendFontColor: color,
+      legendFontSize: 15
+    }
+  }
 
   const catCarousel = createRef();
   const adCarousel = createRef();
@@ -75,6 +103,44 @@ export default function DashboardScreen() {
 
 
         </Card>
+
+
+        {/* Statistics */}
+        <Text text60 style={{ marginTop: 30, marginBottom: 10, color: Colors.primary }}>Statistics</Text>
+        <TabBar
+            onTabSelected={(value) => setFilter(tabRouter[value])}
+            enableShadow
+            containerWidth={345}
+          >
+            <TabBar.Item
+              label="Purchases"
+              selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
+            />
+            <TabBar.Item
+              label="Likes"
+              selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
+            />
+          </TabBar>
+        <Card
+          row
+          enableShadow
+          style={styles.card}
+        >
+          <PieChart
+            data={data}
+            width={350}
+            height={200}
+            chartConfig={{
+              color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`
+            }}
+            accessor={"data"}
+            backgroundColor={"transparent"}
+            paddingLeft={"5"}
+            center={[0, 15]}
+            absolute
+          />
+        </Card>
+
 
         {/* Ads */}
         <Text text60 style={{ marginTop: 20, marginBottom: 10, color: Colors.primary }}>Ads</Text>
