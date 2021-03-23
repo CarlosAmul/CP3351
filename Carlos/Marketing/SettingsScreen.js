@@ -1,11 +1,11 @@
 import React, { useContext, useEffect} from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from '../../../components/Themed';
-import Colors from '../../../constants/Colors';
-import UserContext from '../../../UserContext'
-import fb from '../../../fb'
+import { Text, View } from '../../components/Themed';
+import Colors from '../../constants/Colors';
+import UserContext from '../../UserContext'
+import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../../components/MenuIcon'
+import MenuIcon from '../../components/MenuIcon'
 
 export default function SettingsScreen() {
 
@@ -20,6 +20,7 @@ export default function SettingsScreen() {
   const { user } = useContext(UserContext)
 
   const logout = async () => {
+    await db.UserTrackings.addTrack(user.id, 'logout')
     await fb.auth().signOut()
   }
 

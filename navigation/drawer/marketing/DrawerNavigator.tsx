@@ -3,13 +3,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import * as React from 'react';
 
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Carlos/Marketing/DashboardScreen'
+import DashboardScreen from '../../../Carlos/Marketing/DashboardScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Carlos/Marketing/ActionsScreen'
+import ActionsScreen from '../../../Carlos/Marketing/ActionsScreen'
 // @ts-expect-error
-import SettingsScreen from '../../../screens/Carlos/Marketing/SettingsScreen'
+import SettingsScreen from '../../../Carlos/Marketing/SettingsScreen'
 // @ts-expect-error
-import AdForm from '../../../screens/Carlos/Marketing/AdForm'
+import AdForm from '../../../Carlos/Marketing/AdForm'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error

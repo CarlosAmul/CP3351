@@ -6,7 +6,7 @@ import MenuIcon from '../../components/MenuIcon'
 import { Colors } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
-import Ad from '../Carlos/Ad'
+import Ad from '../../Carlos/Ad'
 import db from '../../db';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 

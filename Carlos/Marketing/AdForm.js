@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { View } from '../../../components/Themed';
+import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Text, Button, Image, TextArea, TouchableOpacity, DateTimePicker } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,8 +9,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
 // import DateTimePicker from '@react-native-community/datetimepicker';
 
-import fb from '../../../fb'
-import db from '../../../db';
+import fb from '../../fb'
+import db from '../../db';
 import { LogBox } from 'react-native';
 
 export default function AdForm({ navigation: { goBack }, route }) {
@@ -64,7 +64,7 @@ export default function AdForm({ navigation: { goBack }, route }) {
                 <View style={{ marginTop: 20, alignItems: 'center' }}>
                     <Text text70 style={{ color: Colors.primary, marginBottom: 10 }}>Image</Text>
                     <Image
-                        source={url == '' ? require('../../../assets/images/placeholderImage.jpg') : { uri: url }}
+                        source={url == '' ? require('../../assets/images/placeholderImage.jpg') : { uri: url }}
                         style={styles.cardimg}
                         resizeMode="contain"
                     />

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import db from '../../db'
+import db from '../db'
 import { Picker } from '@react-native-picker/picker';
 
 export default function UserPicker({ set }) {

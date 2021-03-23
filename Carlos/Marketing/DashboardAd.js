@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
-import { View } from '../../../components/Themed';
+import { View } from '../../components/Themed';
 import { Button, Colors, Image, Text } from 'react-native-ui-lib'
 import Ad from '../Ad'
-import db from '../../../db';
+import db from '../../db';
 
 export default function DashboardAd({ ad }) {
 

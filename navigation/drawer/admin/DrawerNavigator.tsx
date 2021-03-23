@@ -9,7 +9,7 @@ import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
-import UserTrackingsScreen from '../../../screens/Carlos/UserTrackingsScreen'
+import UserTrackingsScreen from '../../../Carlos/UserTrackingsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList } from './types';
 

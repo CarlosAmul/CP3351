@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { View } from '../../../components/Themed';
+import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../../components/MenuIcon'
+import MenuIcon from '../../components/MenuIcon'
 import { Colors } from 'react-native-ui-lib'
 
 export default function ActionsScreen() {

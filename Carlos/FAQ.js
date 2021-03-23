@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { View } from '../../components/Themed';
+import { View } from '../components/Themed';
 import { Button, Text, ExpandableSection, Colors, TextArea } from 'react-native-ui-lib'
-import useColorScheme from '../../hooks/useColorScheme'
+import useColorScheme from '../hooks/useColorScheme'
 import { Entypo } from '@expo/vector-icons';
-import db from '../../db'
+import db from '../db'
 // import { user } from 'firebase-functions/lib/providers/auth';
-import UserContext from '../../UserContext'
+import UserContext from '../UserContext'
 
 export default function FAQ({ faq }) {
     // const [sender, setSender] = useState(null)

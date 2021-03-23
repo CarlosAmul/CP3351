@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { View } from '../../../components/Themed';
+import { View } from '../../components/Themed';
 import { Card, Colors } from 'react-native-ui-lib'
-import db from '../../../db';
+import db from '../../db';
 
 export default function DashboardCategory({ category }) {
 

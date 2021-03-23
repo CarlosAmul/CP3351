@@ -9,13 +9,13 @@ import ActionsScreen from '../../../screens/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
-import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
+import NotificationsScreen from '../../../Carlos/NotificationsScreen'
 // @ts-expect-error
-import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
+import FAQsScreen from '../../../Carlos/FAQsScreen'
 // @ts-expect-error
-import PendingFAQsScreen from '../../../screens/Carlos/PendingQuestionsScreen'
+import PendingFAQsScreen from '../../../Carlos/PendingQuestionsScreen'
 // @ts-expect-error
-import DraftsScreen from '../../../screens/Carlos/DraftsScreen.js'
+import DraftsScreen from '../../../Carlos/DraftsScreen.js'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error

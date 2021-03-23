@@ -1,15 +1,15 @@
 import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { View } from '../../../components/Themed';
+import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Text, Button, Carousel, TextArea, Image } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
-import MenuIcon from '../../../components/MenuIcon'
+import MenuIcon from '../../components/MenuIcon'
 import DashboardCategory from './DashboardCategory'
 import DashboardAd from './DashboardAd'
 import { AntDesign } from '@expo/vector-icons';
 import { Colors } from 'react-native-ui-lib'
-import db from '../../../db';
+import db from '../../db';
 
 
 export default function DashboardScreen() {

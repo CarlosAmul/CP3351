@@ -1,13 +1,13 @@
 import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { View } from '../../components/Themed';
+import { View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Text, Button, TabBar } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
-import MenuIcon from '../../components/MenuIcon'
+import MenuIcon from '../components/MenuIcon'
 import { AntDesign } from '@expo/vector-icons';
 import { Colors } from 'react-native-ui-lib'
-import db from '../../db';
+import db from '../db';
 import { LineChart } from 'react-native-chart-kit';
 
 

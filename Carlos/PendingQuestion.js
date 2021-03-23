@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { View } from '../../components/Themed';
+import { View } from '../components/Themed';
 import { Text, ExpandableSection, Colors, TextArea, Button } from 'react-native-ui-lib'
-import useColorScheme from '../../hooks/useColorScheme'
+import useColorScheme from '../hooks/useColorScheme'
 import { Entypo } from '@expo/vector-icons';
-import db from '../../db'
+import db from '../db'
 
 export default function PendingQuestion({ faq, set }) {
 

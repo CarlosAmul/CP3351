@@ -71,7 +71,6 @@ export default function App() {
         }
         
         else {
-            console.log('user role', user?.role)
             fb.auth().signOut()
             return null
         }

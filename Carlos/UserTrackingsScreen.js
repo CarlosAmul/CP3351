@@ -1,15 +1,15 @@
 import React, { useState, useEffect, createRef } from 'react';
 import { StyleSheet, Dimensions, useColorScheme } from 'react-native';
-import { View } from '../../components/Themed';
+import { View } from '../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import { Card, Text, Button, Carousel, TextArea, Image } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
-import MenuIcon from '../../components/MenuIcon'
+import MenuIcon from '../components/MenuIcon'
 import { Colors } from 'react-native-ui-lib'
 import UserTracking from './UserTracking'
-import db from '../../db';
+import db from '../db';
 import { LineChart } from 'react-native-chart-kit';
-import UserPicker from '../pickers/UserPicker';
+import UserPicker from '../screens/pickers/UserPicker';
 
 
 export default function DashboardScreen() {
