@@ -20,8 +20,6 @@ import ActionsScreen from '../../../screens/Customer/ActionsScreen'
 // @ts-expect-error
 import SensorsScreen from '../../../screens/Customer/SensorsScreen'
 // @ts-expect-error
-import CategoryFavsScreen from '../../../screens/Zainab/CategoryFavsScreen'
-// @ts-expect-error
 import NotificationsScreen from '../../../Carlos/NotificationsScreen'
 // @ts-expect-error
 import FAQsScreen from '../../../Carlos/FAQsScreen'

@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import { Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../../components/MenuIcon'
+import MenuIcon from '../components/MenuIcon'
 import { Colors, Button } from 'react-native-ui-lib'
 import Categories from './Categories'
 import MostFavorite from './MostFavorite'
-import Ad from '../../Carlos/Ad'
-import db from '../../db';
+import Ad from '../Carlos/Ad'
+import db from '../db';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import UserContext from '../UserContext'
 
-export default function CustomerHiring({navigation}) {
+export default function CustomerHiring({navigation}) {  
 
     const {user} = useContext(UserContext)
 
@@ -53,7 +52,7 @@ export default function CustomerHiring({navigation}) {
                         </View>
                     </View>
             }
-            <Categories stacknavigation={stacknavigation} />
+            {/* <Categories stacknavigation={stacknavigation} /> */}
             <MostFavorite />
         </ScrollView>
         <View>

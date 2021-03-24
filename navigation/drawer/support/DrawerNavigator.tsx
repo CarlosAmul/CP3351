@@ -4,10 +4,6 @@ import * as React from 'react';
 import { View, SafeAreaView, Image } from 'react-native'
 import {useContext} from 'react'
 // @ts-expect-error
-import db from '../../../db.js'
-// @ts-expect-error
-import UserContext from '../../../UserContext';
-// @ts-expect-error
 import DashboardScreen from '../../../screens/Admin/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Admin/ActionsScreen'

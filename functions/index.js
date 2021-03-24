@@ -183,8 +183,8 @@ exports.createSampleData = functions.https.onCall(
     const { id: reward1 } = await db.collection('rewards').add({ title: 'Get 20% Off', description: 'Get 20% Off on your next purchase', points: 2000, type: "Discount", discount: 20, image: 'https://thumbs.dreamstime.com/b/discount-pink-brush-new-vector-watercolor-background-colorful-abstract-texture-design-elements-vintage-splash-card-110234831.jpg' })
     const { id: reward2 } = await db.collection('rewards').add({ title: 'Voucher from Adidas', description: 'Get the voucher from adidas and buy your favorite things', points: 1500, type: "Voucher", image: 'https://giftcardcorner.net/wp-content/uploads/2019/09/Free-Adidas-Promo-Code-Adias-Coupon-Code-AND-Voucer-Free-Adidas-Shoes.jpg' })
 
-    const result5 = await db.collection('users').doc(authId5).set({ name: "Bita", role: "Marketing" })
-    functions.logger.info("result5", { result5 })
+    const result7 = await db.collection('users').doc(authId5).set({ name: "Bita", role: "Marketing" })
+    functions.logger.info("result5", { result7 })
 
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
@@ -379,3 +379,4 @@ exports.newPurchase = functions.firestore.document('sensors/{sensorid}').onCreat
     functions.logger.info("notification sent", notif)
 
   })
+})
