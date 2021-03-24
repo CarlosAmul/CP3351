@@ -9,9 +9,9 @@ import DashboardCategory from './DashboardCategory'
 import DashboardAd from './DashboardAd'
 import { AntDesign } from '@expo/vector-icons';
 import { Colors } from 'react-native-ui-lib'
-import { PieChart } from 'react-native-chart-kit'
-import reformatData from './reformatData'
+import { BarChart, PieChart } from 'react-native-chart-kit'
 import db from '../../db';
+import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
 
 
 export default function DashboardScreen() {
@@ -26,12 +26,13 @@ export default function DashboardScreen() {
 
   const tabRouter = ['purchases', 'likes']
 
+  
+
   const [sensors, setSensors] = useState([])
-  useEffect(() => db.Sensors.listenAll(setSensors), [])
+  useEffect(() => db.Sensors.listenAll(setSensors), [categories])
 
   const [favs, setFavs] = useState([])
-  useEffect(() => db.Categories.Favorites.listenToAllFavs(setFavs), [])
-  console.log(favs)
+  useEffect(() => db.Categories.Favorites.listenToAllFavs(setFavs), [categories])
 
   const [categories, setCategories] = useState([])
   useEffect(() => db.Categories.listenAll(setCategories), [])
@@ -39,18 +40,46 @@ export default function DashboardScreen() {
   const [ads, setAds] = useState([])
   useEffect(() => db.Ads.listenAll(setAds), [])
 
-  const [filter, setFilter] = useState('')
-  console.log(filter)
+  const [filter, setFilter] = useState('purchases')
 
-  const [data, setData] = useState([])
-  useEffect(() => setData(categories.map(reformatData)), [categories])
-  console.log('real data', data)
+  const [colors, setColors] = useState([])
+  useEffect(() => setColors(categories.map(getRandomColor)), [categories])
 
-  const reformatData = (category) => {
-    const color = '#' + Math.floor(Math.random()*16777215).toString(16)
+  const [buyData, setBuyData] = useState([])
+  useEffect(() => setBuyData(categories.map(reformatBuyData)), [colors])
+  useEffect(() => setBuyData(categories.map(reformatBuyData)), [categories])
+  useEffect(() => setBuyData(categories.map(reformatBuyData)), [sensors])
+
+  const [likeData, setLikeData] = useState([])
+  useEffect(() => setLikeData(categories.map(reformatLikeData)), [colors])
+  useEffect(() => setLikeData(categories.map(reformatLikeData)), [categories])
+  useEffect(() => setLikeData(categories.map(reformatLikeData)), [favs])
+ 
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  const reformatBuyData = (category) => {
+    const color = colors[categories.indexOf(category)]
     return {
       name: `(${category.name})`,
       data: sensors.filter(sensor => sensor.categoryid == category.id).length,
+      color: color,
+      legendFontColor: color,
+      legendFontSize: 15
+    }
+  }
+
+  const reformatLikeData = (category) => {
+    const color = colors[categories.indexOf(category)]
+    return {
+      name: `(${category.name})`,
+      data: favs.filter(sensor => sensor.parentId == category.id).length,
       color: color,
       legendFontColor: color,
       legendFontSize: 15
@@ -108,37 +137,67 @@ export default function DashboardScreen() {
         {/* Statistics */}
         <Text text60 style={{ marginTop: 30, marginBottom: 10, color: Colors.primary }}>Statistics</Text>
         <TabBar
-            onTabSelected={(value) => setFilter(tabRouter[value])}
-            enableShadow
-            containerWidth={345}
-          >
-            <TabBar.Item
-              label="Purchases"
-              selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
-            />
-            <TabBar.Item
-              label="Likes"
-              selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
-            />
-          </TabBar>
+          onTabSelected={(value) => setFilter(tabRouter[value])}
+          enableShadow
+          containerWidth={345}
+        >
+          <TabBar.Item
+            label="Purchases"
+            selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
+          />
+          <TabBar.Item
+            label="Likes"
+            selectedLabelStyle={{ color: Colors.primary, fontWeight: "bold" }}
+          />
+        </TabBar>
         <Card
           row
           enableShadow
           style={styles.card}
         >
-          <PieChart
-            data={data}
-            width={350}
-            height={200}
+          {/* <BarChart
+            data={
+              {
+                labels: ["January", "February", "March", "April", "May", "June"],
+                datasets: [
+                  {
+                    data: [20, 45, 28, 80, 99, 43],
+                    strokeWidth: 10 // optional
+                  }
+                ],
+                legend: ["Rainy Days"] // optional
+              }
+            }
+            width={300}
+            height={220}
             chartConfig={{
-              color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`
+              backgroundGradientFrom: "white",
+              backgroundGradientTo: "white",
+              color: (opacity = 1) => Colors.primary,
+              strokeWidth: 2, // optional, default 3
+              barPercentage: 0.5
             }}
-            accessor={"data"}
-            backgroundColor={"transparent"}
-            paddingLeft={"5"}
-            center={[0, 15]}
-            absolute
-          />
+            verticalLabelRotation={0}
+          /> */}
+          {
+            likeData.length > 0 || buyData.length > 0 || colors.length > 0 ?
+              <PieChart
+              data={ filter == 'purchases' ? buyData : likeData }
+              width={350}
+              height={200}
+              chartConfig={{
+                color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`
+              }}
+              accessor={"data"}
+              backgroundColor={"transparent"}
+              paddingLeft={"5"}
+              center={[0, 15]}
+              absolute
+            />
+            :
+            undefined
+          }
+          
         </Card>
 
 
