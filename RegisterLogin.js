@@ -1,21 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import fb from './fb'
 import db from './db'
 import { StyleSheet, Image } from 'react-native';
 import LoginPicker from './screens/pickers/LoginPicker'
 import { Button, TextField, View } from 'react-native-ui-lib';
 import { Colors } from 'react-native-ui-lib'
+import { useNavigation } from '@react-navigation/native';
+import MenuIcon from './components/MenuIcon'
 import UserContext from './UserContext'
 
 export default function RegisterLogin() {
+
+	const navigation = useNavigation();
+    useEffect(() => {
+        navigation.setOptions({
+            // @ts-expect-error
+            headerLeft: () => (<MenuIcon />)
+        });
+    }, [navigation]);
 
 	Colors.loadColors({
 		primary: '#6874e2',
 		secondary: '#f9ce7f',
 		mainbg: '#f5f6fa',
 		sidebg: '#ffffff',
+		darkprimary: '#ff466a',
+		darksecondary: '#0df5e3',
+		darkmainbg: '#201a31',
+		darksidebg: '#38304d'
 	});
 
+	const {user} = useContext(UserContext)
+	
+	useEffect(() => user ? navigation.navigate('PublicHomeScreen'): undefined, [user])
 
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
@@ -36,6 +53,7 @@ export default function RegisterLogin() {
 				await fb.auth().createUserWithEmailAndPassword(email, password)
 				console.log(fb.auth().currentUser.uid)
 				await db.Users.update({ id: fb.auth().currentUser.uid, role: "Customer" })
+				navigation.navigate("PublicHomeScreen")
 			} catch (error) {
 				alert(error.message)
 			}

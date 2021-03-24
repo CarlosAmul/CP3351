@@ -5,14 +5,13 @@ import 'firebase/storage'
 import 'firebase/functions'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCPV44gVwibJaPpWH_4G2KY8kc6AKvA1ZM",
-    authDomain: "cp3351-39dd4.firebaseapp.com",
-    databaseURL: "https://cp3351-39dd4-default-rtdb.firebaseio.com",
-    projectId: "cp3351-39dd4",
-    storageBucket: "cp3351-39dd4.appspot.com",
-    messagingSenderId: "442367383444",
-    appId: "1:442367383444:web:c462446d76f860aac6e181",
-    measurementId: "G-XQJBRTN4B6"
+    apiKey: "AIzaSyBR4o8GEC0_0Uqd3OSeimB1djijA8iRkAI",
+    authDomain: "cp3351-project-9be84.firebaseapp.com",
+    projectId: "cp3351-project-9be84",
+    storageBucket: "cp3351-project-9be84.appspot.com",
+    messagingSenderId: "789561957066",
+    appId: "1:789561957066:web:77357785ccb2840713b233",
+    measurementId: "G-HE53FYYKKR"
 }
 
 firebase.initializeApp(firebaseConfig)

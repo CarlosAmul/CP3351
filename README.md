@@ -24,9 +24,10 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Drawer for Navigation (native component)
 * Tabbar and Tabs
 * Dialog
+* Expandable Section
 ## Carlos Tasks
 ### FAQs
-- [ ] Finished ❌
+- [X] Finished ✅
 * customer gets a form to ask a question. Support can see pending questions and answer them.
 * All support can remove or edit any question and they can choose to publish it or leave it as a draft.
 ### Ads
@@ -51,7 +52,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Also, on service reaching a location.
 ## Zainab Tasks
 ### Rewards & customer rewards
-- [ ] Finished ❌
+- [x] Finished ✅
 * Each user will have points. Every purchase earns them more.
 * As soon as points reach a certain amount the user becomes elligble for a reward.
 * The customer can redeem the reward whenever they wish.
@@ -65,7 +66,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * A customer can see a list of their favorite in a separate tab.
 * For the public, total favorites can be displayed for a category, as well as most favorited.
 ### Safety Instructions
-- [ ] Finished ❌
+- [x] Finished ✅
 * Service can write instructions step by step safety instructions for the usage of sensors.
 * Every instruction will have an image.
 * Support will be able to do all CRUD.
@@ -76,10 +77,16 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Admin can assign manufacturers to a category
 * When customers will purchase sensors, they can choose which manufacturer they want with high quality, low price etc. These manufacturers can be displayed on the public home page.
 ### Fitness Tips
-- [ ] Finished ❌
+- [x] Finished ✅
 * Customers can post some tips for the public and other customers. Support must approve these tips.
 * Once approved will be shown to other people
 * ~Again may be the other people can post their likes for these tips
+### Hiring
+- [ ] Finished ❌
+* Customer submits an application for (service, support and marketing roles) stating his skills and abilities.
+* The admin sees all these applications and reviews them and approves/rejects.
+* Once approved, the customer's role will be updated.
+* If rejected, the application will be marked as rejected. 
 ## Omar Tasks
 ### Mapping 
 - [ ] Finished ❌

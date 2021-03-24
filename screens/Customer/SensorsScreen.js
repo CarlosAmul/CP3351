@@ -5,17 +5,24 @@ import MotionInfo from './MotionInfo'
 import TemperatureInfo from './TemperatureInfo'
 import CategoryByUserPicker from '../pickers/CategoryByUserPicker';
 import SensorByUserAndCategoryPicker from '../pickers/SensorByUserAndCategoryPicker';
+import ReportPicker from '../pickers/ReportPicker'
 import UserContext from '../../UserContext'
-import {  Text } from 'react-native-ui-lib'
+import { Text, Button, Colors } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import db from '../../db';
 
-export default function SensorsScreen({route}) {
+export default function SensorsScreen({ route }) {
+
+	Colors.loadColors({
+		primary: '#6874e2',
+		basic: '#f5f6fa',
+	});
+
 	const navigation = useNavigation();
 
-	const [catId, setCatId] = useState(route.params? route.params.extra.catId : "")
-	const [sensorId, setSensorId] = useState(route.params? route.params.extra.sensorId : "")
+	const [catId, setCatId] = useState(route.params ? route.params.extra.catId : "")
+	const [sensorId, setSensorId] = useState(route.params ? route.params.extra.sensorId : "")
 
 	const { user } = useContext(UserContext)
 	useEffect(() => setCategory(null), [user])
@@ -23,33 +30,53 @@ export default function SensorsScreen({route}) {
 	useEffect(() => setSensor(null), [category])
 	const [sensor, setSensor] = useState(null)
 
+	//Omar
+	const [openReportForm, setOpenReportForm] = useState(false)
+	const [report, setReport] = useState(null)
+	const [installations, setInstallations] = useState([])
+
+	useEffect(() => db.Sensors.Installations.listenByCustomer(setInstallations,user.id), [sensor])
+
 	const renderDrawerView = () =>
 		<View>
 			<Text>Home</Text>
 		</View>
-	
+
 	useEffect(() => {
 		navigation.setOptions({
-		  // @ts-expect-error
-		  headerLeft: () => (<MenuIcon />)
+			// @ts-expect-error
+			headerLeft: () => (<MenuIcon />)
 		});
 	});
 
+	const sendRequestForm = () => {
+		db.Users.Reports.createReport(user.id, { type: report, when: new Date(), sensorId: sensor.id })
+		setOpenReportForm(!openReportForm)
+	}
+
+	const isLastRequestActive = () => {
+		return sensor.request === "yes" ? true : false
+	}
+
+	// console.log("installations", installations)
+
+	//
+
 	return (
-		<View style={{ flex: 1 }}> 
-			
+		<View style={{ flex: 1 }}>
+
 			<View style={styles.getStartedContainer}>
 				{
 					user
 					&&
-					<CategoryByUserPicker set={setCategory} routeId={catId} setRoute={setSensorId}/>
+					<CategoryByUserPicker set={setCategory} routeId={catId} setRoute={setSensorId} />
 				}
 				{
 					user
 					&&
 					category
 					&&
-					<SensorByUserAndCategoryPicker category={category} set={setSensor} routeId={sensorId}/>
+					<SensorByUserAndCategoryPicker category={category} set={setSensor} routeId={sensorId} />
 				}
 				{
 					user
@@ -67,8 +94,32 @@ export default function SensorsScreen({route}) {
 						{
 							category.name === "Temperature"
 							&&
+							sensor.install === "yes"
+							&&
 							<TemperatureInfo user={user} category={category} sensor={sensor} />
 						}
+						{/* Omar */}
+						<Button label="Request Report"
+							style={{ width: '60%' }}
+							backgroundColor={Colors.primary}
+							onPress={() => { navigation.navigate({ name: 'ReportsFormScreen', params: { sensor: sensor } }) }}
+							marginT-15
+						/>
+						{
+							sensor.install === "no" || sensor.install === "yes" ?
+							<>
+							{
+							!isLastRequestActive() &&
+								<Button label="Request Service"
+									style={{ width: '60%' }}
+									backgroundColor={Colors.primary}
+									onPress={() => { navigation.navigate({ name: 'InstallationsFormScreen', params: { sensor: sensor } }) }}
+									marginT-15
+								/>
+							}
+							</>: undefined
+						}
+						{/* // */}
 					</>
 				}
 			</View>

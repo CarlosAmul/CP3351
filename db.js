@@ -2,19 +2,6 @@ import firebase from './fb'
 import fetch from 'node-fetch'
 const db = firebase.firestore()
 
-// const a = async () => {
-//     const response = await fetch('https://10.0.2.2:8080',
-//         {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             }
-//         }
-//     )
-//     console.log(response.ok)
-// }
-// a()
-
 // all database functionality here
 class DB {
 
@@ -47,7 +34,7 @@ class DB {
 
     listenOne = (set, id) => {
         console.log('received id ', id)
-        id === ""
+        return id === ""
             ?
             set(null)
             :
@@ -78,6 +65,7 @@ class Sensors extends DB {
     constructor() {
         super('sensors')
         this.Readings = new Readings(this.collection)
+        this.Installations = new Installations(this.collection)
     }
 
     listenByCategory = (set, categoryid) =>
@@ -104,6 +92,9 @@ class Sensors extends DB {
     listenUserSensorCount = (id, set) => {
         db.collection(this.collection).where('userid', '==', id).onSnapshot(snap => set(snap.size))
     }
+    
+    listenByUninstalled = (set, sensorId) => 
+        db.collection(this.collection).doc(sensorId).where("install", "==", "no").onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class Readings extends DB {
@@ -122,6 +113,24 @@ class Readings extends DB {
     listenLatestOne = (set, sensorId) =>
         db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when", "desc").limit(1).onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
 
+    findOldestOne = async (sensorId) => {
+        const doc = await db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when").limit(1).get() 
+        return !doc.empty ? doc.docs[0].data() : undefined
+        
+    }
+}
+class Reports extends DB {
+
+    constructor(containing) {
+        super('reports')
+        this.containing = containing
+    }
+
+    createReport = (userId, report) =>
+        db.collection(this.containing).doc(userId).collection(this.collection).add(report)
+
+    listenByUser = (set, userId) =>
+        db.collection(this.containing).doc(userId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class SupportCenters extends DB {
@@ -131,17 +140,93 @@ class SupportCenters extends DB {
     }
 }
 
+class Installations extends DB {
+
+    constructor(containing) {
+        super('installations')
+        this.containing = containing
+    }
+
+    reformat(doc){
+        return { id: doc.id, parent: doc.ref.parent.parent.id, ...doc.data() }
+    }
+
+    updateSub = async (item, sensorid) => {
+        const { id, ...rest } = item
+        return await db.collection(this.containing).doc(sensorid).collection(this.collection).doc(id).set(rest)
+    }
+
+    createInstallation = async (item, sensorId) => {
+        const { id, ...rest } = item
+        return await db.collection(this.containing).doc(sensorId).collection(this.collection).add(rest)
+    }
+
+    listenByPending = (set, centerid) => 
+        db.collectionGroup(this.collection)
+        .where("userid", "==", null)
+        .where("centerid", "==", centerid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenByAssigned = (set, userid) => 
+        db.collectionGroup(this.collection)
+        .where("userid", "==", userid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    listenByFinished = (set, userid) => 
+        db.collectionGroup(this.collection)
+        .where("status", "==", "Finished")
+        .where("userid", "==", userid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    findByCustomerSensor = async (sensorid) => {
+        const data = await db.collection(this.containing)
+        .doc(sensorid)
+        .collection(this.collection)
+        .get()
+        return data.docs.map(this.reformat)
+    }
+
+    listenByCustomer = (set, customerid) => 
+        db.collectionGroup(this.collection)
+        .where("customerid", "==", customerid)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    removeInstallation = (id, sensorid) =>
+        db.collection(this.containing)
+        .doc(sensorid)
+        .collection(this.collection)
+        .doc(id)
+        .delete()
+}
+
 
 class Users extends DB {
-
     constructor() {
         super('users')
         this.Notifications = new Notifications(this.collection)
+        this.Reports = new Reports(this.collection)
+        this.CustomerRewards = new CustomerRewards(this.collection)
+        this.Applications = new Applications(this.collection)
+    }
+
+    updatePoints = async (userid, points) => {
+        db.collection(this.collection).doc(userid).set({ points: points }, { merge: true })
+    }
+
+    updateCenter = async (userid, centerid) => {
+        db.collection(this.collection).doc(userid).set({ centerid: centerid }, { merge: true })
     }
 
     listenByRole(role, set) {
         return db.collection(this.collection).where('role', '==', role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
+    //Omar
+    listenByServiceNoCenter = (set) => 
+        db.collection(this.collection).where('centerid','==',null).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    //
+
+    listenToUsersByRole = (set, role) =>
+        db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
 }
 
@@ -180,6 +265,7 @@ class Categories extends DB {
     constructor() {
         super('categories')
         this.Favorites = new Favorites(this.collection)
+        this.SafetInstructions = new SafetInstructions(this.collection)
     }
 
     // max 10
@@ -260,7 +346,7 @@ class Favorites extends DB {
             }
         })
 
-        set(caetgoriesFavs)
+        return set(caetgoriesFavs)
     }
 
     listenCategoryFavCount = (set, id) => {
@@ -318,6 +404,112 @@ class UserTrackings extends DB {
 
 }
 
+class FitnessTips extends DB {
+    constructor() {
+        super('fitnesstips')
+    }
+    listenToUserFitnessTips = (set, userid) =>
+        db.collection(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToApprovedTips = (set) =>
+        db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class Simulator extends DB {
+    
+    constructor() {
+        super('simulator')
+    }
+}
+
+class SafetInstructions extends DB {
+    constructor(containing) {
+        super('safetyinstructions')
+        this.containing = containing
+    }
+
+    listenToCategoryInstructions = (set, categoryid) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    createSafetyInstruction = async (categoryid, instruction) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).add(instruction)
+
+    updateSafetyInstruction = async (categoryid, id, instruction) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).doc(id).set(instruction)
+
+    removeInstruction = async (categoryid, id) =>
+        db.collection(this.containing).doc(categoryid).collection(this.collection).doc(id).delete()
+
+}
+
+class Vacancies extends DB {
+    constructor() {
+        super('vacancies')
+    }
+}
+
+class Rewards extends DB {
+    constructor() {
+        super('rewards')
+    }
+
+    listenToRewardsByType = (set, type) => 
+        db.collection(this.collection).where('type', '==', type).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class CustomerRewards extends DB {
+
+    constructor(containing) {
+        super('customerrewards')
+        this.containing = containing
+    }
+
+    createReward = (userid, reward) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).add(reward)
+
+    setRedeemToTrue = (userid, id) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(id).set({redeem: true}, {merge: true})
+
+    listenToUserRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToUnRedeemCustomerRewards = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('redeem', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+}
+
+class Applications extends DB {
+
+    constructor(containing) {
+        super('applications')
+        this.containing = containing
+    }
+
+    reformatApplication(doc) {
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data() }
+    }
+
+    updateUserApplication = (userid, applicationid, application) => 
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(applicationid).set(application)
+
+    createApplication = (userid, application) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).add(application)
+
+    listenToUserApplication = (set, userid, applicationid) => 
+        db.collection(this.containing).doc(userid).collection(this.collection).doc(applicationid).onSnapshot(snap => set(this.reformat(snap)))
+
+    listenToUserApplications = (set, userid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToUsersCreatedApplication = (set, userid, vacancyid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('approved', '==', 'created').where('vacancyid', '==', vacancyid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    listenToUserSubmittedApplication = (set, userid, vacancyid) =>
+        db.collection(this.containing).doc(userid).collection(this.collection).where('approved', '==', 'submitted').where('vacancyid', '==', vacancyid).onSnapshot(snap => set(snap.docs.map(this.reformatApplication)))
+
+    listenToUsersSubmittedApplication = (set) =>
+        db.collectionGroup(this.collection).where('approved', '==', 'submitted').onSnapshot(snap => set(snap.docs.map(this.reformatApplication)))
+
+}
 
 export default {
     Categories: new Categories(),
@@ -327,5 +519,9 @@ export default {
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
     Ads: new Ads(),
-    UserTrackings: new UserTrackings()
+    UserTrackings: new UserTrackings(),
+    FitnessTips: new FitnessTips(),
+    Simulator: new Simulator(),
+    Rewards: new Rewards(),
+    Vacancies: new Vacancies()
 }

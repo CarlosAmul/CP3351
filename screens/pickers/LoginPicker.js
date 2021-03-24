@@ -8,6 +8,8 @@ const defaults = [
     { email: "admin@admin.com", password: "adminadmin" },
     { email: "fred@fred.com", password: "fredfred" },
     { email: "bita@bita.com", password: "bitabita" },
+    { email: "khalil@khalil.com", password: "khalilkhalil" },
+    { email: "kareem@kareem.com", password: "kareemkareem" }
 ]
 
 export default function LoginPicker({ setEmail, setPassword }) {

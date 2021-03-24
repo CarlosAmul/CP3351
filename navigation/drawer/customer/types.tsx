@@ -13,13 +13,22 @@ export type DrawerParamList = {
   Notifications: undefined,
   FAQs: undefined,
   UserFavorites: undefined,
-  PaymentForm: undefined
+  PaymentForm: undefined,
+  FitnessTips: undefined,
+  Reports: undefined,
+  Installations: undefined,
+  CustomerRewards: undefined,
+  LoginRegister: undefined
 };
 
 export type TabOneParamList = {
   PublicHomeScreen: undefined;
   CategoryFavsScreen: undefined;
   PaymentFormScreen: undefined;
+  ApprovedFitnessTipsScreen: undefined;
+  CustomerSafetyInstructionsScreen: undefined;
+  VacancyScreen: undefined;
+  ApplicationScreen: undefined;
 };
 
 export type TabTwoParamList = {
@@ -32,6 +41,8 @@ export type TabThreeParamList = {
 
 export type TabFourParamList = {
   SensorsScreen: undefined;
+  InstallationsFormScreen: undefined;
+  ReportsFormScreen: undefined;
 };
 
 export type TabFiveParamList = {
@@ -44,6 +55,22 @@ export type TabSixParamList = {
 
 export type TabSevenParamList = {
   UserFavoritesScreen: undefined;
+};
+
+export type TabEightParamList = {
+  FitnessTipsScreen: undefined;
+};
+
+export type TabNineParamList = {
+  ReportsScreen: undefined;
+  CustomerRewardsScreen: undefined;
+  RewardsHistoryScreen: undefined;
+};
+
+export type TabTenParamList = {
+  LoginRegisterScreen: undefined;
+  InstallationScreen: undefined;
+  DetailsScreen: undefined;
 };
 
 export type onPressFunc = (event: GestureResponderEvent) => void;

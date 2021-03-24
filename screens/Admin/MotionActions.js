@@ -54,7 +54,7 @@ export default function MotionActions({ sensor }) {
       <TouchableOpacity onPress={uploadImage} style={styles.title}>
         <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
           Upload an image
-    </Text>
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleToggleMotionDetected} style={styles.title}>
         <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
