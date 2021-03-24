@@ -27,7 +27,7 @@ export default function InstallationsFormScreen({ route }) {
     const [type, setType] = useState("")
     const [operationMessage, setOperationMessage] = useState(null)
     const [centers, setCenters] = useState([])
-    const [requestDate, setRequestDate] = useState(new Date())
+    const [requestDate, setRequestDate] = useState(null)
 
     useEffect(() => db.SupportCenters.listenAll(setCenters), [])
     useEffect(() => {
@@ -123,40 +123,37 @@ export default function InstallationsFormScreen({ route }) {
                 transport = Math.ceil(transport)
             fee = Math.ceil(fee)
 
-            let message = `Transport will be ${transport}. Requested installation date is on ${requestDate.toLocaleDateString()} between 2 to 6 pm. Totalling at ${fee} QAR` 
+            let message = `Transport will be ${transport}. Requested installation date is on ${requestDate.toLocaleDateString()} between 2 to 6 pm. Totalling at ${fee} QAR`
             setFee(fee)
             setOperationMessage(message)
         }
     }
 
-    useEffect(() => {handleFees()},[requestDate, closest])
-
-    const validateSubmit = () =>
-        !requestDate
+    useEffect(() => { handleFees() }, [requestDate, closest])
 
     const validateFinal = () =>
-        !type ||    
+        !type ||
         type === "" ||
         requestDate === null
-    
+
     const sendRequest = () => {
-        (async()=>{
+        (async () => {
             let item = {
-                type:type,
-                when:requestDate,
-                on:new Date(),
-                status:"Processing",
-                fee:fee,
+                type: type,
+                when: requestDate,
+                on: new Date(),
+                status: "Processing",
+                fee: fee,
                 note: note,
                 centerid: closest.id,
                 centername: closest.name,
                 from: closest.address,
                 to: user.address,
                 customerid: user.id,
-                userid:null
+                userid: null
             }
             await db.Sensors.Installations.createInstallation(item, sensor.id)
-            let newSensor = {...sensor, request:"yes"}
+            let newSensor = { ...sensor, request: "yes" }
             await db.Sensors.update(newSensor)
             navigation.goBack()
         })()
@@ -175,7 +172,8 @@ export default function InstallationsFormScreen({ route }) {
                     placeholder="Request Date"
                     style={[styles.inputText, { backgroundColor: Colors.mainbg, }]}
                     value={requestDate}
-                    onChange={(date) => { setRequestDate(date) }}
+                    // onChange={handleRequestDate}
+                    onSelect={(date) => { setRequestDate(date) }}
                     minimumDate={new Date()}
                 />
                 {
@@ -206,13 +204,13 @@ export default function InstallationsFormScreen({ route }) {
                 {
                     user.address && centers.length > 0 &&
                     <>
-                    <Text style={[styles.muted, { color: "grey" }]}>
-                        Service radius displayed in blue
+                        <Text style={[styles.muted, { color: "grey" }]}>
+                            Service radius displayed in blue
                     </Text>
-                    <InstallationsMapComponent
-                        distances={distances} centers={centers}
-                        closest={closest} setClosest={setClosest}
-                    />
+                        <InstallationsMapComponent
+                            distances={distances} centers={centers}
+                            closest={closest} setClosest={setClosest}
+                        />
                     </>
                 }
                 {
@@ -227,10 +225,10 @@ export default function InstallationsFormScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-    muted:{
+    muted: {
         fontSize: 13,
         padding: 5,
-        alignContent:"center",
+        alignContent: "center",
     },
     message: {
         fontSize: 16,

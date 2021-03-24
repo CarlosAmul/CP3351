@@ -36,12 +36,13 @@ import ReportsScreen from '../../../screens/Customer/ReportsScreen'
 // @ts-expect-error
 import InstallationsFormScreen from '../../../screens/Customer/SensorsComponents/InstallationsFormScreen'
 // @ts-expect-error
+import ReportsFormScreen from '../../../screens/Customer/SensorsComponents/ReportsFormScreen'
+// @ts-expect-error
 import InstallationsScreen from '../../../screens/Customer/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Customer/DetailsScreen'
 // @ts-expect-error
-import CustomerRewardsScreen from '../../../screens/Zainab/CustomerRewardsScreen'
-// import CustomerRewardsScreen from '../../../Zainab/CustomerRewardsScreen'
+import CustomerRewardsScreen from '../../../Zainab/CustomerRewardsScreen'
 // @ts-expect-error
 import RewardsHistoryScreen from '../../../Zainab/RewardsHistoryScreen'
 // @ts-expect-error
@@ -267,12 +268,13 @@ function SensorsNavigator() {
       <SensorsStack.Screen
         name="InstallationsFormScreen"
         component={InstallationsFormScreen}
-        options={{
-          headerTitle: 'Installation Form'
-
-        }}
+        options={{ headerTitle: 'Installation Form' }}
       />
-
+      <SensorsStack.Screen
+        name="ReportsFormScreen"
+        component={ReportsFormScreen}
+        options={{ headerTitle: 'Report Form' }}
+      />
     </SensorsStack.Navigator>
   )
 }
@@ -346,7 +348,7 @@ function ReportsNavigator() {
   )
 }
 
-const InstallationsStack = createStackNavigator<{ InstallationsScreen: undefined }>();
+const InstallationsStack = createStackNavigator<TabTenParamList>();
 
 function InstallationsNavigator() {
   return (

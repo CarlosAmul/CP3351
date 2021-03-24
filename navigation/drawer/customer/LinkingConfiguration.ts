@@ -25,6 +25,7 @@ export default {
           TabFour: {
             screens: {
               SensorsScreen: 'two',
+              ReportsFormScreen: 'four',
             },
           },
           TabFive: {
@@ -44,7 +45,7 @@ export default {
           },
           TabEight: {
             screens: {
-              InstallationsScreen: 'two',
+              InstallationsScreen: 'two'
             },
           },
           NotFound: '*',

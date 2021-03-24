@@ -11,7 +11,8 @@ export type DrawerParamList = {
   Settings: undefined,
   Rewards: undefined,
   Vacancy: undefined,
-  Applications: undefined
+  Applications: undefined,
+  Technicians: undefined
 };
 
 export type TabOneParamList = {
@@ -36,6 +37,10 @@ export type TabFiveParamList = {
 
 export type TabSixParamList = {
   ApplicationsScreen: undefined;
+};
+
+export type TabSevenParamList = {
+  TechniciansScreen: undefined;
 };
 
 

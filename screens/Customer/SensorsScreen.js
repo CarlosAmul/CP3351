@@ -54,17 +54,11 @@ export default function SensorsScreen({ route }) {
 		setOpenReportForm(!openReportForm)
 	}
 
-	const validateSubmit = () =>
-		report === null ||
-		report === ""
-	
-	console.log(installations)
-
 	const isLastRequestActive = () => {
 		return sensor.request === "yes" ? true : false
 	}
 
-	console.log("installations", installations)
+	// console.log("installations", installations)
 
 	//
 
@@ -108,22 +102,9 @@ export default function SensorsScreen({ route }) {
 						<Button label="Request Report"
 							style={{ width: '60%' }}
 							backgroundColor={Colors.primary}
-							onPress={() => { setOpenReportForm(!openReportForm) }}
+							onPress={() => { navigation.navigate({ name: 'ReportsFormScreen', params: { sensor: sensor } }) }}
 							marginT-15
 						/>
-						{
-							openReportForm &&
-							<>
-								<ReportPicker sensor={sensor} set={setReport} />
-								<Button label="Submit"
-									style={{ width: '60%' }}
-									backgroundColor={Colors.primary}
-									onPress={sendRequestForm}
-									disabled={validateSubmit()}
-									marginT-15
-								/>
-							</>
-						}
 						{
 							sensor.install === "no" || sensor.install === "yes" ?
 							<>

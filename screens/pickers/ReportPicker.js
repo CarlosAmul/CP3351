@@ -3,12 +3,10 @@ import { StyleSheet } from 'react-native';
 import db from '../../db'
 import { Picker } from '@react-native-picker/picker';
 
-export default function ReportPicker({ set, sensor }) {
+export default function ReportPicker({ setTo, setFrom, sensor }) {
 
-    const [period, setPeriod] = useState(null)
-    const [options, setOptions] = useState([])
-
-    useEffect(() => set(period), [period])
+    const [oldest, setOldest] = useState()
+    const [newest, setNewest] = useState()
 
     const oneDay = 1000 * 60 * 60 * 24;
     function dayDiff(a, b) {
@@ -18,49 +16,46 @@ export default function ReportPicker({ set, sensor }) {
         return Math.abs(Math.floor((utc2 - utc1) / oneDay));
     }
 
-    // Set report period options based on oldest reading
+    // Set report range options based on oldest and newest readings
     useEffect(() => {
         (async () => {
 
             let oldest = await db.Sensors.Readings.findOldestOne(sensor.id)
-            // console.log("Oldest", new Date(oldest.when.toDate()).toUTCString() )
-            console.log(dayDiff(new Date(), oldest.when.toDate()))
-
-            let items = []
-
-            // Oldest reading is a year or more
-            if (dayDiff(new Date(), oldest.when.toDate()) >= 365) {
-                items.push({ label: "Yearly", value: 0 })
-                items.push({ label: "Weekly", value: 2 })
-                items.push({ label: "Monthly", value: 1 })
-
-            // Oldest reading is a month or more
-            } else if (dayDiff(new Date(), oldest.when.toDate()) >= 30) {
-                items.push({ label: "Monthly", value: 1 })
-                items.push({ label: "Weekly", value: 2 })
-
-            // Oldest reading is a week or more
-            } else {
-                items.push({ label: "Weekly", value: 2 })
+            if (oldest) {
+                // console.log("Oldest", new Date(oldest.when.toDate()).toUTCString() )
+                // console.log(dayDiff(new Date(), oldest.when.toDate()))
             }
 
-            setOptions(items)
         })()
     }, [sensor])
 
     return (
-        <Picker
-            style={{ height: 50, width: 200 }}
-            selectedValue={period}
-            onValueChange={setPeriod}
-        >
-            <Picker.Item label='Select Period' value="" />
-            {
-                options.map((e, i) =>
-                    <Picker.Item key={i} label={e.label} value={e.value} />
-                )
-            }
-        </Picker>
+        <>
+            <Picker
+                style={{ height: 50, width: 200 }}
+                selectedValue={period}
+                onValueChange={setPeriod}
+            >
+                <Picker.Item label='Select Period' value="" />
+                {
+                    options.map((e, i) =>
+                        <Picker.Item key={i} label={e.label} value={e.value} />
+                    )
+                }
+            </Picker>
+            <Picker
+                style={{ height: 50, width: 200 }}
+                selectedValue={period}
+                onValueChange={setPeriod}
+            >
+                <Picker.Item label='Select Period' value="" />
+                {
+                    options.map((e, i) =>
+                        <Picker.Item key={i} label={e.label} value={e.value} />
+                    )
+                }
+            </Picker>
+        </>
     );
 }
 

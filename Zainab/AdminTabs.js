@@ -34,6 +34,10 @@ export default function AdminTabs({set}) {
                 badgeProps={{backgroundColor: Colors.secondary, padding: 10}}
                 selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
             />
+            <TabBar.Item
+                label="Assign Techs"
+                selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
+            />
         </TabBar>
     );
 }

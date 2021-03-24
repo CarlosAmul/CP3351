@@ -102,7 +102,7 @@ class Readings extends DB {
 
     findOldestOne = async (sensorId) => {
         const doc = await db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when").limit(1).get() 
-        return doc.docs[0].data()
+        return !doc.empty ? doc.docs[0].data() : undefined
         
     }
 }
@@ -200,6 +200,14 @@ class Users extends DB {
         db.collection(this.collection).doc(userid).set({ points: points }, { merge: true })
     }
 
+    updateCenter = async (userid, centerid) => {
+        db.collection(this.collection).doc(userid).set({ centerid: centerid }, { merge: true })
+    }
+
+    //Omar
+    listenByServiceNoCenter = (set) => 
+        db.collection(this.collection).where('centerid','==',null).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    //
 
     listenToUsersByRole = (set, role) =>
         db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))

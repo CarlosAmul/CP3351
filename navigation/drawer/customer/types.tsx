@@ -42,6 +42,7 @@ export type TabThreeParamList = {
 export type TabFourParamList = {
   SensorsScreen: undefined;
   InstallationsFormScreen: undefined;
+  ReportsFormScreen: undefined;
 };
 
 export type TabFiveParamList = {
@@ -68,6 +69,8 @@ export type TabNineParamList = {
 
 export type TabTenParamList = {
   LoginRegisterScreen: undefined;
+  InstallationScreen: undefined;
+  DetailsScreen: undefined;
 };
 
 export type onPressFunc = (event: GestureResponderEvent) => void;
