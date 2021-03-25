@@ -18,9 +18,9 @@ export default function MenuIcon(notif: number) {
 
   const { user } = React.useContext(UserContext)
   const [count, setCount] = React.useState(0)
-  if(user) {
-    React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setCount), [user])
-  }
+  
+  React.useEffect(() => user? db.Users.Notifications.unreadCount(user.id, setCount): undefined, [user])
+
  
 
   const navigation = useNavigation();
@@ -32,7 +32,7 @@ export default function MenuIcon(notif: number) {
   return (
     <TouchableOpacity onPress={openDrawer}>
       {
-        user && count > 0 ?
+       count && count > 0 ?
           <Image
             style={{ width: 24, height: 24, marginLeft: 25 }}
             source={require('../assets/images/menunotification.png')}
@@ -41,6 +41,7 @@ export default function MenuIcon(notif: number) {
           :
           <Feather name="menu" size={24} style={{ marginLeft: 25 }} />
       }
+      {/* <Feather name="menu" size={24} style={{ marginLeft: 25 }} /> */}
     </TouchableOpacity>
   );
 };

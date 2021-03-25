@@ -172,8 +172,8 @@ export default function InstallationsFormScreen({ route }) {
                     placeholder="Request Date"
                     style={[styles.inputText, { backgroundColor: Colors.mainbg, }]}
                     value={requestDate}
-                    // onChange={handleRequestDate}
-                    onSelect={(date) => { setRequestDate(date) }}
+                    onChange={(date)=>{setRequestDate(date)}}
+                    // onSelect={(date) => { setRequestDate(date) }}
                     minimumDate={new Date()}
                 />
                 {

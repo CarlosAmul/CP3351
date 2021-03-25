@@ -14,7 +14,7 @@ import db from '../../db';
 import { LogBox } from 'react-native';
 
 export default function AdForm({ navigation: { goBack }, route }) {
-    LogBox.ignoreLogs(['TypeError: _reactNative.NativeModules.RNDatePickerAndroid.dismiss is not a function'])
+    // LogBox.ignoreLogs(['TypeError: _reactNative.NativeModules.RNDatePickerAndroid.dismiss is not a function'])
 
     // console.log('ad', route.params.ad)
     const [url, setUrl] = useState(route.params.ad ? route.params.ad.image : '')
