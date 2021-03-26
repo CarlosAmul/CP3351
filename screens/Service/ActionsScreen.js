@@ -118,9 +118,9 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         backgroundColor: "#ffffff",
         margin: 20,
-        width: 400,
-        textAlign: "center",
+        width: 150,
         flex: 1,
+        textAlign: "center",
         flexDirection: 'row',
         flexWrap: 'wrap'
     },

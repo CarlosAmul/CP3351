@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../components/MenuIcon'
-import { Colors, Card, Carousel, Button } from 'react-native-ui-lib'
+import { Colors, Card, Carousel } from 'react-native-ui-lib'
 import Categories from './Customer/Categories'
 import MostFavorite from './Customer/MostFavorite'
 import FitnessTips from './Customer/FitnessTips'
