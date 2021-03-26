@@ -15,7 +15,7 @@ import VacancyScreen from '../../../Zainab/Admin/VacancyScreen'
 // @ts-expect-error
 import ApplicationsScreen from '../../../Zainab/Admin/ApplicationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'

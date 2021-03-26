@@ -15,8 +15,12 @@ import ActionsScreen from '../../../screens/Service/ActionsScreen'
 import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
 import SafetyInstructionsScreen from '../../../Zainab/Service/SafetyInstructionsScreen'
+// @ts-expect-error
+import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
+// @ts-expect-error
+import DetailsScreen from '../../../screens/Service/DetailsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -62,6 +66,11 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Settings"
         component={SettingsNavigator}
+      />
+      <Drawer.Screen
+        name="InstallationsService"
+        component={InstallationsServiceNavigator}
+        options={{ drawerLabel: "My Installations" }}
       />
     </Drawer.Navigator>
   );
@@ -111,5 +120,24 @@ function SettingsNavigator() {
         options={{ headerTitle: 'Settings' }}
       />
     </SettingsStack.Navigator>
+  )
+}
+
+const InstallationsServiceStack = createStackNavigator<TabFourParamList>();
+
+function InstallationsServiceNavigator() {
+  return (
+    <InstallationsServiceStack.Navigator>
+      <InstallationsServiceStack.Screen
+        name="InstallationServiceScreen"
+        component={InstallationsServiceScreen}
+        options={{ headerTitle: 'Installations' }}
+      />
+      <InstallationsServiceStack.Screen
+        name="DetailsScreen"
+        component={DetailsScreen}
+        options={{ headerTitle: 'Details' }}
+      />
+    </InstallationsServiceStack.Navigator>
   )
 }

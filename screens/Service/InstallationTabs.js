@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {TabBar} from 'react-native-ui-lib'
 import { Colors } from 'react-native-ui-lib'
 
-export default function AdminTabs({set}) {
+export default function InstallationTabs({set}) {
 
     useEffect(() => {
 		Colors.loadColors({
@@ -13,7 +13,6 @@ export default function AdminTabs({set}) {
 		});
 	}, [Colors])
 
-    
 
     return (
         <TabBar
@@ -22,20 +21,15 @@ export default function AdminTabs({set}) {
             enableShadow
         >
             <TabBar.Item
-                label="Categories"
+                label="Pending"
                 selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
             />
             <TabBar.Item
-                label="Manufacturers"
+                label="Assigned"
                 selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
             />
             <TabBar.Item
-                label="Sensors"
-                badgeProps={{backgroundColor: Colors.secondary, padding: 10}}
-                selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
-            />
-            <TabBar.Item
-                label="Assign Techs"
+                label="Finished"
                 selectedLabelStyle={{color: Colors.primary, fontWeight: "bold"}}
             />
         </TabBar>

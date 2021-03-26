@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Alert, StyleSheet, Text, View, Dimensions } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import { Assets, Image, Colors } from 'react-native-ui-lib';
-import UserContext from '../../../UserContext'
-import db from '../../../db'
+import UserContext from '../../UserContext'
 
+import db from '../../db'
 
 class LatLng {
     constructor(latitude, longitude) {
@@ -13,25 +13,14 @@ class LatLng {
     }
 }
 
-export default function UserMapComponent({ set, location, userAddress }) {
-
-    const { user } = useContext(UserContext)
+export default function UserMapComponent({ oldCenter, oldCenterName, userAddress }) {
 
     Colors.loadColors({
         primary: '#6874e2',
         basic: '#f5f6fa',
     });
 
-    const [centers, setCenters] = useState([])
     const [region, setRegion] = useState(null)
-
-    useEffect(() => db.SupportCenters.listenAll(setCenters), [])
-
-    const placeMarker = (e) => {
-        let coordinate = e.nativeEvent.coordinate
-        set(new LatLng(coordinate.latitude, coordinate.longitude))
-    }
-
 
     // Save moved position to stay still
     // on component render
@@ -51,36 +40,23 @@ export default function UserMapComponent({ set, location, userAddress }) {
                     longitudeDelta: 0.6121,
                 }}
                 onRegionChangeComplete={savePan}
-                onLongPress={placeMarker}
             >
                 {/* Adding markers as images and not
                 icons causes some serious performance
                 issues */}
                 {
-                    centers.map((e, i) =>
-                        <Marker
-                            coordinate={new LatLng(e.address[0], e.address[1])}
-                            icon={require('../../../assets/images/pin.png')}
-                            title={e.name}
-                            key={i}
-                        >
-                        </Marker>
-
-                    )
-                }
-                {
-                    location && centers.length > 0 &&
-                    <Marker key={centers.length}
-                        coordinate={new LatLng(location.latitude, location.longitude)}
-                        icon={require('../../../assets/images/pin-user.png')}
+                    <Marker
+                        coordinate={new LatLng(oldCenter[0], oldCenter[1])}
+                        icon={require('../../assets/images/pin.png')}
+                        title={oldCenterName}
                     >
                     </Marker>
                 }
                 {
-                    !location && centers.length > 0 && userAddress &&
-                    <Marker key={centers.length+1}
+                    userAddress &&
+                    <Marker
                         coordinate={new LatLng(userAddress[0], userAddress[1])}
-                        icon={require('../../../assets/images/pin-user.png')}
+                        icon={require('../../assets/images/pin-user.png')}
                     >
                     </Marker>
                 }

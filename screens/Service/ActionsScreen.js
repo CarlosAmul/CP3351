@@ -69,19 +69,37 @@ export default function ActionsScreen() {
                                 elevation={12}
                             >
                                 <Card.Image
-                                    source={{uri: category.url}}
-                                    style={{width: 100, height: 100, margin: 10}}
+                                    source={{ uri: category.url }}
+                                    style={{ width: 100, height: 100, margin: 10 }}
                                 />
                                 <Card.Section
                                     content={[{ text: category.name, text60BO: true, dark10: true }]}
                                 />
                                 <Button
-                                    style={{backgroundColor: 'transparent'}}
+                                    style={{ backgroundColor: 'transparent' }}
                                     label={<AntDesign name="pluscircle" size={24} color={Colors.secondary} />}
-                                    onPress={() => navigation.navigate("SafetyInstructionsScreen", {categoryid: category.id})}
+                                    onPress={() => navigation.navigate("SafetyInstructionsScreen", { categoryid: category.id })}
                                 />
                             </Card>
                         )
+                    }
+                </ScrollView>
+                <Text style={styles.subtitle}>Manage Safety Instructions</Text>
+                <ScrollView contentContainerStyle={styles.horizontalView}>
+                    {
+                        <Card
+                            borderRadius={10}
+                            style={styles.card, {marginLeft: 0}}
+                            elevation={12}
+                        >
+                            <Card.Section
+                                content={[{ text: "Check pending service requests under your installations screen", marginR:20, text60BO: true, dark10: true }]}
+                            />
+                            <Button
+                                style={{ backgroundColor: 'transparent' }}
+                                onPress={() => navigation.navigate("InstallationsScreen")}
+                            />
+                        </Card>
                     }
                 </ScrollView>
             </View>

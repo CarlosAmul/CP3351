@@ -36,7 +36,7 @@ export default function App() {
         let dbUnsubscribe = () => { } // initially, do nothing
 
         const findAndSetUser = async user => {
-            if(dbUnsubscribe) {
+            if (dbUnsubscribe) {
                 dbUnsubscribe()
             }
             if (user) {
@@ -52,7 +52,7 @@ export default function App() {
 
         return () => {
             authUnsubscribe()
-            if(dbUnsubscribe) {
+            if (dbUnsubscribe) {
                 dbUnsubscribe()
             }
         }
