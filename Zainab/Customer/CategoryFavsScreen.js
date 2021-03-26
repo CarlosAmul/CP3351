@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
-import UserContext from '../UserContext'
-import db from '../db'
+import UserContext from '../../UserContext'
+import db from '../../db'
 import Favorite from './Favorite'
 
 export default function CategoryFavsScreen({ route }) {

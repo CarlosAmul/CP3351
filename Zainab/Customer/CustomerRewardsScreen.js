@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, Text, Image } from 'react-native';
 import { View, Colors, Card, Button } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../components/MenuIcon'
-import db from '../db';
+import MenuIcon from '../../components/MenuIcon'
+import db from '../../db';
 import CustomerReward from './CustomerReward'
-import UserContext from '../UserContext'
+import UserContext from '../../UserContext'
 
 export default function CustomerRewardsScreen() {
 
@@ -51,7 +51,7 @@ export default function CustomerRewardsScreen() {
                 </View>
                 <View style={styles.rightCardView}>
                     <Image
-                        source={require("../assets/images/admin-reward.png")}
+                        source={require("../../assets/images/admin-reward.png")}
                         style={{ width: 100, height: 150 }}
                     />
                 </View>

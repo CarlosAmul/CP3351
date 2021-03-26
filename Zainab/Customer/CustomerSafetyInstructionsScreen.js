@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image} from 'react-native';
-import { Colors, Button, Card } from 'react-native-ui-lib'
-import db from '../db'
-import Vacancy from './Vacancy'
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, ScrollView, Text, View, Platform, Image } from 'react-native';
+import { Colors, TextField } from 'react-native-ui-lib'
+import db from '../../db'
 
-export default function VacancyScreen({ navigation }) {
+import SafetyInstruction from '../Service/SafetyInstruction'
+
+export default function CustomerSafetyInstructionsScreen({ route }) {
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -17,40 +18,44 @@ export default function VacancyScreen({ navigation }) {
         darksidebg: '#38304d'
     });
 
-    const [vacancies, setVacancies] = useState([])
-    useEffect(() => db.Vacancies.listenAll(setVacancies), [])
+    const { categoryid } = route.params
+    const [category, setCategory] = useState([])
+    useEffect(() => db.Categories.listenOne(setCategory, categoryid), [categoryid])
+
+    const [instructions, setInstructions] = useState([])
+    useEffect(() => db.Categories.SafetInstructions.listenToCategoryInstructions(setInstructions, categoryid), [categoryid])
+
+    const [search, setSearch] = useState("")
 
     return (
-        <View style={styles.container}>
-            <Card
-                borderRadius={20}
-                style={styles.card}
-                enableShadow={false}
-            >
-                <View style={styles.leftCardVew}>
-                    <Text style={[styles.title, { color: Colors.darkprimary }]}>We are Hiring!</Text>
-                    <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Apply For Vacancies</Text>
-                </View>
-                <View style={styles.rightCardView}>
-                    <Image
-                        source={require("../assets/images/hiring2.png")}
-                        style={{ width: 170, height: 170 }}
-                    />
-                </View>
-            </Card>
-            <Text style={[styles.title, styles.mainHeader]}>We have the following vacancies</Text>
-            <View style={{ width: "80%", justifyContent: 'center', alignItems: 'center' }}>
-                {
-                    vacancies.map(vacancy =>
-                        <Vacancy
-                            key={vacancy.id}
-                            vacancy={vacancy}
-                            navigation={navigation}
-                        />
-                    )
-                }
+        <ScrollView style={styles.scrollcontainer} contentContainerStyle={{justifyContent: 'center'}}>   
+            <Text style={[styles.title, styles.mainHeader]}>Safety Instructions for {category.name}</Text>
+            <View style={styles.searchField}>
+                <TextField
+                    onChangeText={text => setSearch(text)}
+                    hideUnderline
+                    placeholder="Search Instructions ..."
+                    style={[styles.inputText, { backgroundColor: Colors.mainbg }]}
+                />
             </View>
-        </View>
+            {
+                instructions.map(instruction => 
+                    search !== "" ? 
+                        instruction.title.toLowerCase().includes(search.toLowerCase()) || instruction.description.toLowerCase().includes(search.toLowerCase()) ? 
+                            <SafetyInstruction
+                                key={instruction.id}
+                                instruction={instruction}
+                            />
+                        :
+                            null
+                    :
+                        <SafetyInstruction
+                            key={instruction.id}
+                            instruction={instruction}
+                        />
+                )
+            }
+        </ScrollView>
     );
 }
 
@@ -63,9 +68,9 @@ const styles = StyleSheet.create({
         margin: 20
     },
     container: {
+        flex: 1,
         backgroundColor: '#ffffff',
         alignItems: "center",
-        flex: 1
     },
     subcontainer: {
         display: 'flex',
@@ -73,7 +78,7 @@ const styles = StyleSheet.create({
     },
     scrollcontainer: {
         flex: 1,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff'
     },
     developmentModeText: {
         marginBottom: 20,
@@ -158,15 +163,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around"
     },
-    card: {
-        padding: 20,
-        backgroundColor: "#f9ce7f49",
-        margin: 20,
-        width: 380,
-        textAlign: "center",
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+    searchField: {
+        marginLeft: 20,
+        marginRight: 20
     },
 });

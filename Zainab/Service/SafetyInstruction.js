@@ -4,9 +4,9 @@ import { View } from 'react-native'
 import { Button, Text, Card } from 'react-native-ui-lib'
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import UserContext from '../UserContext'
+import UserContext from '../../UserContext'
 
-export default function SafetInstruction({ instruction, edit, remove }) {
+export default function SafetyInstruction({ instruction, edit, remove }) {
 
     useEffect(() => {
         Colors.loadColors({

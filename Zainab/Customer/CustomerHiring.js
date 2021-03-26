@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import { StyleSheet,  Text, View, } from 'react-native';
 import { Colors, Button } from 'react-native-ui-lib'
-import UserContext from '../UserContext'
+import UserContext from '../../UserContext'
 
 export default function CustomerHiring({navigation}) {
 

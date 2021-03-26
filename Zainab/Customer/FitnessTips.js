@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, ScrollView } from 'react-native'
 import { Card, Colors, Button, View, Text, Chip } from 'react-native-ui-lib'
-import db from '../db'
+import db from '../../db'
 import FitnessTip from './FitnessTip'
 
 export default function FitnessTips({ navigation }) {

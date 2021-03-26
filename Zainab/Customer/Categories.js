@@ -1,23 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { View } from '../components/Themed';
-import UserContext from '../UserContext'
+import { View } from '../../components/Themed';
+import UserContext from '../../UserContext'
 import { Text } from 'react-native-ui-lib'
-import { useNavigation } from '@react-navigation/native';
-import MenuIcon from '../components/MenuIcon'
-import db from '../db'
+import db from '../../db'
 import { Colors } from 'react-native-ui-lib'
 import Category from './Category'
 
-export default function Categories({stacknavigation}) {
-    const navigation = useNavigation();
-    useEffect(() => {
-        navigation.setOptions({
-            // @ts-expect-error
-            headerLeft: () => (<MenuIcon />)
-        });
-    });
-
+export default function Categories({navigation}) {
+    
     Colors.loadColors({
         primary: '#6874e2',
 		secondary: '#f9ce7f',
@@ -32,20 +23,20 @@ export default function Categories({stacknavigation}) {
 
     const onPress = (category) => {
         user ? 
-            stacknavigation.navigate("CategoryFavsScreen", {category: category})
+            navigation.navigate("CategoryFavsScreen", {category: category})
         :
-            stacknavigation.navigate("LoginRegisterScreen")
+            navigation.navigate("LoginRegister")
     }
 
     const onPressBuy = (category) => {
         user ? 
-            stacknavigation.navigate("PaymentFormScreen", {category: category})
+            navigation.navigate("PaymentFormScreen", {category: category})
         :
-            stacknavigation.navigate("LoginRegisterScreen")
+            navigation.navigate("LoginRegister")
     }
 
     const onPressSafety = (category) => {
-        stacknavigation.navigate("CustomerSafetyInstructionsScreen", {categoryid: category.id})
+        navigation.navigate("CustomerSafetyInstructionsScreen", {categoryid: category.id})
     }
 
     return (

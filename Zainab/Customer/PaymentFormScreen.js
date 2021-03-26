@@ -5,11 +5,11 @@ import {
     Text, TextField, RadioGroup, RadioButton,
     Stepper, Dialog
 } from 'react-native-ui-lib'
-import db from '../db'
+import db from '../../db'
 import { FontAwesome5 } from '@expo/vector-icons';
-import UserContext from '../UserContext'
+import UserContext from '../../UserContext'
 import { AntDesign } from '@expo/vector-icons';
-import fb from '../fb'
+import fb from '../../fb'
 
 export default function PaymentFormScreen({ navigation, route }) {
 

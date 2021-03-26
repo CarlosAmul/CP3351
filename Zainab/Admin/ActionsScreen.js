@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from '../../components/Themed';
-import CategoryPicker from '../pickers/CategoryPicker'
-import SensorByCategoryPicker from '../pickers/SensorByCategoryPicker'
-import TemperatureActions from './TemperatureActions'
-import MotionActions from './MotionActions'
+import CategoryPicker from '../../screens/pickers/CategoryPicker'
+import SensorByCategoryPicker from '../../screens/pickers/SensorByCategoryPicker'
+import TemperatureActions from '../../screens/Admin/TemperatureActions'
+import MotionActions from '../../screens/Admin/MotionActions'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import AdminTabs from '../../Zainab/AdminTabs'
+import AdminTabs from './AdminTabs'
 import { Colors } from 'react-native-ui-lib'
-import AdminCategories from '../../Zainab/AdminCategories'
-import Manufacturers from '../../Zainab/Manufacturers'
+import AdminCategories from './AdminCategories'
+import Manufacturers from './Manufacturers'
 
 export default function ActionsScreen() {
 

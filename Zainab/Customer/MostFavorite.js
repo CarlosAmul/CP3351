@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Colors, Button, View, Text } from 'react-native-ui-lib'
-import db from '../db'
+import db from '../../db'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function MostFavorite() {

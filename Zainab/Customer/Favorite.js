@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { ListItem } from 'react-native-ui-lib'
-import UserContext from '../UserContext'
-import db from '../db'
+import UserContext from '../../UserContext'
+import db from '../../db'
 import {Avatar} from 'react-native-ui-lib'
 import { Colors } from 'react-native-ui-lib'
 
@@ -27,11 +27,12 @@ export default function CategoryFavsScreen({ favorite }) {
             height={70}
         >
             <ListItem.Part left>
-                <Text>{fuser?.name || ""}</Text>
+                <Text>by </Text>
+                <Text style={{fontSize: 18}}>{fuser?.name || ""}</Text>
             </ListItem.Part>
-            <ListItem.Part middle>
-                <Text>
-                    {favorite.when.toLocaleDateString() }
+            <ListItem.Part middle containerStyle={{marginLeft: 50}}>
+                <Text style={{textAlign: 'center'}}>
+                    on {favorite.when.toLocaleDateString()} at {favorite.when.toLocaleTimeString()}
                 </Text>
             </ListItem.Part>
             <ListItem.Part right>

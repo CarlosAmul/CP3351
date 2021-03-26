@@ -231,7 +231,7 @@ export default function RewardsScreen() {
                             null
                     }
                 </View>
-                <TouchableOpacity onPress={uploadImage}>
+                {/* <TouchableOpacity onPress={uploadImage}>
                     <>
                         <Image
                             source={{ uri: image === "" ? "https://cdn.pixabay.com/photo/2016/06/15/14/54/download-1459071_960_720.png" : image }}
@@ -264,7 +264,8 @@ export default function RewardsScreen() {
                         remove={remove}
                     />
                 )
-            }
+            } */}
+            </View>
         </ScrollView>
     );
 }

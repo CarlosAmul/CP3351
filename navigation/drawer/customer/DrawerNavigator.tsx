@@ -10,9 +10,9 @@ import UserContext from '../../../UserContext';
 // @ts-expect-error
 import PublicHomeScreen from '../../../Zainab/PublicHomeScreen'
 // @ts-expect-error
-import UserFavoritesScreen from '../../../Zainab/UserFavoritesScreen'
+import UserFavoritesScreen from '../../../Zainab/Customer/UserFavoritesScreen'
 // @ts-expect-error
-import PaymentFormScreen from '../../../Zainab/PaymentFormScreen'
+import PaymentFormScreen from '../../../Zainab/Customer/PaymentFormScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
@@ -24,21 +24,21 @@ import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
 // @ts-expect-error
 import FAQsScreen from '../../../screens/Carlos/FAQsScreen'
 // @ts-expect-error
-import CategoryFavsScreen from '../../../Zainab/CategoryFavsScreen'
+import CategoryFavsScreen from '../../../Zainab/Customer/CategoryFavsScreen'
 // @ts-expect-error
-import FitnessTipsScreen from '../../../Zainab/FitnessTipsScreen'
+import FitnessTipsScreen from '../../../Zainab/Customer/FitnessTipsScreen'
 // @ts-expect-error
-import CustomerSafetyInstructionsScreen from '../../../Zainab/CustomerSafetyInstructionsScreen'
+import CustomerSafetyInstructionsScreen from '../../../Zainab/Customer/CustomerSafetyInstructionsScreen'
 // @ts-expect-error
-import ApprovedFitnessTipsScreen from '../../../Zainab/ApprovedFitnessTipsScreen'
+import ApprovedFitnessTipsScreen from '../../../Zainab/Customer/ApprovedFitnessTipsScreen'
 // @ts-expect-error
-import CustomerRewardsScreen from '../../../Zainab/CustomerRewardsScreen'
+import CustomerRewardsScreen from '../../../Zainab/Customer/CustomerRewardsScreen'
 // @ts-expect-error
-import RewardsHistoryScreen from '../../../Zainab/RewardsHistoryScreen'
+import RewardsHistoryScreen from '../../../Zainab/Customer/RewardsHistoryScreen'
 // @ts-expect-error
-import VacancyScreen from '../../../Zainab/VacancyScreen'
+import VacancyScreen from '../../../Zainab/Customer/VacancyScreen'
 // @ts-expect-error
-import ApplicationScreen from '../../../Zainab/ApplicationScreen'
+import ApplicationScreen from '../../../Zainab/Customer/ApplicationScreen'
 // @ts-expect-error
 import RegisterLogin from '../../../RegisterLogin'
 

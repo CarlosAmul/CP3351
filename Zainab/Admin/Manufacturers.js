@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Colors } from 'react-native-ui-lib'
 import { ScrollView, View } from 'react-native'
 import { TextField, Button, Text } from 'react-native-ui-lib'
-import db from '../db'
+import db from '../../db'
 import { StyleSheet } from 'react-native';
 import Manufacturer from './Manufacturer'
 

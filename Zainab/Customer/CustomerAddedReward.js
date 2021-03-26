@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Colors } from 'react-native-ui-lib'
 import { View } from 'react-native'
 import { Text, Card, Button, } from 'react-native-ui-lib'
 import { StyleSheet } from 'react-native';
-import UserContext from '../UserContext'
+import UserContext from '../../UserContext'
 import * as Progress from 'react-native-progress';
-import db from '../db'
+import db from '../../db'
 
-export default function CustomerReward({ reward }) {
+export default function CustomerAddedReward({ customerreward }) {
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -22,11 +22,9 @@ export default function CustomerReward({ reward }) {
 
     const { user } = useContext(UserContext)
 
-    const updatePoints = async () => {
-        await db.Users.updatePoints(user.id, user.points - reward.points)
-        await db.Users.CustomerRewards.createReward(user.id, {rewardid: reward.id, redeem: false})
-    }
-
+    const [reward, setReward] = useState("")
+    useEffect(() => db.Rewards.listenOne(setReward, customerreward?.rewardid || ""), [customerreward])
+    
     return (
         <Card
             borderRadius={12}
@@ -42,32 +40,12 @@ export default function CustomerReward({ reward }) {
             <View style={styles.rightCardView}>
                 <Text style={[styles.title, styles.cardText, { textAlign: 'left', fontSize: 16 }]}>{reward.title}</Text>
                 <Text style={styles.cardText}>{reward.description}</Text>
-                <Text style={[{ color: Colors.sidebg, backgroundColor: Colors.secondary, marginTop: -30 }, styles.cardText, styles.points]}>{reward.points} points</Text>
+                <Text style={{fontSize: 15, marginBottom: 20, color: Colors.dark10}}>Present the code 👏</Text>
                 {
-                    user &&
-                    user.points >= reward.points ?
-                        <Button
-                            label="Redeem"
-                            backgroundColor={Colors.green70}
-                            color={Colors.green10}
-                            labelStyle={{fontSize: 14}}
-                            style={{padding: 0, marginTop: -30}}
-                            onPress={() => updatePoints()}
-                        />
+                    customerreward.redeem ? 
+                        <Text style={{fontSize: 17, color: Colors.green30}}>Redeemed</Text>
                     :
-                        null
-                }
-                {
-                    user
-                    &&
-                    <Progress.Bar 
-                        progress={user.points / reward.points} 
-                        width={100} color={Colors.darkprimary} 
-                        unfilledColor="#ff467720" 
-                        borderWidth={0} 
-                        height={4} 
-                        style={{marginBottom: -15}}
-                    />
+                        <Text style={{fontSize: 17, color: Colors.green30}}>{customerreward.id}</Text>
                 }
             </View>
         </Card>
