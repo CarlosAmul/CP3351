@@ -66,7 +66,7 @@ export default function FAQ({ faq }) {
                             </View>
                     }
                     {
-                        user.role != 'Customer' &&
+                        user && user.role != 'Customer' &&
                         <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: 'space-between' }}>
                             {
                                 !inEdit ?

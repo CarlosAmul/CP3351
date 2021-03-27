@@ -82,39 +82,41 @@ export default function FAQsScreen() {
     return (
         <ScrollView contentContainerStyle={styles.helpContainer}>
             {
-                user.role != 'Support' ?
+                user && user.role != 'Support' &&
+                <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                    <ExpandableSection
+                        sectionHeader={drawFormHeader()}
+                        expanded={expanded}
+                        onPress={() => setExpanded(!expanded)}
+                    >
+                        {drawSubmitForm()}
+                    </ExpandableSection>
+                </View>
+            }
+            {
+                user &&
+                <>
                     <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                        <ExpandableSection
-                            sectionHeader={drawFormHeader()}
-                            expanded={expanded}
-                            onPress={() => setExpanded(!expanded)}
-                        >
-                            {drawSubmitForm()}
-                        </ExpandableSection>
+                        <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
+                            <View style={styles.headerSection}>
+                                <Text style={styles.header}>Pending Questions</Text>
+                                <View style={styles.icon}>
+                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
                     </View>
-                    :
-                    <>
-                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                            <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>
-                                <View style={styles.headerSection}>
-                                    <Text style={styles.header}>Pending Questions</Text>
-                                    <View style={styles.icon}>
-                                        <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
-                                    </View>
+                    <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
+                        <TouchableOpacity onPress={() => navigation.navigate('DraftsScreen', { screen: "DraftsScreen" })}>
+                            <View style={styles.headerSection}>
+                                <Text style={styles.header}>Drafts</Text>
+                                <View style={styles.icon}>
+                                    <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
                                 </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
-                            <TouchableOpacity onPress={() => navigation.navigate('DraftsScreen', { screen: "DraftsScreen" })}>
-                                <View style={styles.headerSection}>
-                                    <Text style={styles.header}>Drafts</Text>
-                                    <View style={styles.icon}>
-                                        <Entypo name="chevron-thin-right" size={15} color={expanded ? Colors.primary : 'gray'} />
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    </>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </>
             }
             {
                 !statusHidden &&
