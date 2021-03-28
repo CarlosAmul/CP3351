@@ -32,7 +32,7 @@ export default function MenuIcon(notif: number) {
   return (
     <TouchableOpacity onPress={openDrawer}>
       {
-       count && count > 0 ?
+       user && count && count > 0 ?
           <Image
             style={{ width: 24, height: 24, marginLeft: 25 }}
             source={require('../assets/images/menunotification.png')}

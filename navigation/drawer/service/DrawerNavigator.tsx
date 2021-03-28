@@ -3,6 +3,7 @@ import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import { View, SafeAreaView, Image } from 'react-native'
 import * as React from 'react';
 import {useContext} from 'react'
+import {Text} from 'react-native-ui-lib'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
@@ -19,12 +20,16 @@ import SafetyInstructionsScreen from '../../../Zainab/SafetyInstructionsScreen'
 import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
+// @ts-expect-error
+import ReviewsScreen from '../../../Carlos/ReviewsScreen'
+// @ts-expect-error
+import ReviewForm from '../../../Carlos/ReviewForm'
 
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
+
 
 export default function DrawerNavigator() {
 
@@ -72,6 +77,11 @@ export default function DrawerNavigator() {
         name="InstallationsService"
         component={InstallationsServiceNavigator}
         options={{ drawerLabel: "My Installations" }}
+      />
+      <Drawer.Screen
+        name="Reviews"
+        component={ReviewsNavigator}
+        options={{ drawerLabel: "My Reviews" }}
       />
     </Drawer.Navigator>
   );
@@ -124,13 +134,17 @@ function SettingsNavigator() {
   )
 }
 
-const InstallationsServiceStack = createStackNavigator<{ InstallationsServiceScreen: undefined }>();
+const InstallationsServiceStack = createStackNavigator<{ 
+  InstallationsServiceScreen: undefined,
+  DetailsScreen: undefined,
+  ReviewsForm: undefined 
+}>();
 
 function InstallationsServiceNavigator() {
   return (
     <InstallationsServiceStack.Navigator>
       <InstallationsServiceStack.Screen
-        name="InstallationServiceScreen"
+        name="InstallationsServiceScreen"
         component={InstallationsServiceScreen}
         options={{ headerTitle: 'Installations' }}
       />
@@ -139,6 +153,25 @@ function InstallationsServiceNavigator() {
         component={DetailsScreen}
         options={{ headerTitle: 'Details' }}
       />
+      <InstallationsServiceStack.Screen
+       name="ReviewsForm"
+       component={ReviewForm}
+       options={{ headerTitle: 'Review Form' }}
+      />
     </InstallationsServiceStack.Navigator>
+  )
+}
+
+const ReviewsStack = createStackNavigator<TabFourParamList>();
+
+function ReviewsNavigator() {
+  return (
+    <ReviewsStack.Navigator>
+      <ReviewsStack.Screen
+        name="ReviewsScreen"
+        component={ReviewsScreen}
+        options={{ headerTitle: 'Reviews' }}
+      />
+    </ReviewsStack.Navigator>
   )
 }

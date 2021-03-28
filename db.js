@@ -207,6 +207,7 @@ class Users extends DB {
         this.Reports = new Reports(this.collection)
         this.CustomerRewards = new CustomerRewards(this.collection)
         this.Applications = new Applications(this.collection)
+        this.Reviews = new Reviews(this.collection)
     }
 
     updatePoints = async (userid, points) => {
@@ -227,6 +228,32 @@ class Users extends DB {
 
     listenToUsersByRole = (set, role) =>
         db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+}
+
+class Reviews extends DB {
+    constructor(containing) {
+        super('reviews')
+        this.containing = containing
+    }
+
+    reformat(doc) {
+        console.log('reformat', doc.id)
+        return { id: doc.id, ...doc.data(), parent: doc.ref.parent.parent.id }
+    }
+
+    listenByUserAll(uid, set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByRevieweeAll(uid, set) {
+        return db.collectionGroup(this.collection).where('supportid', '==', uid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    createReview = async(userid, item) => {
+        const {id, ...rest} = item
+        await db.collection(this.containing).doc(userid).collection('reviews').add(rest)
+    }
 
 }
 

@@ -94,7 +94,7 @@ export default function FAQsScreen() {
                 </View>
             }
             {
-                user &&
+                user && user.role == "Support" &&
                 <>
                     <View style={{ borderBottomWidth: 2, borderBottomColor: 'lightgray' }}>
                         <TouchableOpacity onPress={() => navigation.navigate('PendingQuestions', { screen: "PendingFAQsScreen" })}>

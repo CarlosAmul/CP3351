@@ -9,7 +9,8 @@ export type DrawerParamList = {
   Dashboard: undefined,
   Actions: undefined,
   Settings: undefined,
-  InstallationsService: undefined
+  InstallationsService: undefined,
+  Reviews: undefined
 };
 
 export type TabOneParamList = {
@@ -23,4 +24,8 @@ export type TabTwoParamList = {
 
 export type TabThreeParamList = {
   SettingsScreen: undefined;
+};
+
+export type TabFourParamList = {
+  ReviewsScreen: undefined;
 };

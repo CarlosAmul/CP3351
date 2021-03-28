@@ -40,6 +40,7 @@ export default function InstallationsServiceScreen() {
     const [finished, setFinished] = useState([])
     
     useEffect(() => db.Sensors.Installations.listenByPending(setPending, user.centerid), [])
+    console.log('pending', pending)
     useEffect(() => db.Sensors.Installations.listenByAssigned(setAssigned, user.id), [])
     useEffect(() => db.Sensors.Installations.listenByFinished(setFinished, user.id), [])
 
@@ -58,8 +59,13 @@ export default function InstallationsServiceScreen() {
         navigation.navigate("DetailsScreen", options)
     }
 
+    const handleReviews = (request) => {
+        navigation.navigate("ReviewsForm", { request })
+    }
+
     const [isOpen, open] = useState(false)
     const [edit, setEdit] = useState("")
+    console.log(edit)
 
     const handleEdit = () => { open(!isOpen) }
 
@@ -76,7 +82,7 @@ export default function InstallationsServiceScreen() {
         })()
     }
 
-    validateSave = () =>
+    const validateSave = () =>
         edit === ""
 
     return (
@@ -145,7 +151,7 @@ export default function InstallationsServiceScreen() {
                                                 style={styles.flexButton}
                                                 backgroundColor={Colors.primary}
                                                 onPress={() => { save(request) }}
-                                                disabled={validateSave()}
+                                                // disabled={validateSave}
                                                 marginT-15
                                             />
                                         </>
@@ -167,11 +173,18 @@ export default function InstallationsServiceScreen() {
                                     <Text text60M>{request.type === "install" ? "Installation" : "Removal"} Request</Text>
                                     <Text>Made on: {request.on.toDate().toLocaleDateString()}</Text>
                                     <Text green10>Fee: {request.fee} QAR</Text>
-                                    <View style={styles.horizontalView}>
+                                    <View style={[styles.horizontalView, { flexDirection: 'column' }]}>
                                         <Button label="Details"
                                             style={styles.flexButton}
                                             backgroundColor={Colors.primary}
                                             onPress={() => { handleDetails(request) }}
+                                            marginT-15
+                                        />
+                                        {/* Carlos */}
+                                        <Button label="Leave Review"
+                                            style={styles.flexButton}
+                                            backgroundColor={Colors.primary}
+                                            onPress={() => { handleReviews(request) }}
                                             marginT-15
                                         />
                                     </View>
