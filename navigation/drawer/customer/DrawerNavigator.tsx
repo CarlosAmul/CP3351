@@ -53,8 +53,10 @@ import ApplicationScreen from '../../../Zainab/ApplicationScreen'
 import RegisterLogin from '../../../RegisterLogin'
 // @ts-expect-error
 import ReviewForm from '../../../Carlos/ReviewForm'
+// @ts-expect-error
+import ReviewsScreen from '../../../Carlos/Customer/ReviewsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList, TabElevenParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -120,6 +122,15 @@ export default function DrawerNavigator() {
         <Drawer.Screen
           name="Sensors"
           component={SensorsNavigator}
+        />
+      }
+      {
+        user
+        &&
+        <Drawer.Screen
+          name="Reviews"
+          component={ReviewsNavigator}
+          options={{ drawerLabel: "My Reviews" }}
         />
       }
       {
@@ -404,5 +415,19 @@ function LoginRegisterNavigator() {
         options={{ headerTitle: 'Login/Register' }}
       />
     </LoginRegisterStack.Navigator>
+  )
+}
+
+const ReviewsStack = createStackNavigator<TabElevenParamList>();
+
+function ReviewsNavigator() {
+  return (
+    <ReviewsStack.Navigator>
+      <ReviewsStack.Screen
+        name="ReviewsScreen"
+        component={ReviewsScreen}
+        options={{ headerTitle: 'Reviews' }}
+      />
+    </ReviewsStack.Navigator>
   )
 }

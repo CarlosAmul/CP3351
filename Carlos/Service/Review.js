@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { View } from '../components/Themed';
+import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
-import UserContext from '../UserContext'
-import MenuIcon from '../components/MenuIcon'
-import db from '../db'
+import UserContext from '../../UserContext'
+import MenuIcon from '../../components/MenuIcon'
+import db from '../../db'
 import { Card, Button, Text } from 'react-native-ui-lib'
 import { Directions } from 'react-native-gesture-handler';
 

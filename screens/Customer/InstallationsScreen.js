@@ -39,7 +39,7 @@ export default function InstallationsScreen() {
 
 	const [reviews, setReviews] = useState([])
 
-	useEffect(() => db.Users.Reviews.listenByUserAll(setReviews, user.id), [])
+	useEffect(() => db.Users.Reviews.listenByUserAll(user.id, setReviews), [])
 
 
 	const handleDetails = (req) => {
@@ -87,8 +87,6 @@ export default function InstallationsScreen() {
 
 
 							</View>
-							{ console.log('dis is review', reviews.find(review => review.jobid == request.id)) }
-							{/* Carlos */}
 							{
 								request.status == "Finished" && !reviews.find(review => review.jobid == request.id) &&
 								<Button label="Leave Review"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, createRef } from 'react';
 import { StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
@@ -71,6 +71,7 @@ export default function DetailsScreen({ route }) {
         darksidebg: '#38304d'
     });
 
+    const installRef = createRef();
 
     return (
         <>
@@ -79,11 +80,11 @@ export default function DetailsScreen({ route }) {
                 <>
                     <View style={styles.container}>
                         <Carousel
-                            // ref={catCarousel}
+                            ref={installRef}
                             pageControlProps={{
                                 size: 8,
                                 enlargeActive: true,
-                                onPagePress: page => catCarousel.current.goToPage(page)
+                                onPagePress: page => installRef.current.goToPage(page)
                             }}
                         >
                             <View style={{ height: '100%' }}>
@@ -112,9 +113,9 @@ export default function DetailsScreen({ route }) {
                             </View>
                             {
                                 review &&
-                                <View style={{ height: '100%' }}>
+                                <View style={{ height: '100%', padding: 10 }}>
                                     <Text text60M> Review by {customer.name}</Text>
-                                    <Text text70M>Comment: {review.comment}</Text>
+                                    <Text text70M style={{marginTop: 20}}>{review.comment}</Text>
                                 </View>
                             }
 

@@ -21,7 +21,7 @@ import InstallationsServiceScreen from '../../../screens/Service/InstallationsSc
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
 // @ts-expect-error
-import ReviewsScreen from '../../../Carlos/ReviewsScreen'
+import ReviewsScreen from '../../../Carlos/Service/ReviewsScreen'
 
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';

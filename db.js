@@ -249,7 +249,7 @@ class Reviews extends DB {
         return { id: doc.id, ...doc.data(), parent: doc.ref.parent.parent.id }
     }
 
-    listenByUserAll(set, uid) {
+    listenByUserAll(uid, set) {
         return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
 
