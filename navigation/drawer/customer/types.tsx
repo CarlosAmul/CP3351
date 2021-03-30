@@ -71,6 +71,7 @@ export type TabTenParamList = {
   LoginRegisterScreen: undefined;
   InstallationScreen: undefined;
   DetailsScreen: undefined;
+  ReviewsForm: undefined;
 };
 
 export type onPressFunc = (event: GestureResponderEvent) => void;

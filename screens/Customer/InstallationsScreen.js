@@ -37,17 +37,26 @@ export default function InstallationsScreen() {
 
 	useEffect(() => db.Sensors.Installations.listenByCustomer(setRequests, user.id), [sensors])
 
+	const [reviews, setReviews] = useState([])
+
+	useEffect(() => db.Users.Reviews.listenByUserAll(setReviews, user.id), [])
+
+
 	const handleDetails = (req) => {
 		navigation.navigate("DetailsScreen", { request: req })
 	}
 
 	const handleCancel = (req) => {
-		(async()=>{
+		(async () => {
 			await db.Sensors.Installations.removeInstallation(req.id, req.parent)
 			let sensor = await db.Sensors.findOne(req.parent)
-			let newSensor = {...sensor, request:"no"}
+			let newSensor = { ...sensor, request: "no" }
 			await db.Sensors.update(newSensor)
 		})()
+	}
+
+	const handleReviews = (request) => {
+		navigation.navigate("ReviewsForm", { request })
 	}
 
 	return (
@@ -75,7 +84,20 @@ export default function InstallationsScreen() {
 										marginT-15
 									/>
 								}
+
+
 							</View>
+							{ console.log('dis is review', reviews.find(review => review.jobid == request.id)) }
+							{/* Carlos */}
+							{
+								request.status == "Finished" && !reviews.find(review => review.jobid == request.id) &&
+								<Button label="Leave Review"
+									style={styles.flexButton}
+									backgroundColor={Colors.primary}
+									onPress={() => { handleReviews(request) }}
+									marginT-15
+								/>
+							}
 						</View>
 					)
 				}
@@ -121,10 +143,10 @@ const styles = StyleSheet.create({
 		alignSelf: "center"
 	},
 	flexButton: {
-        width: Dimensions.get("window").width / 1.2,
-        margin: 5,
-        alignSelf: "center"
-    },
+		width: Dimensions.get("window").width / 1.2,
+		margin: 5,
+		alignSelf: "center"
+	},
 	card: {
 		padding: 10,
 		paddingTop: 15,

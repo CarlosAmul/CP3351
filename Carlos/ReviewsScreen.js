@@ -33,7 +33,7 @@ export default function ReviewsScreen() {
             {
                 reviews.map(
                     review =>
-                        <Review review={review}/>
+                        <Review key={review.id} review={review}/>
                 )
             }
         </ScrollView>

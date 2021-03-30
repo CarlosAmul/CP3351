@@ -180,13 +180,6 @@ export default function InstallationsServiceScreen() {
                                             onPress={() => { handleDetails(request) }}
                                             marginT-15
                                         />
-                                        {/* Carlos */}
-                                        <Button label="Leave Review"
-                                            style={styles.flexButton}
-                                            backgroundColor={Colors.primary}
-                                            onPress={() => { handleReviews(request) }}
-                                            marginT-15
-                                        />
                                     </View>
                                 </View>
                             :undefined)

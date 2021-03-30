@@ -51,6 +51,8 @@ import VacancyScreen from '../../../Zainab/VacancyScreen'
 import ApplicationScreen from '../../../Zainab/ApplicationScreen'
 // @ts-expect-error
 import RegisterLogin from '../../../RegisterLogin'
+// @ts-expect-error
+import ReviewForm from '../../../Carlos/ReviewForm'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList } from './types';
 
@@ -362,6 +364,11 @@ function InstallationsNavigator() {
         name="DetailsScreen"
         component={DetailsScreen}
         options={{ headerTitle: 'Details' }}
+      />
+       <InstallationsStack.Screen
+        name="ReviewsForm"
+        component={ReviewForm}
+        options={{ headerTitle: 'Review Form' }}
       />
     </InstallationsStack.Navigator>
   )

@@ -79,7 +79,7 @@ export default function DetailsScreen({ route }) {
                         <Text text70M>For: {customer.name} - {customer.authUser}</Text>
                         <Text text70M>Sensor: {sensor.location}</Text>
                         {
-                            request.note &&
+                            request.note !== '' &&
                             <Text text70M>Note: {request.note}</Text>
                         }
                         {

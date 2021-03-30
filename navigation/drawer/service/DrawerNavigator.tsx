@@ -22,8 +22,6 @@ import InstallationsServiceScreen from '../../../screens/Service/InstallationsSc
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
 // @ts-expect-error
 import ReviewsScreen from '../../../Carlos/ReviewsScreen'
-// @ts-expect-error
-import ReviewForm from '../../../Carlos/ReviewForm'
 
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
@@ -136,8 +134,7 @@ function SettingsNavigator() {
 
 const InstallationsServiceStack = createStackNavigator<{ 
   InstallationsServiceScreen: undefined,
-  DetailsScreen: undefined,
-  ReviewsForm: undefined 
+  DetailsScreen: undefined
 }>();
 
 function InstallationsServiceNavigator() {
@@ -152,11 +149,6 @@ function InstallationsServiceNavigator() {
         name="DetailsScreen"
         component={DetailsScreen}
         options={{ headerTitle: 'Details' }}
-      />
-      <InstallationsServiceStack.Screen
-       name="ReviewsForm"
-       component={ReviewForm}
-       options={{ headerTitle: 'Review Form' }}
       />
     </InstallationsServiceStack.Navigator>
   )

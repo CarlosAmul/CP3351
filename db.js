@@ -161,6 +161,8 @@ class Installations extends DB {
         return await db.collection(this.containing).doc(sensorId).collection(this.collection).add(rest)
     }
 
+    
+
     listenByPending = (set, centerid) => 
         db.collectionGroup(this.collection)
         .where("userid", "==", null)
@@ -197,6 +199,11 @@ class Installations extends DB {
         .collection(this.collection)
         .doc(id)
         .delete()
+    
+    //Carlos
+    listenOne = (set, reqid) => 
+    db.collectionGroup(this.collection)
+    .onSnapshot(snap => set(snap.docs.map(this.reformat).find(item => item.id == reqid)))
 }
 
 
@@ -242,12 +249,16 @@ class Reviews extends DB {
         return { id: doc.id, ...doc.data(), parent: doc.ref.parent.parent.id }
     }
 
-    listenByUserAll(uid, set) {
+    listenByUserAll(set, uid) {
         return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
     }
 
     listenByRevieweeAll(uid, set) {
         return db.collectionGroup(this.collection).where('supportid', '==', uid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByJob(reqid, set) {
+        return db.collectionGroup(this.collection).where('jobid', '==', reqid).onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
     }
 
     createReview = async(userid, item) => {
