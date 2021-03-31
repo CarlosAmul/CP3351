@@ -42,7 +42,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * The time is given, and a type name is given so it can be picked from a list of specific reports.
 * each buy also sends a track
 ### Customer Reviews
-- [ ] Finished ❌
+- [X] Finished ✅
 * Customer can leave review after installation is done. Also after support role resolves complaint
 ### Notifications
 - [x] Finished ✅
