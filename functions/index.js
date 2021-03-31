@@ -194,6 +194,8 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All Temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     // functions.logger.info("categoryId2", { categoryId2 })
+      
+    const { id: categoryId10 } = await db.collection('categories').add({ name: "Blood Pressure", description: "All Blood Pressure sensors here", price: 200, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
 
     await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
     await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
@@ -205,6 +207,8 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install: "yes", request: "no", price: 400 })
     // functions.logger.info("sensorId2", { sensorId2 })
+
+    const { id: sensorId10 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId10, location: "left arm", maxSys: 120, minSys: 90, maxDia: 80, minDia: 60, alert: false, install: "yes", request: "no", price: 400 })
 
     const { id: adId1 } = await db.collection('ads').add({
       title: 'New motion sensor',
@@ -236,6 +240,8 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     const categoryDoc = await db.collection('categories').doc(sensor.categoryid).get()
     const category = { id: categoryDoc.id, ...categoryDoc.data() }
     // functions.logger.info("category", { category })
+
+    functions.logger.info("cat name ", category.name=="Blood Pressure")
 
     if (category.name === "Motion") {
       const readingData = await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when", "desc").limit(2).get()
@@ -273,7 +279,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         }
       }
     }
-    else if (category.name = "Temperature") {
+    else if (category.name === "Temperature") {
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
 
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
@@ -281,6 +287,14 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
       // functions.logger.info("temp alert update", { alert: isAlert });
+    } else if (category.name === "Blood Pressure") {
+      const isAlert = reading.current.sys*1 > sensor.maxSys || reading.current.sys*1 < sensor.minSys || reading.current.dia*1 > sensor.maxDia || reading.current.dia*1 < sensor.minDia
+      functions.logger.info('alert', { isAlert })
+
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if (isAlert) {
+        newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Abnormal blood pressure detected`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
     } else {
       // functions.logger.info("No such category", { category });
     }

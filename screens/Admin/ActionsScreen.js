@@ -5,6 +5,7 @@ import CategoryPicker from '../pickers/CategoryPicker'
 import SensorByCategoryPicker from '../pickers/SensorByCategoryPicker'
 import TemperatureActions from './TemperatureActions'
 import MotionActions from './MotionActions'
+import BPMonitorActions from '../../Carlos/BPMonitorActions'
 import { useNavigation } from '@react-navigation/native'
 import MenuIcon from '../../components/MenuIcon'
 import AdminTabs from '../../Zainab/AdminTabs'
@@ -120,6 +121,15 @@ export default function ActionsScreen() {
                                     category.name === "Temperature"
                                     &&
                                     <TemperatureActions sensor={sensor} />
+                                }
+                                {
+                                    category
+                                    &&
+                                    sensor
+                                    &&
+                                    category.name === "Blood Pressure"
+                                    &&
+                                    <BPMonitorActions sensor={sensor} />
                                 }
                             </View>
                             :

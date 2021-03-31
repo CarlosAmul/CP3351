@@ -2,21 +2,22 @@ const firebase = require('firebase')
 
 // put your own config here
 const firebaseConfig = {
-    apiKey: "AIzaSyBR4o8GEC0_0Uqd3OSeimB1djijA8iRkAI",
-    authDomain: "cp3351-project-9be84.firebaseapp.com",
-    projectId: "cp3351-project-9be84",
-    storageBucket: "cp3351-project-9be84.appspot.com",
-    messagingSenderId: "789561957066",
-    appId: "1:789561957066:web:77357785ccb2840713b233",
-    measurementId: "G-HE53FYYKKR"
+    apiKey: "AIzaSyCPV44gVwibJaPpWH_4G2KY8kc6AKvA1ZM",
+    authDomain: "cp3351-39dd4.firebaseapp.com",
+    databaseURL: "https://cp3351-39dd4-default-rtdb.firebaseio.com",
+    projectId: "cp3351-39dd4",
+    storageBucket: "cp3351-39dd4.appspot.com",
+    messagingSenderId: "442367383444",
+    appId: "1:442367383444:web:c462446d76f860aac6e181",
+    measurementId: "G-XQJBRTN4B6"
 }
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore()
 
-db.useEmulator("localhost", 8081)
-firebase.functions().useEmulator("localhost", 5001)
-firebase.auth().useEmulator("http://localhost:9099")
+db.useEmulator("10.0.2.2", 8081)
+firebase.functions().useEmulator("10.0.2.2", 5001)
+firebase.auth().useEmulator("http://10.0.2.2:9099")
 
 const reformat = doc => ({ id: doc.id, ...doc.data() })
 const findAll = async collection => (await db.collection(collection).get()).docs.map(reformat)
@@ -68,6 +69,30 @@ const simulateReading = async sensor => {
         await db.collection('sensors').doc(sensor.id).collection('readings').add({
             when: new Date(),
             current: current + Math.floor(Math.random() * 20) - 10
+        })
+    }
+    if (isCategory(sensor, "Blood Pressure")) {
+        const changeOps = ['+', '-']
+        const op = Math.floor(Math.random() * 2)
+        const current = readings.length > 0 ? readings[0].current : { sys: 120, dia: 80, pulse: 72 }
+
+        changeOps[op] === '+' ? 
+        await db.collection('sensors').doc(sensor.id).collection('readings').add({
+            when: new Date(),
+            current: {
+                sys: current.sys + op,
+                dia: current.dia + op,
+                pulse: current.pulse + op
+            }
+        })
+        :
+        await db.collection('sensors').doc(sensor.id).collection('readings').add({
+            when: new Date(),
+            current: {
+                sys: current.sys - op,
+                dia: current.dia - op,
+                pulse: current.pulse - op
+            }
         })
     } else {
         console.log('other type of sensor not simulated yet')

@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { View } from '../../components/Themed';
 import MotionInfo from './MotionInfo'
 import TemperatureInfo from './TemperatureInfo'
+import BPMonitorInfo from '../../Carlos/BPMonitorInfo'
 import CategoryByUserPicker from '../pickers/CategoryByUserPicker';
 import SensorByUserAndCategoryPicker from '../pickers/SensorByUserAndCategoryPicker';
 import ReportPicker from '../pickers/ReportPicker'
@@ -97,6 +98,13 @@ export default function SensorsScreen({ route }) {
 							sensor.install === "yes"
 							&&
 							<TemperatureInfo user={user} category={category} sensor={sensor} />
+						}
+						{
+							category.name === "Blood Pressure"
+							&&
+							sensor.install === "yes"
+							&&
+							<BPMonitorInfo user={user} category={category} sensor={sensor} />
 						}
 						{/* Omar */}
 						<Button label="Request Report"
