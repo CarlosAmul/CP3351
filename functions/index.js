@@ -7,6 +7,7 @@ admin.initializeApp();
 //Omar
 const createSampleCenters = require('./createSampleCenters')
 const createHistoricReadingsSample = require('./createHistoricReadingsSample');
+// const { convertToObject } = require("typescript");
 
 exports.createSampleCenters = functions.https.onCall(createSampleCenters)
 exports.createHistoricReadingsSample = functions.https.onCall(createHistoricReadingsSample)
@@ -125,7 +126,7 @@ exports.createSampleData = functions.https.onCall(
           await removeOne('usertrackings', tracking.id)
       )
     )
-    
+
     let centers = await findAll("supportcenters")
 
     let alKhor = centers.find((c) => c.name.indexOf("Al Khor") !== -1)
@@ -162,7 +163,7 @@ exports.createSampleData = functions.https.onCall(
     const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer", points: 0 })
     // functions.logger.info("result1", { result1 })
 
-    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", points: 0, address: [25.213983211544196,51.30470898002386]})
+    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", points: 0, address: [25.213983211544196, 51.30470898002386] })
     // functions.logger.info("result2", { result2 })
 
     const result3 = await db.collection('users').doc(authId3).set({ name: "Admin", role: "Admin" })
@@ -200,9 +201,9 @@ exports.createSampleData = functions.https.onCall(
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false, price: 500 })
     // functions.logger.info("sensorId1", { sensorId1 })
 
-    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install:"no", request: "no", price: 400 })
+    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install: "no", request: "no", price: 400 })
 
-    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install:"yes", request: "no", price: 400 })
+    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install: "yes", request: "no", price: 400 })
     // functions.logger.info("sensorId2", { sensorId2 })
 
     const { id: adId1 } = await db.collection('ads').add({
@@ -214,7 +215,7 @@ exports.createSampleData = functions.https.onCall(
       endDate: new Date('2021-04-19T12:00:00-06:30')
     })
 
-    // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
+    
   }
 )
 
@@ -251,7 +252,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         //   -- change the blobs to base64 strings
         // 2 -- compare the strings
         // 3 -- update db with true/false (motiondetected field)
-        
+
         // functions.logger.info("checkMotion", { sensor, previousImageURL, latestImageURL })
 
         const response1 = await fetch(latestImageURL)
@@ -290,7 +291,7 @@ exports.newRegistration = functions.firestore.document('users/{userid}').onCreat
     const { userid } = context.params
     const userDoc = await db.collection('users').doc(userid).get()
     const user = { id: userDoc.id, ...userDoc.data() }
-    const tracking = db.collection('usertrackings').add({ operation: 'register', when: new Date(), userid: userid })
+    const tracking = await db.collection('usertrackings').add({ operation: 'register', when: new Date(), userid: userid })
     console.log('registration tracked', tracking)
 
     if (user.role == "Customer") {
@@ -315,6 +316,7 @@ exports.addSensor = functions.https.onCall(
   async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
     functions.logger.info("Done with it!!!!!!!")
     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+  })
 exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
   async (snap, context) => {
     const { tipid } = context.params
@@ -348,20 +350,51 @@ exports.notifyAdminForApplication = functions.https.onCall(
         await newNotification(user.id, `${username} has submitted an application`, 'Applications')
       })
     )
-  }
-)
+  })
 
 exports.notifyUserForApplication = functions.https.onCall(
   async ({ userid, status, vacancy }, context) => {
-    if(status === "rejected") {
+    if (status === "rejected") {
       await newNotification(userid, `Sorry, your application for ${vacancy.role} was rejected. Apply again next time`, 'VacancyScreen')
     } else {
       await newNotification(userid, `Congratulations! You have been hired!`, 'Settings')
-      await db.collection('users').doc(userid).set({role: vacancy.role, centerid: null}, {merge: true})
-      await db.collection('vacancies').doc(vacancy.id).set({spaces: vacancy.spaces - 1}, {merge: true})
+      await db.collection('users').doc(userid).set({ role: vacancy.role, centerid: null }, { merge: true })
+      await db.collection('vacancies').doc(vacancy.id).set({ spaces: vacancy.spaces - 1 }, { merge: true })
     }
   }
 )
+
+exports.newReview = functions.firestore.document('users/{userid}/reviews/{reviewid}').onCreate(
+  async (snap, context) => {
+    const { userid } = context.params
+    const { reviewid } = context.params
+
+    const reviewDoc = await db.collection('users').doc(userid).collection('reviews').doc(reviewid).get()
+    const review = { id: reviewDoc.id, ...reviewDoc.data() }
+
+    const notif = newNotification(review.supportid, 'You have a new review', 'Reviews')
+    functions.logger.info("notification sent", notif)
+
+  })
+
+exports.newRequest = functions.firestore.document('sensors/{sensorid}/installation/{installationid}').onCreate(
+  async (snap, context) => {
+    const { sensorid } = context.params
+    const { installationid } = context.params
+
+    const reqDoc = await db.collection('sensors').doc(sensorid).collection('installations').doc(installationid).get()
+    const request = { id: reqDoc.id, ...reqDoc.data() }
+
+    const supportDocs = await db.collection('users').where('role', '==', 'Support').where('centerid', '==', request.centerid).get()
+    const supports = supportDocs.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    functions.logger.info("support", supports)
+
+    // const notif = newNotification(request.supportid, 'You have a new review', 'Reviews')
+    // functions.logger.info("notification sent", notif)
+
+  })
+
 
 exports.newPurchase = functions.firestore.document('sensors/{sensorid}').onCreate(
   async (snap, context) => {
@@ -378,4 +411,3 @@ exports.newPurchase = functions.firestore.document('sensors/{sensorid}').onCreat
     functions.logger.info("notification sent", notif)
 
   })
-})

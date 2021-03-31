@@ -7,7 +7,6 @@ import MenuIcon from '../components/MenuIcon'
 import db from '../db'
 import { Card } from 'react-native-ui-lib'
 import { ScrollView } from 'react-native-gesture-handler';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Colors as CustomColors } from 'react-native-ui-lib';
 
 export default function NotificationsScreen() {
@@ -33,9 +32,12 @@ export default function NotificationsScreen() {
 
     // console.log(notifications)
 
-    function link(uid, nid, screen, extra) {
+    function link(uid, nid, screen, extra, nestedScreen) {
         db.Users.Notifications.markRead(uid, nid)
-        navigation.navigate(screen, { screen: screen + "Screen", params: { extra: extra ? extra : null } })
+        console.log('nestedScreen', nestedScreen)
+        if(screen !== ''){
+            navigation.navigate(screen, { screen: nestedScreen ? nestedScreen : screen + "Screen", params: { extra: extra ? extra : null } })
+        }
     }
 
     function clearAll() {
@@ -58,7 +60,7 @@ export default function NotificationsScreen() {
                             row
                             enableShadow
                             key={notification.id}
-                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra)}
+                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra, notification.                                                                                                                    nestedScreen)}
                             style={[styles.card, { backgroundColor: notification.status ? '#f2f2f2' : 'white' }]}
                         >
                             <Card.Section

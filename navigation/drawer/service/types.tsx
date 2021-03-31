@@ -1,4 +1,4 @@
-import { GestureResponderEvent } from "react-native";
+// import { GestureResponderEvent } from "react-native";
 
 export type RootStackParamList = {
   Root: undefined;
@@ -10,7 +10,8 @@ export type DrawerParamList = {
   Actions: undefined,
   Settings: undefined,
   InstallationsService: undefined,
-  Reviews: undefined
+  Reviews: undefined,
+  Notifications: undefined
 };
 
 export type TabOneParamList = {
@@ -28,4 +29,8 @@ export type TabThreeParamList = {
 
 export type TabFourParamList = {
   ReviewsScreen: undefined;
+};
+
+export type TabFiveParamList = {
+  NotificationsScreen: undefined;
 };

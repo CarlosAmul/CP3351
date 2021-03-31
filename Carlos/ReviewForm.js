@@ -16,12 +16,16 @@ import { LogBox } from 'react-native';
 export default function ReviewForm({ navigation: { goBack }, route }) {
     // LogBox.ignoreLogs(['TypeError: _reactNative.NativeModules.RNDatePickerAndroid.dismiss is not a function'])
 
+    if(route.params.extra){
+        route.params.request = route.params.extra
+    }
+
     const [support, setSupport] = useState(null)
     useEffect(() => db.Users.listenOne(setSupport, route.params.request.userid), [])
     console.log('support ', support)
 
     const [comment, setComment] = useState('')
-    console.log('params', route.params)
+    console.log('params', route.params.request)
 
     let routing = new Array()
     routing["install"] = "Installation"
@@ -30,6 +34,10 @@ export default function ReviewForm({ navigation: { goBack }, route }) {
     const submitReview = async () => {
        //create review in db
        await db.Users.Reviews.createReview(route.params.request.customerid, { comment, when: new Date(), supportid: support.id, jobid: route.params.request.id })
+       if (route.params.extra){
+          let doc = await db.Users.Notifications.findByJob(route.params.request.customerid, route.params.request.id)
+          await db.Users.Notifications.remove(route.params.request.customerid, doc.id)
+       }
        goBack()
     }
 
@@ -65,6 +73,14 @@ export default function ReviewForm({ navigation: { goBack }, route }) {
                             style={[styles.button]}
                             enableShadow
                             onPress={() => submitReview()}
+                        />
+                           <Button
+                            backgroundColor={Colors.red10}
+                            label="Cancel"
+                            labelStyle={{ fontWeight: '100' }}
+                            style={[styles.button, { marginLeft: 20}]}
+                            enableShadow
+                            onPress={() => goBack()}
                         />
                     </View>
                 </View>

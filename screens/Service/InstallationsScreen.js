@@ -73,9 +73,15 @@ export default function InstallationsServiceScreen() {
         (async () => {
             let item = {...req, status:edit}
             let sensor = {...await db.Sensors.findOne(req.parent)}
+            if (edit === "Arrived") {
+                db.Users.Notifications.newNotification(req.customerid, 'Service has arrived', '')
+            }
             if (edit === "Finished")  {
                 sensor.install = "yes"
                 sensor.request = "no"
+                db.Users.Notifications
+                .newNotification(req.customerid,
+                    `Your ${req.type === "install" ? "installation" : "removal"} request has been completed. Click here to leave a review`, 'Installations', 'ReviewsForm', req)
             }
             await db.Sensors.Installations.updateSub(item, req.parent)
             db.Sensors.update(sensor)

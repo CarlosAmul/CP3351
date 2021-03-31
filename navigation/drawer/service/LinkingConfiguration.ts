@@ -26,6 +26,11 @@ export default {
               ReviewsScreen: 'four',
             },
           },
+          TabFive: {
+            screens: {
+              NotificationsScreen: 'four',
+            },
+          },
         },
       },
       NotFound: '*',

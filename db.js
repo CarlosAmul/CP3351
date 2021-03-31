@@ -290,10 +290,19 @@ class Notifications extends DB {
         db.collection(this.containing).doc(uid).collection(this.collection).doc(nid).set({ status: true }, { merge: true })
     }
 
-    newNotification = async (userid, message, screen, extra) => await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, when: new Date(), extra: extra ? extra : {} })
+    newNotification = async (userid, message, screen, nestedScreen, extra ) => {
+        console.log('runing')
+        await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, nestedScreen: nestedScreen ? nestedScreen : '', when: new Date(), extra: extra ? extra : {} })
+    }
+        
 
     remove = async (uid, id) => {
         await db.collection(this.containing).doc(uid).collection(this.collection).doc(id).delete()
+    }
+
+    findByJob = async(userid, jobid) => {
+        let notif = await db.collection(this.containing).doc(userid).collection(this.collection).where('extra.id', '==', jobid).limit(1).get()
+        return notif.docs.map(this.reformat)[0]
     }
 
 }
