@@ -73,7 +73,8 @@ export default function App() {
             return <DrawerService colorScheme={colorScheme} />
         } else {
             console.log('user role', user?.role)
-            fb.auth().signOut()
+            if(user)
+                fb.auth().signOut()
             return null
         }
     }

@@ -10,6 +10,11 @@ module.exports = createSampleCenters = async (data, context) => {
     const removeOne = async (collection, id) => await db.collection(collection).doc(id).delete()
 
 
+    if ((await db.collection('supportcenters').get()).docs.length > 0) {
+        functions.logger.info("already have data", {})
+        return
+    }
+
     let allCenters = await findAll('supportcenters')
 
     if(allCenters.length > 0) {

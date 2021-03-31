@@ -47,6 +47,11 @@ const newNotification = async (userid, message, screen, extra) => await db.colle
 exports.createSampleData = functions.https.onCall(
   async (data, context) => {
 
+    if ((await db.collection('users').get()).docs.length > 0) {
+      functions.logger.info("already have data", {})
+      return
+    }
+
     const sensors = await findAll('sensors')
     await Promise.all(
       sensors.map(
@@ -180,7 +185,7 @@ exports.createSampleData = functions.https.onCall(
 
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install:"no", request: "no", price: 400 })
 
-    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install:"yes", request: "no", price: 400 })
+    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 70, alert: false, install:"yes", request: "no", price: 400 })
     // functions.logger.info("sensorId2", { sensorId2 })
 
     // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })

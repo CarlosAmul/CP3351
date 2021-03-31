@@ -5,20 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
 import { ScrollView } from 'react-native-gesture-handler';
 
-import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-} from "react-native-chart-kit";
-
+import OneReport from './OneReport'
 import UserContext from '../../UserContext'
-import fb from '../../fb'
 import db from '../../db'
 
-export default function SettingsScreen() {
+export default function ReportsScreen() {
 
     const navigation = useNavigation();
     useEffect(() => {
@@ -31,11 +22,70 @@ export default function SettingsScreen() {
     const { user } = useContext(UserContext)
 
     const [reports, setReports] = useState([])
+    const [reportsWithSensors, setReportsWithSensors] = useState([])
+    const [readings, setReadings] = useState([])
     const [report, setReport] = useState(null)
     const [isOpen, open] = useState(false)
 
+    const [xAxis, setXAxis] = useState(null)
+    const [yAxis, setYAxis] = useState(null)
 
-    useEffect(() => db.Users.Reports.listenByUser(setReports, user.id), [])
+    // Listen by newest reports first
+    useEffect(() => db.Users.Reports.listenByUserDesc(setReports, user.id), [])
+
+    // Give reports their sensor location information
+    useEffect(() => {
+        (async () => {
+            let newReports = await Promise.all(reports.map(async report => {
+                let sensor = await db.Sensors.findOne(report.sensorid)
+                report.sensor = sensor
+                return report
+            }))
+            setReportsWithSensors(newReports)
+        })()
+    }, [reports])
+
+    // Get readings from the sensor the user picked
+    useEffect(() => report ? db.Sensors.Readings.listenAllBetween(report.sensorid, setReadings, report.from, report.to) : undefined, [report])
+
+    // Calculate graph display data
+    useEffect(() => {
+        (async () => {
+            if (report && readings) {
+                
+                // Month names for yAxis labels of reading times
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ]
+
+                let data = {}
+                readings.forEach(reading => {
+                    let month = reading.when.toDate().getMonth()
+                    if (data[monthNames[month]]) {
+                        data[monthNames[month]].push(reading.current)
+                    } else {
+                        data[monthNames[month]] = []
+                        data[monthNames[month]].push(reading.current)
+                    }
+                })
+
+                // Average each month
+                for (const month in data) {
+                    let values = data[month]
+                    let length = values.length
+                    values = values.reduce((p,c) => p+c)
+                    values = Math.round(values / length)
+                    data[month] = values
+                }
+
+                // console.log("xaxis", Object.keys(data))
+                // console.log("yaxis", Object.values(data))
+
+                setXAxis(Object.keys(data))
+                setYAxis(Object.values(data))
+            }
+        })()
+    }, [report, readings])
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -47,22 +97,11 @@ export default function SettingsScreen() {
         setReport(picked)
     }
 
-    const typeToString = (type) => {
-        switch (type) {
-            case 0:
-                return "Yearly"
-            case 1:
-                return "Monthly"
-            case 2:
-                return "Weekly"
-        }
-    }
-
     return (
 
         <ScrollView style={styles.cardContainer}>
             {
-                !isOpen && reports.map(
+                !isOpen && reportsWithSensors.map(
                     report =>
                         <Card
                             row
@@ -73,8 +112,8 @@ export default function SettingsScreen() {
                             onPress={() => showReport(report)}>
                             <Card.Section
                                 content={[
-                                    { text: typeToString(report.type), text60: true, grey10: true },
-                                    { text: report.when.toDate('MM/dd/yyyy').toString().slice(0, 24), text70: true, grey30: true }
+                                    { text: `Report for: ${report.sensor.location} sensor`, text60: true, grey10: true },
+                                    { text: `Requested on: ` + report.when.toDate('MM/dd/yyyy').toString().slice(0, 24), text70: true, grey30: true }
                                 ]}
                                 style={{ padding: 10 }}
                             />
@@ -82,53 +121,9 @@ export default function SettingsScreen() {
                 )
             }
             {
-                isOpen &&
+                isOpen && report && xAxis && yAxis &&
                 <View style={styles.getStartedContainer}>
-                    <LineChart
-                        data={{
-                            labels: ["January", "February", "March", "April", "May", "June"],
-                            datasets: [
-                                {
-                                    data: [
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100,
-                                        Math.random() * 100
-                                    ]
-                                }
-                            ]
-                        }}
-                        width={Dimensions.get("window").width} // from react-native
-                        height={220}
-                        // yAxisLabel=""
-                        yAxisSuffix="C"
-                        yAxisInterval={1} // optional, defaults to 1
-                        chartConfig={{
-                            // backgroundColor: "#e26a00",
-                            // backgroundColor: `${Colors.primary}`,
-                            backgroundGradientFrom: `${Colors.primary}`,
-                            backgroundGradientTo: `${Colors.primary}`,
-                            decimalPlaces: 2, // optional, defaults to 2dp
-                            // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            color: () => `${Colors.basic}`,
-                            labelColor: () => `${Colors.basic}`,
-                            style: {
-                                borderRadius: 16
-                            },
-                            propsForDots: {
-                                r: "6",
-                                strokeWidth: "2",
-                                stroke: "#ffa726"
-                            }
-                        }}
-                        bezier
-                        style={{
-                            marginVertical: 8,
-                            // borderRadius: 16
-                        }}
-                    />
+                    <OneReport type={report.type} data={yAxis} labels={xAxis} />
                     <Button label="Back"
                         style={{ width: '60%' }}
                         backgroundColor={Colors.primary}

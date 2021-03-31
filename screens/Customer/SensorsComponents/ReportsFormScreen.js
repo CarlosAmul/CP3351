@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Button, View, Colors, Text, DateTimePicker, TextField } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import UserContext from '../../../UserContext'
-import fb from '../../../fb'
 import db from '../../../db'
 
 
@@ -14,6 +13,28 @@ export default function ReportsFormScreen({ route }) {
     const navigation = useNavigation()
     const { user } = useContext(UserContext)
 
+    const [from, setFrom] = useState(null)
+    const [to, setTo] = useState(null)
+    const [min, setMin] = useState(null)
+    const [max, setMax] = useState(null)
+    const [type, setType] = useState(null)
+    const [category, setCategory] = useState(null)
+
+
+    useEffect(() => {
+        (async () => {
+            if (sensor) {
+                // Get sensor category
+                let category = await db.Categories.findOne(sensor.categoryid)
+                setCategory(category)
+                // Set report date range
+                let oldestReading = await db.Sensors.Readings.findOldestOne(sensor.id)
+                let latestReading = await db.Sensors.Readings.findLatestOne(sensor.id)
+                setMin(oldestReading.when.toDate())
+                setMax(latestReading.when.toDate())
+            }
+        })()
+    }, [sensor])
 
     Colors.loadColors({
         primary: '#6874e2',
@@ -27,31 +48,95 @@ export default function ReportsFormScreen({ route }) {
     });
 
 
-    const validateFinal = () => {}
+    const oneDay = 1000 * 60 * 60 * 24;
+    function dayDiff(a, b) {
+        // UTC to discount daylight saving time
+        const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+        const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+        console.log("diff", Math.abs(Math.floor((utc2 - utc1) / oneDay)))
+        return Math.abs(Math.floor((utc2 - utc1) / oneDay));
+    }
+
+    const validateFinal = () =>
+        to === null ||
+        from === null
 
     const sendRequest = () => {
         (async () => {
-
+            await db.Users.Reports.createReport(user.id, {
+                sensorid: sensor.id,
+                to: to,
+                type: category.name,
+                from: from,
+                when: new Date()
+            })
+            navigation.goBack()
         })()
     }
 
-    // console.log("req date", requestDate)
-    // console.log("type", type)
+    const getMaxAllowed = () => {
+        let fromToMax = dayDiff(from, max)
+        if (fromToMax / 30.417 > 6)
+            return new Date(from.getTime() + 1000 * 60 * 60 * 24 * 30 * 6)
+        else
+            return max
+    }
 
     return (
         <>
-            <View styles={styles.container}>
+            <View style={styles.container}>
+                {
+                    <>
+                        <Text style={{ marginBottom: 15 }} text40M>Select report data range</Text>
+                        {
+                            <>
+                                <DateTimePicker
+                                    placeholder="Report start date"
+                                    style={[styles.inputText, { backgroundColor: Colors.mainbg, }]}
+                                    value={from}
+                                    onChange={(date) => { setFrom(date) }}
+                                    minimumDate={min}
+                                    maximumDate={max}
+                                />
+                                {
+                                    from &&
+                                    <>
+                                        <Text style={styles.muted}>Maximum of 6 months of data per report</Text>
+                                        <DateTimePicker
+                                            placeholder="Report end date"
+                                            style={[styles.inputText, { backgroundColor: Colors.mainbg, }]}
+                                            value={to}
+                                            onChange={(date) => { setTo(date) }}
+                                            minimumDate={from}
+                                            maximumDate={getMaxAllowed()}
+                                        />
+                                        <Button label="Send Request"
+                                            style={{ width: '60%', alignSelf: "center" }}
+                                            backgroundColor={Colors.primary}
+                                            onPress={sendRequest}
+                                            disabled={validateFinal()}
+                                            marginT-15
+                                        />
+                                    </>
+                                }
+                            </>
+                        }
+                    </>
+                }
 
             </View>
         </>
     );
 }
 
+
+
 const styles = StyleSheet.create({
     muted: {
         fontSize: 13,
         padding: 5,
         alignContent: "center",
+        color: 'grey'
     },
     message: {
         fontSize: 16,
@@ -67,6 +152,7 @@ const styles = StyleSheet.create({
     inputText: {
         backgroundColor: Colors.mainbg,
         borderRadius: 20,
+        paddingVertical: 5,
         paddingHorizontal: 10,
         alignSelf: "center",
     },
@@ -78,8 +164,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     container: {
+        padding: 15,
         flex: 1,
-        flexDirection: "row",
     },
     card: {
         padding: 20,
