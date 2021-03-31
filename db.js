@@ -325,6 +325,9 @@ class FitnessTips extends DB {
 
     listenToApprovedTips = (set) =>
         db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToDisapprovedTips = (set) =>
+        db.collection(this.collection).where('approved', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class Simulator extends DB {

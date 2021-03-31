@@ -8,7 +8,6 @@ export type RootStackParamList = {
 export type DrawerParamList = {
   PublicHome: undefined,
   Settings: undefined,
-  Actions: undefined,
   Sensors: undefined,
   Notifications: undefined,
   FAQs: undefined,
@@ -33,10 +32,6 @@ export type TabOneParamList = {
 
 export type TabTwoParamList = {
   SettingsScreen: undefined;
-};
-
-export type TabThreeParamList = {
-  ActionsScreen: undefined;
 };
 
 export type TabFourParamList = {

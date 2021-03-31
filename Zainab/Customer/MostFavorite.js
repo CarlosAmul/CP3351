@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native'
 import { Card, Colors, Button, View, Text } from 'react-native-ui-lib'
 import db from '../../db'
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 export default function MostFavorite() {
     
@@ -41,7 +41,7 @@ export default function MostFavorite() {
                     />
                 </View>
                 <View style={styles.rightCardView}>
-                    <MaterialCommunityIcons name="party-popper" size={64} color={Colors.secondary} />
+                    <Entypo name="trophy" size={50} color={Colors.secondary} />
                     <Card.Section
                         content={[{ text: catFavs.length > 0 ? catFavs.reduce((first, second) => first.favs > second.favs ? first : second).category.name : "Nothing yet", text60M: true, dark10: true, marginT: 20 }]}
                         backgroundColor={Colors.white}

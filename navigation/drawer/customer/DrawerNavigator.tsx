@@ -16,8 +16,6 @@ import PaymentFormScreen from '../../../Zainab/Customer/PaymentFormScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Customer/SettingsScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Customer/ActionsScreen'
-// @ts-expect-error
 import SensorsScreen from '../../../screens/Customer/SensorsScreen'
 // @ts-expect-error
 import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
@@ -52,7 +50,7 @@ import ApplicationScreen from '../../../Zainab/Customer/ApplicationScreen'
 // @ts-expect-error
 import RegisterLogin from '../../../RegisterLogin'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
@@ -97,14 +95,6 @@ export default function DrawerNavigator() {
           name="Notifications"
           component={NotificationsNavigator}
           options={{ drawerLabel: `Notifications (${notifCount})` }}
-        />
-      }
-      {
-        user
-        &&
-        <Drawer.Screen
-          name="Actions"
-          component={ActionsNavigator}
         />
       }
       <Drawer.Screen
@@ -238,20 +228,6 @@ function SettingsNavigator() {
         options={{ headerTitle: 'Settings' }}
       />
     </SettingsStack.Navigator>
-  )
-}
-
-const ActionsStack = createStackNavigator<TabThreeParamList>();
-
-function ActionsNavigator() {
-  return (
-    <ActionsStack.Navigator>
-      <ActionsStack.Screen
-        name="ActionsScreen"
-        component={ActionsScreen}
-        options={{ headerTitle: 'Actions' }}
-      />
-    </ActionsStack.Navigator>
   )
 }
 

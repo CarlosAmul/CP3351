@@ -6,7 +6,7 @@ import {Colors, Card} from 'react-native-ui-lib'
 
 // all picker values should be non-object (number, string, etc.)
 
-export default function TemperatureInfo({ user, category, sensor }) {
+export default function HeartRateMonitorInfo({ user, category, sensor }) {
 
     const [reading, setReading] = useState(null)
     useEffect(() => sensor ? db.Sensors.Readings.listenLatestOne(setReading, sensor.id) : undefined, [sensor])
@@ -17,7 +17,7 @@ export default function TemperatureInfo({ user, category, sensor }) {
                 <Text
                     style={styles.getStartedText}
                 >
-                    Max: {sensor.max}
+                    Normal Highest: {sensor.max}
                 </Text>
             </Card>
             
@@ -25,7 +25,7 @@ export default function TemperatureInfo({ user, category, sensor }) {
                 <Text
                     style={styles.getStartedText}
                 >
-                    Min: {sensor.min}
+                    Normal Lowest: {sensor.min}
                 </Text>
             </Card>
             {
@@ -36,7 +36,7 @@ export default function TemperatureInfo({ user, category, sensor }) {
                         style={sensor.alert ? styles.getStartedRed : styles.getStartedGreen}
                         lightColor="rgba(0,0,0,0.8)"
                         darkColor="rgba(255,255,255,0.8)">
-                        Current: {reading.current}
+                        Current Rate: {reading.current}
                     </Text>
                 </Card>
                 

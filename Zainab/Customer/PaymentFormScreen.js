@@ -71,10 +71,16 @@ export default function PaymentFormScreen({ navigation, route }) {
             }
             const addSensor = fb.functions().httpsCallable('addSensor')
             if(category.name === "Temperature") {
-                await addSensor({location, user, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: "no", quantity: quantity*1})
+                await addSensor({location, userid: user.id, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, install: "yes", request: "no", quantity: quantity*1, user, category})
             }
-            else if(category.name === "Sleep Tracker") {
-                await addSensor({location, user, categoryid: category.id, min: 0, max: 100, alert: false, price, manufacturer, category, install: false, quantity: quantity*1})
+            else if(category.name === "Heart Rate Monitor") {
+                await addSensor({location, userid: user.id, categoryid: category.id, min: 50, max: 100, alert: false, price, manufacturer, install: "no", request: "no", quantity: quantity*1, user, category})
+            }
+            else if(category.name === "Pedometer") {
+                await addSensor({location, userid: user.id, categoryid: category.id, goal: 7000, alert: false, price, manufacturer, install: "no", request: "no", quantity: quantity*1, user, category})
+            }
+            else if(category.name === "Body Temperature") {
+                await addSensor({location, userid: user.id, categoryid: category.id, min: 36, max: 39, alert: false, price, manufacturer, install: "no", request: "no", quantity: quantity*1, user, category})
             }
         }
         else {
@@ -106,7 +112,7 @@ export default function PaymentFormScreen({ navigation, route }) {
                 totalPrice = totalPrice - (reward.discount / 100 * totalPrice)
                 setPrice(totalPrice)
             }
-        } else {
+        } else if(value !== "") {
             let previousPrice = category.price
             if(manufacturers.find(m => m.id === manufacturer)) {
                 previousPrice += manufacturers.find(m => m.id === manufacturer).price

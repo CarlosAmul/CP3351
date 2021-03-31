@@ -12,7 +12,6 @@ import db from '../../../db'
 import InstallationsMapComponent from './InstallationsMapComponent'
 import InstallationTypePicker from '../../pickers/InstallationTypePicker'
 
-
 export default function InstallationsFormScreen({ route }) {
 
     const { sensor } = route.params
