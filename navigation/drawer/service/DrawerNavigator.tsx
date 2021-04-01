@@ -8,7 +8,7 @@ import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Service/DashboardScreen'
+import DashboardScreen from '../../../Zainab/Service/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error

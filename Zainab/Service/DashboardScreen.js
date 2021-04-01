@@ -10,22 +10,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {BarChart} from "react-native-chart-kit";
 import { Dimensions } from "react-native";
-import * as Progress from 'react-native-progress';
-
 const screenWidth = Dimensions.get("window").width;
+import { FontAwesome5 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 export default function DashboardScreen() {
-
-    Colors.loadColors({
-        primary: '#6874e2',
-        secondary: '#f9ce7f',
-        mainbg: '#f5f6fa',
-        sidebg: '#ffffff',
-        darkprimary: '#ff466a',
-        darksecondary: '#0df5e3',
-        darkmainbg: '#201a31',
-        darksidebg: '#38304d'
-    });
 
     const navigation = useNavigation();
     useEffect(() => {
@@ -46,31 +35,28 @@ export default function DashboardScreen() {
         //seShadowColorFromDataset: false // optional
     };
 
+    const [categories, setCategories] = useState([])
+    useEffect(() => db.Categories.listenAll(setCategories), [])
+
     const [users, setUsers] = useState([])
     useEffect(() => db.Users.listenToUsersByRole(setUsers, 'Customer'), [])
 
-    const [allTips, setAllTips] = useState([])
-    useEffect(() => db.FitnessTips.listenAll(setAllTips), [])
+    const [safetyInstructions, setSafetyInstructions] = useState([])
+    useEffect(() => db.Categories.SafetInstructions.listenToAllSafetyInstructions(setSafetyInstructions), [])
 
-    const [approvedTips, setApprovedTips] = useState([])
-    useEffect(() => db.FitnessTips.listenToApprovedTips(setApprovedTips), [])
-
-    const [disapprovedTips, setDisapprovedTips] = useState([])
-    useEffect(() => db.FitnessTips.listenToDisapprovedTips(setDisapprovedTips), [])
-
-    const [faqs, setFaqs] = useState([])
-    useEffect(() => db.FAQs.listenAll(setFaqs), [])
-
-    const [answeredFaqs, setAnsweredFaqs] = useState([])
-    useEffect(() => db.FAQs.listenAllAnswered(setAnsweredFaqs), [])
+    const [supportCenters, setSupportCenters] = useState([])
+    useEffect(() => db.SupportCenters.listenAll(setSupportCenters), [])
+    
+    const [pendingInstalls, setPendingInstalls] = useState([])
+    useEffect(() => db.Sensors.Installations.listenToAllPendings(setPendingInstalls), [])
 
     return (
         <ScrollView contentContainerStyle={[styles.container, {backgroundColor: Colors.sidebg}]}>
             <View style={styles.figuresContainer}>
                 <Card style={[styles.card, {borderBottomWidth: 3, borderBottomColor: Colors.primary}]} elevation={15}>
-                    <MaterialIcons name="approval" size={45} color={Colors.primary} />
-                    <Text style={[styles.title, {color: Colors.primary}]}>Approved Tips</Text>
-                    <Text style={[styles.numberTitle]}>{approvedTips.length}</Text>
+                    <AntDesign name="Safety" size={45} color={Colors.primary} />
+                    <Text style={[styles.title, {color: Colors.primary}]}>Safety Instructions</Text>
+                    <Text style={[styles.numberTitle]}>{safetyInstructions.length}</Text>
                 </Card>
                 <Card style={[styles.card, {borderBottomWidth: 3, borderBottomColor: Colors.darkprimary}]} elevation={15}>
                     <FontAwesome name="users" size={45} color={Colors.darkprimary} />
@@ -80,49 +66,48 @@ export default function DashboardScreen() {
             </View>
             <View style={styles.figuresContainer}>
                 <Card style={[styles.card, {borderBottomWidth: 3, borderBottomColor: Colors.secondary}]} elevation={15}>
-                    <MaterialIcons name="do-not-touch" size={45} color={Colors.secondary} />
-                    <Text style={[styles.title, {color: Colors.secondary}]}>Disapproved Tips</Text>
-                    <Text style={[styles.numberTitle]}>{disapprovedTips.length}</Text>
+                    <FontAwesome5 name="building" size={45} color={Colors.secondary} />
+                    <Text style={[styles.title, {color: Colors.secondary}]}>Support Centers</Text>
+                    <Text style={[styles.numberTitle]}>{supportCenters.length}</Text>
                 </Card>
                 <Card style={[styles.card, {borderBottomWidth: 3, borderBottomColor: Colors.green30}]} elevation={15}>
-                    <MaterialCommunityIcons name="comment-question" size={45} color={Colors.green30} />
-                    <Text style={[styles.title, {color: Colors.green30}]}>FAQs</Text>
-                    <Text style={[styles.numberTitle]}>{faqs.length}</Text>
+                    <MaterialIcons name="pending" size={45} color={Colors.green30} />
+                    <Text style={[styles.title, {color: Colors.green30}]}>Pending Installs</Text>
+                    <Text style={[styles.numberTitle]}>{pendingInstalls.length}</Text>
                 </Card>
             </View>
-            <Text style={[styles.title, {color: Colors.grey30}]}>Total Approved Tips {approvedTips.length} / {allTips.length}</Text>
-            <Progress.Bar 
-                progress={approvedTips.length / allTips.length} 
-                width={300} 
-                color={Colors.darkprimary}
-                unfilledColor="#ff467720" 
-                borderWidth={0} 
-                height={7} 
-                style={{marginTop: -20}}
-            />
-            <Text style={[styles.title, {color: Colors.grey30}]}>Total FAQs Answered {answeredFaqs.length} / {faqs.length}</Text>
-            <Progress.Bar 
-                progress={answeredFaqs.length / faqs.length} 
-                width={300} 
-                color={Colors.blue30}
-                unfilledColor={Colors.blue70} 
-                borderWidth={0} 
-                height={7} 
-                style={{marginTop: -20}}
-            />
+            <View style={styles.graphContainer}>
+                <Text style={[styles.title, {color: Colors.grey30, fontSize: 16, marginBottom: 10}]}>Safety Instructions by Category</Text>
+                <BarChart
+                    data={{
+                        labels: categories.map(c => c.name),
+                        datasets: [
+                            {
+                                data: categories.map(c => safetyInstructions.filter(s => s.parentId === c.id).length)
+                            }
+                        ]
+                    }}
+                    width={screenWidth - 40}
+                    height={300}
+                    yAxisLabel=""
+                    chartConfig={chartConfig}
+                    verticalLabelRotation={30}
+                    withInnerLines={false}
+                />
+            </View>
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
+        textAlign: 'center'
     },
     separator: {
         marginVertical: 30,
