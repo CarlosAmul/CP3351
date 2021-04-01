@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import db from '../../db'
+import {Colors, Card} from 'react-native-ui-lib'
 
 // all picker values should be non-object (number, string, etc.)
 
@@ -11,36 +12,35 @@ export default function TemperatureInfo({ user, category, sensor }) {
     useEffect(() => sensor ? db.Sensors.Readings.listenLatestOne(setReading, sensor.id) : undefined, [sensor])
 
     return (
-        <View>
-            <Text
-                style={styles.getStartedText}
-                lightColor="rgba(0,0,0,0.8)"
-                darkColor="rgba(255,255,255,0.8)"
-            >
-                Max: {sensor.max}
-            </Text>
-            <Text
-                style={styles.getStartedText}
-                lightColor="rgba(0,0,0,0.8)"
-                darkColor="rgba(255,255,255,0.8)">
-                Min: {sensor.min}
-            </Text>
+        <View style={[styles.sensorControls, {backgroundColor: Colors.yellow70}]}>
+            <Card style={[styles.sensorField, {backgroundColor: Colors.green70}]} elevation={12}>
+                <Text
+                    style={styles.getStartedText}
+                >
+                    Max: {sensor.max}
+                </Text>
+            </Card>
+            
+            <Card style={[styles.sensorField, {backgroundColor: Colors.purple70}]} elevation={12}>
+                <Text
+                    style={styles.getStartedText}
+                >
+                    Min: {sensor.min}
+                </Text>
+            </Card>
             {
                 reading
                 &&
-                <Text
-                    style={sensor.alert ? styles.getStartedRed : styles.getStartedGreen}
-                    lightColor="rgba(0,0,0,0.8)"
-                    darkColor="rgba(255,255,255,0.8)">
-                    Current: {reading.current}
-                </Text>
+                <Card style={[styles.sensorField, {backgroundColor: sensor.alert ? Colors.red50 : Colors.green40}]}>
+                    <Text
+                        style={sensor.alert ? styles.getStartedRed : styles.getStartedGreen}
+                        lightColor="rgba(0,0,0,0.8)"
+                        darkColor="rgba(255,255,255,0.8)">
+                        Current: {reading.current}
+                    </Text>
+                </Card>
+                
             }
-            <Text
-                style={sensor.alert ? styles.getStartedRed : styles.getStartedGreen}
-                lightColor="rgba(0,0,0,0.8)"
-                darkColor="rgba(255,255,255,0.8)">
-                Alert: {sensor.alert ? "True" : "False"}
-            </Text>
         </View>
     );
 }
@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    sensorField: {
+        padding: 5,
+        width: 200,
+        margin: 10
+    },  
     developmentModeText: {
         marginBottom: 20,
         fontSize: 14,
