@@ -5,51 +5,51 @@ import { View, SafeAreaView, Image } from 'react-native'
 // @ts-expect-error
 import DashboardScreen from '../../../Zainab/Admin/DashboardScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen'
+import ActionsScreen from '../../../Zainab/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
 import UserTrackingsScreen from '../../../Carlos/UserTrackingsScreen'
 
 // @ts-expect-error
-import RewardsScreen from '../../../screens/Admin/RewardsScreen'
+import RewardsScreen from '../../../Zainab/Admin/RewardsScreen'
 // @ts-expect-error
-import VacancyScreen from '../../../screens/Admin/VacancyScreen'
+import VacancyScreen from '../../../Zainab/Admin/VacancyScreen'
 // @ts-expect-error
-import ApplicationsScreen from '../../../screens/Admin/ApplicationsScreen'
+import ApplicationsScreen from '../../../Zainab/Admin/ApplicationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
+import { Text } from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      drawerContent={ (props) => {
+      drawerContent={(props) => {
         return (
           <SafeAreaView>
             <View
-              style={ {
+              style={{
                 height: 200,
                 alignItems: "center",
                 justifyContent: "center",
-              } }
+              }}
             >
               <Image
-                source={ require("../../../assets/images/logo.png") }
-                style={{width: 110, height: 120}}
+                source={require("../../../assets/images/logo.png")}
+                style={{ width: 110, height: 120 }}
               />
             </View>
             <DrawerItemList {...props} />
           </SafeAreaView>
         );
-      } }
+      }}
     >
       <Drawer.Screen
         name="Dashboard"
         component={DashboardNavigator}
-        options={{ drawerLabel: "Dashboard" }} 
+        options={{ drawerLabel: "Dashboard" }}
       />
       <Drawer.Screen
         name="Actions"
@@ -60,7 +60,7 @@ export default function DrawerNavigator() {
         component={TrackingsNavigator}
         options={{ drawerLabel: "User Trackings" }}
       />
-        <Drawer.Screen
+      <Drawer.Screen
         name="Rewards"
         component={RewardsNavigator}
       />

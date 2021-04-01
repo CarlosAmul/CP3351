@@ -62,7 +62,7 @@ db.collection('sensors').onSnapshot(snap => sensors = snap.docs.map(reformat))
 
 const simulateReading = async sensor => {
     // first get latest reading
-    const readings = (await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when").limit(1).get()).docs.map(reformat)
+    const readings = (await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when", 'desc').limit(1).get()).docs.map(reformat)
     // then update it
     if (isCategory(sensor, "Temperature")) {
         const current = readings.length > 0 ? readings[0].current : 50
@@ -94,7 +94,46 @@ const simulateReading = async sensor => {
                 pulse: current.pulse - op
             }
         })
-    } else {
+    } else if(isCategory(sensor, "Heart Rate Monitor")) {
+        const currentR = readings.length > 0 ? readings[0].current : 70
+        const changeOps = ['-', '+']
+        const op = Math.floor(Math.random() * 2)
+        const randomValue = Math.floor(Math.random() * 10)
+        changeOps[op] === '-' ?
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: currentR - randomValue
+            })
+        :
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: currentR + randomValue
+            })
+    }
+    else if(isCategory(sensor, "Pedometer")) {
+        const currentR = readings.length > 0 ? readings[0].current: 100
+        await db.collection('sensors').doc(sensor.id).collection('readings').add({
+            when: new Date(),
+            current: currentR + 1
+        })
+    }
+    else if(isCategory(sensor, "Body Temperature")) {
+        const currentR = readings.length > 0 ? readings[0].current: 36
+        const changeOps = ['-', '+']
+        const op = Math.floor(Math.random() * 2)
+        const randomValue = Math.floor(Math.random() * 4)
+        changeOps[op] === '-' ?
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: currentR - randomValue
+            })
+        :
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: currentR + randomValue
+            })
+    }
+    else {
         console.log('other type of sensor not simulated yet')
     }
 }

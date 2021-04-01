@@ -34,3 +34,8 @@ export type TabFourParamList = {
 export type TabFiveParamList = {
   NotificationsScreen: undefined;
 };
+
+export type TabSixParamList = {
+  InstallationServiceScreen: undefined;
+  DetailsScreen: undefined;
+};

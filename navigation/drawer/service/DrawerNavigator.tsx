@@ -9,13 +9,13 @@ import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Service/DashboardScreen'
+import DashboardScreen from '../../../Zainab/Service/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
-import SafetyInstructionsScreen from '../../../Zainab/SafetyInstructionsScreen'
+import SafetyInstructionsScreen from '../../../Zainab/Service/SafetyInstructionsScreen'
 // @ts-expect-error
 import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
 // @ts-expect-error
@@ -26,7 +26,7 @@ import ReviewsScreen from '../../../Carlos/Service/ReviewsScreen'
 import NotificationsScreen from '../../../Carlos/NotificationsScreen'
 
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabSixParamList} from './types';
 import { TabFiveParamList } from '../customer/types.js';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
@@ -140,16 +140,13 @@ function SettingsNavigator() {
   )
 }
 
-const InstallationsServiceStack = createStackNavigator<{ 
-  InstallationsServiceScreen: undefined,
-  DetailsScreen: undefined
-}>();
+const InstallationsServiceStack = createStackNavigator<TabSixParamList>();
 
 function InstallationsServiceNavigator() {
   return (
     <InstallationsServiceStack.Navigator>
       <InstallationsServiceStack.Screen
-        name="InstallationsServiceScreen"
+        name="InstallationServiceScreen"
         component={InstallationsServiceScreen}
         options={{ headerTitle: 'Installations' }}
       />

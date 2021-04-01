@@ -4,9 +4,13 @@ import * as React from 'react';
 import { View, SafeAreaView, Image } from 'react-native'
 import {useContext} from 'react'
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Admin/DashboardScreen'
+import db from '../../../db.js'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen'
+import UserContext from '../../../UserContext';
+// @ts-expect-error
+import DashboardScreen from '../../../Zainab/Support/DashboardScreen'
+// @ts-expect-error
+import ActionsScreen from '../../../Zainab/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
@@ -22,7 +26,7 @@ import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import FitnessTipsScreen from '../../../screens/Support/FitnessTipsScreen'
+import FitnessTipsScreen from '../../../Zainab/Support/FitnessTipsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
 

@@ -184,6 +184,10 @@ class Installations extends DB {
     }
 
     
+    listenToAllPendings = (set) => 
+        db.collectionGroup(this.collection)
+        .where("userid", "==", null)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
     listenByPending = (set, centerid) => 
         db.collectionGroup(this.collection)
@@ -482,6 +486,9 @@ class FitnessTips extends DB {
 
     listenToApprovedTips = (set) =>
         db.collection(this.collection).where('approved', '==', true).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenToDisapprovedTips = (set) =>
+        db.collection(this.collection).where('approved', '==', false).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class Simulator extends DB {
@@ -496,6 +503,13 @@ class SafetInstructions extends DB {
         super('safetyinstructions')
         this.containing = containing
     }
+
+    reformatInstruction(doc) {
+        return { id: doc.id, parentId: doc.ref.parent.parent.id, ...doc.data() }
+    }
+
+    listenToAllSafetyInstructions = (set) => 
+        db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatInstruction)))
 
     listenToCategoryInstructions = (set, categoryid) =>
         db.collection(this.containing).doc(categoryid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))

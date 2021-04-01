@@ -29,9 +29,14 @@ const db = admin.firestore()
 
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
-  async ({ location, user, categoryid, min, max, alert, price, manufacturer, category, install, quantity }, context) => {
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category }, context) => {
     for (let k = 0; k < quantity; k++) {
-      await db.collection('sensors').add({ location, userid: user.id, categoryid, min, max, alert, price, manufacturer, install })
+      if (category.name === "Temperature" || category.name === "Heart Rate Monitor" || category.name === "Body Temperature") {
+        await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request })
+      }
+      else if (category.name === "Pedometer") {
+        await db.collection('sensors').add({ location, userid, categoryid, goal, alert, price, manufacturer, install, request })
+      }
       await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })
     }
   }
@@ -194,23 +199,33 @@ exports.createSampleData = functions.https.onCall(
     const { id: manufacturer1 } = await db.collection('manufacturers').add({ name: "Amaze Fit", price: 0, url: 'https://gizchina.it/wp-content/uploads/2020/07/Amazfit-logo.jpg' })
     const { id: manufacturer2 } = await db.collection('manufacturers').add({ name: "Fitbit", price: 200, url: 'https://i.pinimg.com/originals/70/37/80/703780894a96e0786fe57b9a03087626.jpg' })
 
-    const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion", description: "All Motion sensors here", price: 500, url: "https://is5-ssl.mzstatic.com/image/thumb/Purple30/v4/cf/b9/cf/cfb9cfdb-0258-d8c0-245d-18d644205b8d/source/512x512bb.jpg", manufacturers: [manufacturer1, manufacturer2] })
-    // functions.logger.info("categoryId1", { categoryId1 })
+    const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion", description: "All motion sensors here", price: 500, url: "https://is5-ssl.mzstatic.com/image/thumb/Purple30/v4/cf/b9/cf/cfb9cfdb-0258-d8c0-245d-18d644205b8d/source/512x512bb.jpg", manufacturers: [manufacturer1, manufacturer2] })
+    const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
+    const { id: categoryId3 } = await db.collection('categories').add({ name: "Heart Rate Monitor", description: "Hear rate monitor analyzes your heart beat and you can continuously check your heart beat at your own comfort", price: 300, url: "https://img1.pnghut.com/t/17/18/1/gcaPjLKyBP/flower-watercolor-silhouette-frame-cartoon.jpg", manufacturers: [manufacturer1, manufacturer2] })
+    const { id: categoryId4 } = await db.collection('categories').add({ name: "Pedometer", description: "Count your steps with this amazing sensor. With pedometer, you can count your steps while you do any acitvity in your day. ", price: 350, url: "https://cdn5.vectorstock.com/i/1000x1000/10/34/fitness-app-notification-icon-vector-27151034.jpg", manufacturers: [manufacturer1, manufacturer2] })
+    const { id: categoryId5 } = await db.collection('categories').add({ name: "Blood Pressure Monitor", description: "Monitor your blood pressure with our blood pressure monitor aiming to keep you fit!", price: 450, url: "https://thumbs.dreamstime.com/b/blood-pressure-vector-concept-design-heart-blood-pressure-monitor-flat-style-blood-pressure-concept-flat-style-144129158.jpg", manufacturers: [manufacturer1] })
+    const { id: categoryId6 } = await db.collection('categories').add({ name: "Body Temperature", description: "Body temperature sensor to measure your temperature of the body. ", price: 400, url: "https://image.freepik.com/free-vector/medical-infrared-thermometer-isometric-projection-digital-body-thermometer-isolated-blue-background_168129-305.jpg", manufacturers: [manufacturer1] })
+    const { id: categoryId7 } = await db.collection('categories').add({ name: "Sleep Tracker", description: "Track your sleeping environment with our unique;y designed sleep tracker sensor. ", price: 500, url: "https://pim.beurer.com/images/produkt/uebersicht/se80-flat.jpg", manufacturers: [manufacturer1, manufacturer2] })
 
     const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All Temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     // functions.logger.info("categoryId2", { categoryId2 })
-      
+
     const { id: categoryId10 } = await db.collection('categories').add({ name: "Blood Pressure", description: "All Blood Pressure sensors here", price: 200, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
 
     await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
     await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
 
+    const { id: vacancy1 } = await db.collection('vacancies').add({ description: 'Support users helps the customers answering to their queries and giving them support', spaces: 2, role: 'Support' })
+    const { id: vacancy2 } = await db.collection('vacancies').add({ description: 'Service users deal with the installation and removal of the sensors. Also, service will make sure the user gets the right safety instructions of each of the sensors so they dont have any unconveniences. ', spaces: 1, role: 'Service' })
+
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false, price: 500 })
     // functions.logger.info("sensorId1", { sensorId1 })
 
     const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install: "no", request: "no", price: 400 })
-
     const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install: "yes", request: "no", price: 400 })
+    const { id: sensorId4 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId3, location: "with me", min: 40, max: 90, alert: false, install: "no", request: "no", price: 400 })
+    const { id: sensorId5 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId4, location: "At the gym", goal: 1000, alert: false, install: "no", request: "no", price: 450 })
+
     // functions.logger.info("sensorId2", { sensorId2 })
 
     const { id: sensorId10 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId10, location: "left arm", maxSys: 120, minSys: 90, maxDia: 80, minDia: 60, alert: false, install: "yes", request: "no", price: 400 })
@@ -224,7 +239,7 @@ exports.createSampleData = functions.https.onCall(
       endDate: new Date('2021-04-19T12:00:00-06:30')
     })
 
-    
+
   }
 )
 
@@ -246,7 +261,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     const category = { id: categoryDoc.id, ...categoryDoc.data() }
     // functions.logger.info("category", { category })
 
-    functions.logger.info("cat name ", category.name=="Blood Pressure")
+    functions.logger.info("cat name ", category.name == "Blood Pressure")
 
     if (category.name === "Motion") {
       const readingData = await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when", "desc").limit(2).get()
@@ -286,22 +301,39 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
     else if (category.name === "Temperature") {
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
-
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
       if (isAlert) {
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
       // functions.logger.info("temp alert update", { alert: isAlert });
     } else if (category.name === "Blood Pressure") {
-      const isAlert = reading.current.sys*1 > sensor.maxSys || reading.current.sys*1 < sensor.minSys || reading.current.dia*1 > sensor.maxDia || reading.current.dia*1 < sensor.minDia
+      const isAlert = reading.current.sys * 1 > sensor.maxSys || reading.current.sys * 1 < sensor.minSys || reading.current.dia * 1 > sensor.maxDia || reading.current.dia * 1 < sensor.minDia
       functions.logger.info('alert', { isAlert })
 
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
       if (isAlert) {
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Abnormal blood pressure detected`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
-    } else {
-      // functions.logger.info("No such category", { category });
+    } else if (category.name === "Heart Rate Monitor") {
+      const isAlert = reading.current > sensor.max || reading.current < sensor.min
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if (isAlert) {
+        newNotification(sensor.userid, `Heart rate alert on ${category.name} sensor. Current beat is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
+    }
+    else if (category.name === "Pedometer") {
+      const isAlert = reading.current % 1000
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if (isAlert) {
+        newNotification(sensor.userid, `Alert on your ${category.name} sensor. Current steps reached ${reading.current} 🔥🔥🔥`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
+    }
+    else if (category.name === "Body Temperature") {
+      const isAlert = reading.current > sensor.max || reading.current < sensor.min
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if (isAlert) {
+        newNotification(sensor.userid, `Alert on your ${category.name} sensor. Current skin temperature reached ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
     }
   })
 
