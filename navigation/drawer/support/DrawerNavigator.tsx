@@ -22,10 +22,6 @@ import PendingFAQsScreen from '../../../Carlos/PendingQuestionsScreen'
 // @ts-expect-error
 import DraftsScreen from '../../../Carlos/DraftsScreen.js'
 // @ts-expect-error
-import db from '../../../db.js'
-// @ts-expect-error
-import UserContext from '../../../UserContext';
-// @ts-expect-error
 import FitnessTipsScreen from '../../../Zainab/Support/FitnessTipsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
