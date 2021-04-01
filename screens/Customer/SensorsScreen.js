@@ -6,7 +6,6 @@ import TemperatureInfo from './TemperatureInfo'
 import BPMonitorInfo from '../../Carlos/BPMonitorInfo'
 import CategoryByUserPicker from '../pickers/CategoryByUserPicker';
 import SensorByUserAndCategoryPicker from '../pickers/SensorByUserAndCategoryPicker';
-import ReportPicker from '../pickers/ReportPicker'
 import UserContext from '../../UserContext'
 import { Text, Button, Colors } from 'react-native-ui-lib'
 import { useNavigation } from '@react-navigation/native';
@@ -35,8 +34,9 @@ export default function SensorsScreen({ route }) {
 	const [openReportForm, setOpenReportForm] = useState(false)
 	const [report, setReport] = useState(null)
 	const [installations, setInstallations] = useState([])
+	const [readings, setReadings] = useState([])
 
-	useEffect(() => db.Sensors.Installations.listenByCustomer(setInstallations,user.id), [sensor])
+	useEffect(() => db.Sensors.Installations.listenByCustomer(setInstallations, user.id), [sensor])
 
 	const renderDrawerView = () =>
 		<View>
@@ -50,18 +50,11 @@ export default function SensorsScreen({ route }) {
 		});
 	});
 
-	const sendRequestForm = () => {
-		db.Users.Reports.createReport(user.id, { type: report, when: new Date(), sensorId: sensor.id })
-		setOpenReportForm(!openReportForm)
-	}
+	useEffect(() => sensor ? db.Sensors.Readings.listenAll(sensor.id, setReadings) : undefined, [sensor])
 
 	const isLastRequestActive = () => {
 		return sensor.request === "yes" ? true : false
 	}
-
-	// console.log("installations", installations)
-
-	//
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -107,25 +100,28 @@ export default function SensorsScreen({ route }) {
 							<BPMonitorInfo user={user} category={category} sensor={sensor} />
 						}
 						{/* Omar */}
-						<Button label="Request Report"
-							style={{ width: '60%' }}
-							backgroundColor={Colors.primary}
-							onPress={() => { navigation.navigate({ name: 'ReportsFormScreen', params: { sensor: sensor } }) }}
-							marginT-15
-						/>
+						{
+							readings.length > 0 &&
+							<Button label="Request Report"
+								style={{ width: '60%' }}
+								backgroundColor={Colors.primary}
+								onPress={() => { navigation.navigate({ name: 'ReportsFormScreen', params: { sensor: sensor } }) }}
+								marginT-15
+							/>
+						}
 						{
 							sensor.install === "no" || sensor.install === "yes" ?
-							<>
-							{
-							!isLastRequestActive() &&
-								<Button label="Request Service"
-									style={{ width: '60%' }}
-									backgroundColor={Colors.primary}
-									onPress={() => { navigation.navigate({ name: 'InstallationsFormScreen', params: { sensor: sensor } }) }}
-									marginT-15
-								/>
-							}
-							</>: undefined
+								<>
+									{
+										!isLastRequestActive() &&
+										<Button label="Request Service"
+											style={{ width: '60%' }}
+											backgroundColor={Colors.primary}
+											onPress={() => { navigation.navigate({ name: 'InstallationsFormScreen', params: { sensor: sensor } }) }}
+											marginT-15
+										/>
+									}
+								</> : undefined
 						}
 						{/* // */}
 					</>

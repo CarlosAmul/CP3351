@@ -48,6 +48,11 @@ const newNotification = async (userid, message, screen, extra) => await db.colle
 exports.createSampleData = functions.https.onCall(
   async (data, context) => {
 
+    if ((await db.collection('users').get()).docs.length > 0) {
+      functions.logger.info("already have data", {})
+      return
+    }
+
     const sensors = await findAll('sensors')
     await Promise.all(
       sensors.map(

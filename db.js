@@ -115,9 +115,28 @@ class Readings extends DB {
 
     findOldestOne = async (sensorId) => {
         const doc = await db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when").limit(1).get() 
-        return !doc.empty ? doc.docs[0].data() : undefined
-        
+        return !doc.empty ? this.reformat(doc.docs[0]) : undefined
     }
+
+    findLatestOne = async (sensorId) => {
+        const doc = await db.collection(this.containing).doc(sensorId).collection(this.collection).orderBy("when", "desc").limit(1).get() 
+        return !doc.empty ? this.reformat(doc.docs[0]) : undefined
+    }
+
+    listenAll = (sensorid, set) => 
+    db.collection(this.containing)
+    .doc(sensorid)
+    .collection(this.collection)
+    .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+    listenAllBetween = (sensorid, set, from, to) => 
+    db.collection(this.containing)
+    .doc(sensorid)
+    .collection(this.collection)
+    .where('when', '>=', from)
+    .where('when', '<=', to)
+    .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
 }
 class Reports extends DB {
 
@@ -131,6 +150,9 @@ class Reports extends DB {
 
     listenByUser = (set, userId) =>
         db.collection(this.containing).doc(userId).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    
+    listenByUserDesc = (set, userId) =>
+        db.collection(this.containing).doc(userId).collection(this.collection).orderBy('when', 'desc').onSnapshot(snap => set(snap.docs.map(this.reformat)))
 }
 
 class SupportCenters extends DB {
