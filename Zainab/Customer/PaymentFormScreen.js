@@ -140,6 +140,7 @@ export default function PaymentFormScreen({ navigation, route }) {
                         <Text style={[styles.title, { color: Colors.darkprimary, marginTop: 10 }]}>Total Price: QAR {price}</Text>
                     </View>
                 </Card>
+                <Text style={{color: Colors.red50}}>{location === "" && cardno === "" && pin === "" && manufacturer === "" ? "All fields must be specified" : ""}</Text>
                 <TextField
                     onChangeText={text => setLocation(text)}
                     hideUnderline

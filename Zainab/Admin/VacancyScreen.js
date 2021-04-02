@@ -82,6 +82,7 @@ export default function VacancyScreen() {
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.topContainer}>
                 <Text style={[styles.title, styles.mainHeader]}>Manage Vacancies</Text>
+                <Text style={{color: Colors.red50}}>{role === "" && spaces === "" && description === "" ? "All fields must be specified" : ""}</Text>
                 <Image
                     source={require("../../assets/images/hiring.png")}
                     style={{ width: 250, height: 250, margin: 10 }}

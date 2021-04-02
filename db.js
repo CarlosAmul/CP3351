@@ -406,21 +406,21 @@ class Favorites extends DB {
     listenToAllFavs = (set) =>
         db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
-    findAllFavsWithCategories = async (set) => {
-        const categoriesdata = await db.collection('categories').get()
-        const categories = categoriesdata.docs.map(doc => (this.reformat(doc)))
-        const caetgoriesFavs = []
-        const favoritesdata = await db.collectionGroup(this.collection).get()
-        const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
+    // findAllFavsWithCategories = async (set) => {
+    //     const categoriesdata = await db.collection('categories').get()
+    //     const categories = categoriesdata.docs.map(doc => (this.reformat(doc)))
+    //     const caetgoriesFavs = []
+    //     const favoritesdata = await db.collectionGroup(this.collection).get()
+    //     const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
 
-        categories.map(c => {
-            if (favorites.length > 0) {
-                caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
-            }
-        })
+    //     categories.map(c => {
+    //         if (favorites.length > 0) {
+    //             caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
+    //         }
+    //     })
 
-        return set(caetgoriesFavs)
-    }
+    //     set(caetgoriesFavs)
+    // }
 
     listenCategoryFavCount = (set, id) => {
         return db.collection(this.containing).doc(id).collection(this.collection).onSnapshot(snap => set(snap.size))

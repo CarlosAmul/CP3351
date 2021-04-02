@@ -110,6 +110,7 @@ export default function SafetyInstructionsScreen({ route }) {
     return (
         <ScrollView style={styles.scrollcontainer}>
             <Text style={[styles.title, styles.mainHeader]}>Safety Instructions for {category.name}</Text>
+            <Text style={{color: Colors.red50}}>{title === "" && image === "" && description === "" ? "All fields must be specified" : ""}</Text>
             <View style={styles.fieldsContainer}>
                 <TextField
                     onChangeText={text => setTitle(text)}
