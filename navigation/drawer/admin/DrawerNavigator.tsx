@@ -5,15 +5,15 @@ import { View, SafeAreaView, Image } from 'react-native'
 // @ts-expect-error
 import DashboardScreen from '../../../Zainab/Admin/DashboardScreen'
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen'
+import ActionsScreen from '../../../Zainab/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
-import RewardsScreen from '../../../screens/Admin/RewardsScreen'
+import RewardsScreen from '../../../Zainab/Admin/RewardsScreen'
 // @ts-expect-error
-import VacancyScreen from '../../../screens/Admin/VacancyScreen'
+import VacancyScreen from '../../../Zainab/Admin/VacancyScreen'
 // @ts-expect-error
-import ApplicationsScreen from '../../../screens/Admin/ApplicationsScreen'
+import ApplicationsScreen from '../../../Zainab/Admin/ApplicationsScreen'
 
 import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList} from './types';
 

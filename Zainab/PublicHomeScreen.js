@@ -2,14 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../components/MenuIcon'
-import { Colors, Card, Carousel, Button } from 'react-native-ui-lib'
-import Categories from './Categories'
-import MostFavorite from './MostFavorite'
-import FitnessTips from './FitnessTips'
-import CustomerHiring from './CustomerHiring'
+import { Colors, Card, Carousel } from 'react-native-ui-lib'
+import Categories from './Customer/Categories'
+import MostFavorite from './Customer/MostFavorite'
+import FitnessTips from './Customer/FitnessTips'
+import CustomerHiring from './Customer/CustomerHiring'
 
-export default function PublicHomeScreen(props) {
-    const stacknavigation = props.navigation
+export default function PublicHomeScreen() {
 
     const navigation = useNavigation();
     useEffect(() => {
@@ -82,7 +81,7 @@ export default function PublicHomeScreen(props) {
                     />
                 </View>
             </Carousel>
-            <Categories stacknavigation={stacknavigation} />
+            <Categories navigation={navigation} />
             <MostFavorite />
             <CustomerHiring navigation={navigation}/>
             <FitnessTips navigation={navigation} />

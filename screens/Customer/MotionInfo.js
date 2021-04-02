@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import db from '../../db'
+import {Colors} from 'react-native-ui-lib'
 
 // all picker values should be non-object (number, string, etc.)
 
@@ -28,7 +29,7 @@ export default function MotionInfo({ user, category, sensor }) {
     console.log(readings.length)
 
     return (
-        <View>
+        <View style={{backgroundColor: Colors.yellow60}}>
 
             <Text
                 style={styles.getStartedText}

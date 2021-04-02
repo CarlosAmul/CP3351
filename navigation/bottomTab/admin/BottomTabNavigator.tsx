@@ -8,7 +8,7 @@ import useColorScheme from '../../../hooks/useColorScheme';
 // @ts-expect-error
 import SensorsScreen from '../../../screens/Admin/DashboardScreen';
 // @ts-expect-error
-import ActionsScreen from '../../../screens/Admin/ActionsScreen';
+import ActionsScreen from '../../../Zainab/Admin/ActionsScreen';
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList, TabThreeParamList } from './types';

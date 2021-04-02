@@ -8,20 +8,19 @@ import db from '../../../db.js'
 // @ts-expect-error
 import UserContext from '../../../UserContext';
 // @ts-expect-error
-import DashboardScreen from '../../../screens/Service/DashboardScreen'
+import DashboardScreen from '../../../Zainab/Service/DashboardScreen'
 // @ts-expect-error
 import ActionsScreen from '../../../screens/Service/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Service/SettingsScreen'
 // @ts-expect-error
-import SafetyInstructionsScreen from '../../../Zainab/SafetyInstructionsScreen'
+import SafetyInstructionsScreen from '../../../Zainab/Service/SafetyInstructionsScreen'
 // @ts-expect-error
 import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
 
-
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 import {Text} from 'react-native-ui-lib'
@@ -124,7 +123,7 @@ function SettingsNavigator() {
   )
 }
 
-const InstallationsServiceStack = createStackNavigator<{ InstallationsServiceScreen: undefined }>();
+const InstallationsServiceStack = createStackNavigator<TabFourParamList>();
 
 function InstallationsServiceNavigator() {
   return (

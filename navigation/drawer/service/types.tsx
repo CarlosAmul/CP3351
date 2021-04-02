@@ -24,3 +24,8 @@ export type TabTwoParamList = {
 export type TabThreeParamList = {
   SettingsScreen: undefined;
 };
+
+export type TabFourParamList = {
+  InstallationServiceScreen: undefined;
+  DetailsScreen: undefined;
+};
