@@ -7,6 +7,9 @@ import Categories from './Customer/Categories'
 import MostFavorite from './Customer/MostFavorite'
 import FitnessTips from './Customer/FitnessTips'
 import CustomerHiring from './Customer/CustomerHiring'
+import Ad from '../Carlos/Ad'
+import db from '../db'
+
 
 export default function PublicHomeScreen() {
 
@@ -29,8 +32,32 @@ export default function PublicHomeScreen() {
         darksidebg: '#38304d'
     });
 
+    const [ads, setAds] = useState([])
+    const [ad, setAd] = useState(null)
+
+    useEffect(() => db.Ads.listenAllActive(setAds), [])
+    console.log(ads)
+    useEffect(() => setAd(ads[Math.floor(Math.random() * ads.length)]), [ads]
+    )
+
+    const onPress = () => {
+        navigation.navigate(ad.screen, { screen: ad.screen + "Screen" })
+    }
+
     return (
         <ScrollView style={styles.scrollcontainer} contentContainerStyle={{ alignItems: 'center' }}>
+            {
+                ad ?
+                    <TouchableOpacity onPress={onPress}>
+                        <Ad ad={ad} styling={{ margin: 20, marginBottom: 0 }} />
+                    </TouchableOpacity>
+                    :
+                    <View style={[{ borderWidth: 1, borderColor: 'black', alignItems: 'center', borderRadius: 10, margin: 20, marginBottom: 0  }]} >
+                        <View style={{ width: '50%', margin: 5, padding: 5, textAlign: 'center' }}>
+                            <Text text40 style={{ color: Colors.grey20, alignSelf: 'center' }}>No Ad Available</Text>
+                        </View>
+                    </View>
+            }
             <Card
                 borderRadius={20}
                 style={styles.card}

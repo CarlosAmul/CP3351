@@ -76,25 +76,25 @@ const simulateReading = async sensor => {
         const op = Math.floor(Math.random() * 2)
         const current = readings.length > 0 ? readings[0].current : { sys: 120, dia: 80, pulse: 72 }
 
-        changeOps[op] === '+' ? 
-        await db.collection('sensors').doc(sensor.id).collection('readings').add({
-            when: new Date(),
-            current: {
-                sys: current.sys + op,
-                dia: current.dia + op,
-                pulse: current.pulse + op
-            }
-        })
-        :
-        await db.collection('sensors').doc(sensor.id).collection('readings').add({
-            when: new Date(),
-            current: {
-                sys: current.sys - op,
-                dia: current.dia - op,
-                pulse: current.pulse - op
-            }
-        })
-    } else if(isCategory(sensor, "Heart Rate Monitor")) {
+        changeOps[op] === '+' ?
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: {
+                    sys: current.sys + op,
+                    dia: current.dia + op,
+                    pulse: current.pulse + op
+                }
+            })
+            :
+            await db.collection('sensors').doc(sensor.id).collection('readings').add({
+                when: new Date(),
+                current: {
+                    sys: current.sys - op,
+                    dia: current.dia - op,
+                    pulse: current.pulse - op
+                }
+            })
+    } else if (isCategory(sensor, "Heart Rate Monitor")) {
         const currentR = readings.length > 0 ? readings[0].current : 70
         const changeOps = ['-', '+']
         const op = Math.floor(Math.random() * 2)
@@ -104,21 +104,21 @@ const simulateReading = async sensor => {
                 when: new Date(),
                 current: currentR - randomValue
             })
-        :
+            :
             await db.collection('sensors').doc(sensor.id).collection('readings').add({
                 when: new Date(),
                 current: currentR + randomValue
             })
     }
-    else if(isCategory(sensor, "Pedometer")) {
-        const currentR = readings.length > 0 ? readings[0].current: 100
+    else if (isCategory(sensor, "Pedometer")) {
+        const currentR = readings.length > 0 ? readings[0].current : 100
         await db.collection('sensors').doc(sensor.id).collection('readings').add({
             when: new Date(),
             current: currentR + 1
         })
     }
-    else if(isCategory(sensor, "Body Temperature")) {
-        const currentR = readings.length > 0 ? readings[0].current: 36
+    else if (isCategory(sensor, "Body Temperature")) {
+        const currentR = readings.length > 0 ? readings[0].current : 36
         const changeOps = ['-', '+']
         const op = Math.floor(Math.random() * 2)
         const randomValue = Math.floor(Math.random() * 4)
@@ -127,7 +127,7 @@ const simulateReading = async sensor => {
                 when: new Date(),
                 current: currentR - randomValue
             })
-        :
+            :
             await db.collection('sensors').doc(sensor.id).collection('readings').add({
                 when: new Date(),
                 current: currentR + randomValue

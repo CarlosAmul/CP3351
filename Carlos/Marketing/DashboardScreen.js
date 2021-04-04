@@ -70,8 +70,8 @@ export default function DashboardScreen() {
       name: `(${category.name})`,
       data: sensors.filter(sensor => sensor.categoryid == category.id).length,
       color: color,
-      legendFontColor: color,
-      legendFontSize: 15
+      legendFontColor: 'black',
+      legendFontSize: 13
     }
   }
 
@@ -81,8 +81,8 @@ export default function DashboardScreen() {
       name: `(${category.name})`,
       data: favs.filter(sensor => sensor.parentId == category.id).length,
       color: color,
-      legendFontColor: color,
-      legendFontSize: 15
+      legendFontColor: 'black',
+      legendFontSize: 13
     }
   }
 
@@ -132,8 +132,6 @@ export default function DashboardScreen() {
 
 
         </Card>
-
-
         {/* Statistics */}
         <Text text60 style={{ marginTop: 30, marginBottom: 10, color: Colors.primary }}>Statistics</Text>
         <TabBar
@@ -153,32 +151,8 @@ export default function DashboardScreen() {
         <Card
           row
           enableShadow
-          style={styles.card}
+          style={[styles.card]}
         >
-          {/* <BarChart
-            data={
-              {
-                labels: ["January", "February", "March", "April", "May", "June"],
-                datasets: [
-                  {
-                    data: [20, 45, 28, 80, 99, 43],
-                    strokeWidth: 10 // optional
-                  }
-                ],
-                legend: ["Rainy Days"] // optional
-              }
-            }
-            width={300}
-            height={220}
-            chartConfig={{
-              backgroundGradientFrom: "white",
-              backgroundGradientTo: "white",
-              color: (opacity = 1) => Colors.primary,
-              strokeWidth: 2, // optional, default 3
-              barPercentage: 0.5
-            }}
-            verticalLabelRotation={0}
-          /> */}
           {
             likeData.length > 0 || buyData.length > 0 || colors.length > 0 ?
               <PieChart
@@ -190,8 +164,8 @@ export default function DashboardScreen() {
               }}
               accessor={"data"}
               backgroundColor={"transparent"}
-              paddingLeft={"5"}
-              center={[0, 15]}
+              paddingLeft={"-35"}
+              center={[30, 10]}
               absolute
             />
             :
