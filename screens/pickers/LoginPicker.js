@@ -7,6 +7,7 @@ const defaults = [
     { email: "ann@ann.com", password: "annann" },
     { email: "admin@admin.com", password: "adminadmin" },
     { email: "fred@fred.com", password: "fredfred" },
+    { email: "bita@bita.com", password: "bitabita" },
     { email: "khalil@khalil.com", password: "khalilkhalil" },
     { email: "kareem@kareem.com", password: "kareemkareem" }
 ]

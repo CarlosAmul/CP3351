@@ -19,6 +19,11 @@ class DB {
         return data.docs.map(this.reformat)
     }
 
+    findAllSize = async () => {
+        const data = await db.collection(this.collection).get()
+        return data.docs.length
+    }
+
     listenAll = set =>
         db.collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
@@ -46,6 +51,7 @@ class DB {
     update = async item => {
         const { id, ...rest } = item
         await db.collection(this.collection).doc(id).set(rest)
+        console.log('updated')
     }
 
     remove = async id => {
@@ -65,6 +71,9 @@ class Sensors extends DB {
     listenByCategory = (set, categoryid) =>
         db.collection(this.collection).where("categoryid", "==", categoryid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
+    listenByCategoryCount = (set, categoryid) => {
+        return db.collection(this.collection).where("categoryid", "==", categoryid).onSnapshot(snap => set(snap.size))
+    }
     listenByUser = (set, userid) =>
         db.collection(this.collection).where("userid", "==", userid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
@@ -79,6 +88,10 @@ class Sensors extends DB {
 
     toggleAlert = sensor =>
         db.collection(this.collection).doc(sensor.id).set({ alert: !sensor.alert }, { merge: true })
+
+    listenUserSensorCount = (id, set) => {
+        db.collection(this.collection).where('userid', '==', id).onSnapshot(snap => set(snap.size))
+    }
     
     listenByUninstalled = (set, sensorId) => 
         db.collection(this.collection).doc(sensorId).where("install", "==", "no").onSnapshot(snap => set(snap.docs.map(this.reformat)))
@@ -170,6 +183,7 @@ class Installations extends DB {
         return await db.collection(this.containing).doc(sensorId).collection(this.collection).add(rest)
     }
 
+    
     listenToAllPendings = (set) => 
         db.collectionGroup(this.collection)
         .where("userid", "==", null)
@@ -211,6 +225,11 @@ class Installations extends DB {
         .collection(this.collection)
         .doc(id)
         .delete()
+    
+    //Carlos
+    listenOne = (set, reqid) => 
+    db.collectionGroup(this.collection)
+    .onSnapshot(snap => set(snap.docs.map(this.reformat).find(item => item.id == reqid)))
 }
 
 
@@ -221,6 +240,7 @@ class Users extends DB {
         this.Reports = new Reports(this.collection)
         this.CustomerRewards = new CustomerRewards(this.collection)
         this.Applications = new Applications(this.collection)
+        this.Reviews = new Reviews(this.collection)
     }
 
     updatePoints = async (userid, points) => {
@@ -231,6 +251,9 @@ class Users extends DB {
         db.collection(this.collection).doc(userid).set({ centerid: centerid }, { merge: true })
     }
 
+    listenByRole(role, set) {
+        return db.collection(this.collection).where('role', '==', role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
     //Omar
     listenByServiceNoCenter = (set) => 
         db.collection(this.collection).where('centerid','==',null).onSnapshot(snap => set(snap.docs.map(this.reformat)))
@@ -238,6 +261,36 @@ class Users extends DB {
 
     listenToUsersByRole = (set, role) =>
         db.collection(this.collection).where("role", "==", role).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+
+}
+
+class Reviews extends DB {
+    constructor(containing) {
+        super('reviews')
+        this.containing = containing
+    }
+
+    reformat(doc) {
+        console.log('reformat', doc.id)
+        return { id: doc.id, ...doc.data(), parent: doc.ref.parent.parent.id }
+    }
+
+    listenByUserAll(uid, set) {
+        return db.collection(this.containing).doc(uid).collection(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByRevieweeAll(uid, set) {
+        return db.collectionGroup(this.collection).where('supportid', '==', uid).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenByJob(reqid, set) {
+        return db.collectionGroup(this.collection).where('jobid', '==', reqid).onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
+    }
+
+    createReview = async(userid, item) => {
+        const {id, ...rest} = item
+        await db.collection(this.containing).doc(userid).collection('reviews').add(rest)
+    }
 
 }
 
@@ -263,7 +316,31 @@ class Notifications extends DB {
         db.collection(this.containing).doc(uid).collection(this.collection).doc(nid).set({ status: true }, { merge: true })
     }
 
-    newNotification = async (userid, message, screen, extra) => await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, when: new Date(), extra: extra ? extra : {} })
+    newNotification = async (userid, message, screen, nestedScreen, extra ) => {
+        console.log('runing')
+        await db.collection('users').doc(userid).collection('notifications').add({ message, status: false, screen, nestedScreen: nestedScreen ? nestedScreen : '', when: new Date(), extra: extra ? extra : {} })
+    }
+        
+
+    remove = async (uid, id) => {
+        await db.collection(this.containing).doc(uid).collection(this.collection).doc(id).delete()
+    }
+
+    // removeAll = async(uid) => {
+    //     const data = await db.collection(this.containing).doc(uid).collection(this.collection).get()
+    //     await Promise.all(
+    //         data.docs.map(
+    //             async notif => {
+    //                 await this.remove(uid, notif.id)
+    //             }
+    //         )
+    //     )
+    // }
+
+    findByJob = async(userid, jobid) => {
+        let notif = await db.collection(this.containing).doc(userid).collection(this.collection).where('extra.id', '==', jobid).limit(1).get()
+        return notif.docs.map(this.reformat)[0]
+    }
 
 }
 
@@ -279,6 +356,7 @@ class Categories extends DB {
     listenInIds = (set, ids) =>
         db.collection(this.collection).where(db.FieldPath.documentId(), "in", ids).onSnapshot(snap => set(snap.docs.map(this.reformat)))
 
+
 }
 
 class FAQs extends DB {
@@ -288,7 +366,23 @@ class FAQs extends DB {
     }
 
     listenAllAnswered = (set) => {
-        return db.collection(this.collection).where('answer', '!=', '').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+        return db.collection(this.collection).where('status', '==', 'answered').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenAllPending = (set) => {
+        return db.collection(this.collection).where('status', '==', 'pending').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenAllDraft = (set) => {
+        return db.collection(this.collection).where('status', '==', 'draft').onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    answerFAQ = (id, answer) => {
+        db.collection(this.collection).doc(id).set({ answer, status: 'answered' }, { merge: true })
+    }
+
+    saveDraft = (id, answer) => {
+        db.collection(this.collection).doc(id).set({ answer, status: 'draft' }, { merge: true })
     }
 }
 
@@ -308,6 +402,9 @@ class Favorites extends DB {
     listenToCatgoryFavsByUser = (set, catId, userId) =>
         db.collection(this.containing).doc(catId).collection(this.collection).where('userid', '==', userId).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
+    listenUserLikesCount = (set, userid) =>
+        db.collectionGroup(this.collection).where('userid', '==', userid).onSnapshot(snap => set(snap.size))
+
     addFav = async (catId, like) =>
         await db.collection(this.containing).doc(catId).collection(this.collection).add(like)
 
@@ -320,20 +417,24 @@ class Favorites extends DB {
     listenToAllFavs = (set) =>
         db.collectionGroup(this.collection).onSnapshot(snap => set(snap.docs.map(this.reformatFav)))
 
-    findAllFavsWithCategories = async (set) => {
-        const categoriesdata = await db.collection('categories').get()
-        const categories = categoriesdata.docs.map(doc => (this.reformat(doc)))
-        const caetgoriesFavs = []
-        const favoritesdata = await db.collectionGroup(this.collection).get()
-        const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
+    // findAllFavsWithCategories = async (set) => {
+    //     const categoriesdata = await db.collection('categories').get()
+    //     const categories = categoriesdata.docs.map(doc => (this.reformat(doc)))
+    //     const caetgoriesFavs = []
+    //     const favoritesdata = await db.collectionGroup(this.collection).get()
+    //     const favorites = favoritesdata.docs.map(doc => (this.reformatFav(doc)))
 
-        categories.map(c => {
-            if (favorites.length > 0) {
-                caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
-            }
-        })
+    //     categories.map(c => {
+    //         if (favorites.length > 0) {
+    //             caetgoriesFavs.push({ category: c, favs: favorites.filter(f => f.parentId === c.id).length })
+    //         }
+    //     })
 
-        return set(caetgoriesFavs)
+    //     set(caetgoriesFavs)
+    // }
+
+    listenCategoryFavCount = (set, id) => {
+        return db.collection(this.containing).doc(id).collection(this.collection).onSnapshot(snap => set(snap.size))
     }
 }
 
@@ -341,6 +442,50 @@ class Manufacturers extends DB {
     constructor() {
         super('manufacturers')
     }
+}
+
+class Ads extends DB {
+    constructor() {
+        super('ads')
+    }
+
+    listenAllByStartDate = (set) => {
+        db.collection(this.collection).orderBy("startDate", "asc").onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenAllActive = (set) => {
+        db.collection(this.collection).where('startDate', '<=', new Date())
+            .onSnapshot(snap => {
+                const array = snap.docs.map(doc => this.reformat(doc))
+                set(array.filter(a => a.endDate.toDate() > new Date()))
+            })
+    }
+}
+
+class UserTrackings extends DB {
+    constructor() {
+        super('usertrackings')
+    }
+
+    addTrack = async (id, operation) => {
+        await db.collection(this.collection).add({ operation, when: new Date(), userid: id })
+    }
+
+    lastTrack = (id, operation, set) => {
+        db.collection(this.collection).where('userid', '==', id).where('operation', '==', operation).orderBy('when', 'desc').onSnapshot(snap => set(snap.docs.map(this.reformat)[0]))
+    }
+
+    listenTrackings = (id, set, startDate, endDate) => {
+        db.collection(this.collection).where('userid', '==', id)
+        .where('when', '>=', startDate).where('when', '<=', endDate)
+        .onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+    listenTrackingsByDate = (id, operation, set, date) => {
+        db.collection(this.collection).where('userid', '==', id).where('operation', '==', operation).where('when', '==', date).onSnapshot(snap => set(snap.docs.map(this.reformat)))
+    }
+
+
 }
 
 class FitnessTips extends DB {
@@ -467,6 +612,8 @@ export default {
     FAQs: new FAQs(),
     Manufacturers: new Manufacturers(),
     SupportCenters: new SupportCenters(),
+    Ads: new Ads(),
+    UserTrackings: new UserTrackings(),
     FitnessTips: new FitnessTips(),
     Simulator: new Simulator(),
     Rewards: new Rewards(),

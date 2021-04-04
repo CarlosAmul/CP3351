@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View } from '../../components/Themed';
 import { Button, Colors } from 'react-native-ui-lib'
 import UserContext from '../../UserContext'
+import db from '../../db'
 import fb from '../../fb'
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
@@ -25,6 +26,7 @@ export default function SettingsScreen() {
   const { user } = useContext(UserContext)
 
   const logout = async () => {
+    await db.UserTrackings.addTrack(user.id, 'logout')
     await fb.auth().signOut()
   }
 

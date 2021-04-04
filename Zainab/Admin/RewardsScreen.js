@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { StyleSheet, ScrollView, Text, TextInput, Image } from 'react-native';
 import { View, Colors, Card, TextField, TextArea, Button, TouchableOpacity, RadioGroup, RadioButton } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
@@ -37,6 +37,8 @@ export default function RewardsScreen() {
     const [type, setType] = useState("")
     const [isDiscount, setIsDiscount] = useState(false)
     const [discount, setDiscount] = useState("")
+
+    const [inputErrors, setInputErrors] = useState("All fields must be specified")
 
     const [rewards, setRewards] = useState([])
     useEffect(() => db.Rewards.listenAll(setRewards), [])
@@ -121,6 +123,7 @@ export default function RewardsScreen() {
             const blob = await response.blob()
             await imageRef.put(blob)
             const url = await imageRef.getDownloadURL()
+            blob.close()
             type === "Discount" ? 
                 await db.Rewards.update({ id, title, description, image: url, type, points: points * 1, discount: discount * 1 })
             :
@@ -146,7 +149,6 @@ export default function RewardsScreen() {
         }
     }
 
-    console.log(type)
     return (
         <ScrollView style={styles.scrollcontainer} contentContainerStyle={{ alignItems: 'center' }}>
             <Card
@@ -166,6 +168,7 @@ export default function RewardsScreen() {
                 </View>
             </Card>
             <Text style={[styles.title, styles.mainHeader, { marginTop: -5, marginBottom: 15 }]}>As an admin, you manage the rewards for the customers</Text>
+            <Text style={{color: Colors.red50}}>{title === "" && points === "" && description === "" && type === "" ? "All fields must be specified" : ""}</Text>
             <View style={styles.fieldsContainer}>
                 <TextField
                     onChangeText={text => setTitle(text)}
@@ -192,10 +195,10 @@ export default function RewardsScreen() {
                     }}
                 >
                     <TextArea 
-                        ref={ref => description === "" ? ref.clear() : description}
                         placeholder="Write description..." 
                         value={description} 
                         onChangeText={text => setDescription(text)} 
+                        style={{marginTop: 10}}
                     />
                 </View>
                 <View style={[styles.radioGroup, { backgroundColor: Colors.mainbg }]}>
@@ -231,7 +234,7 @@ export default function RewardsScreen() {
                             null
                     }
                 </View>
-                {/* <TouchableOpacity onPress={uploadImage}>
+                <TouchableOpacity onPress={uploadImage}>
                     <>
                         <Image
                             source={{ uri: image === "" ? "https://cdn.pixabay.com/photo/2016/06/15/14/54/download-1459071_960_720.png" : image }}
@@ -264,8 +267,7 @@ export default function RewardsScreen() {
                         remove={remove}
                     />
                 )
-            } */}
-            </View>
+            }
         </ScrollView>
     );
 }
@@ -295,8 +297,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     scrollcontainer: {
-        flex: 1,
         backgroundColor: '#ffffff',
+        flex: 1,
     },
     mainHeader: {
         color: "#6874e2",

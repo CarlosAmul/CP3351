@@ -23,6 +23,7 @@ export default function SettingsScreen() {
 	const { user } = useContext(UserContext)
 
 	const logout = async () => {
+		await db.UserTrackings.addTrack(user.id, 'logout')
 		await fb.auth().signOut()
 	}
 

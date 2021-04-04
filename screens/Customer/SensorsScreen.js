@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, Image } from 'react-native';
 import { View } from '../../components/Themed';
 import MotionInfo from './MotionInfo'
 import TemperatureInfo from './TemperatureInfo'
+import BPMonitorInfo from '../../Carlos/BPMonitorInfo'
 import PedometerInfo from './PedometerInfo'
 import CategoryByUserPicker from '../pickers/CategoryByUserPicker';
 import SensorByUserAndCategoryPicker from '../pickers/SensorByUserAndCategoryPicker';
@@ -39,6 +40,11 @@ export default function SensorsScreen({ route }) {
 	const [readings, setReadings] = useState([])
 
 	useEffect(() => db.Sensors.Installations.listenByCustomer(setInstallations, user.id), [sensor])
+
+	const renderDrawerView = () =>
+		<View>
+			<Text>Home</Text>
+		</View>
 
 	useEffect(() => {
 		navigation.setOptions({
@@ -100,6 +106,13 @@ export default function SensorsScreen({ route }) {
 							sensor.install === "yes"
 							&&
 							<TemperatureInfo user={user} category={category} sensor={sensor} />
+						}
+						{
+							category.name === "Blood Pressure"
+							&&
+							sensor.install === "yes"
+							&&
+							<BPMonitorInfo user={user} category={category} sensor={sensor} />
 						}
 						{
 							category.name === "Pedometer"

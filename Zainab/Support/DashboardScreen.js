@@ -90,7 +90,7 @@ export default function DashboardScreen() {
                     <Text style={[styles.numberTitle]}>{faqs.length}</Text>
                 </Card>
             </View>
-            <Text style={[styles.title, {color: Colors.grey30}]}>Total Approved Tips {approvedTips.length} / {allTips.length}</Text>
+            {/* <Text style={[styles.title, {color: Colors.grey30}]}>Total Approved Tips {approvedTips.length} / {allTips.length}</Text>
             <Progress.Bar 
                 progress={approvedTips.length / allTips.length} 
                 width={300} 
@@ -109,7 +109,7 @@ export default function DashboardScreen() {
                 borderWidth={0} 
                 height={7} 
                 style={{marginTop: -20}}
-            />
+            /> */}
         </ScrollView>
     );
 }

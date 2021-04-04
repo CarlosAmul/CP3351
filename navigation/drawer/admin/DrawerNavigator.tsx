@@ -9,48 +9,56 @@ import ActionsScreen from '../../../Zainab/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
+import UserTrackingsScreen from '../../../Carlos/UserTrackingsScreen'
+
+// @ts-expect-error
 import RewardsScreen from '../../../Zainab/Admin/RewardsScreen'
 // @ts-expect-error
 import VacancyScreen from '../../../Zainab/Admin/VacancyScreen'
 // @ts-expect-error
 import ApplicationsScreen from '../../../Zainab/Admin/ApplicationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
+import { Text } from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
   return (
     <Drawer.Navigator
-      drawerContent={ (props) => {
+      drawerContent={(props) => {
         return (
           <SafeAreaView>
             <View
-              style={ {
+              style={{
                 height: 200,
                 alignItems: "center",
                 justifyContent: "center",
-              } }
+              }}
             >
               <Image
-                source={ require("../../../assets/images/logo.png") }
-                style={{width: 110, height: 120}}
+                source={require("../../../assets/images/logo.png")}
+                style={{ width: 110, height: 120 }}
               />
             </View>
             <DrawerItemList {...props} />
           </SafeAreaView>
         );
-      } }
+      }}
     >
       <Drawer.Screen
         name="Dashboard"
         component={DashboardNavigator}
-        options={{ drawerLabel: "Dashboard" }} 
+        options={{ drawerLabel: "Dashboard" }}
       />
       <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
+      />
+      <Drawer.Screen
+        name="UserTrackings"
+        component={TrackingsNavigator}
+        options={{ drawerLabel: "User Trackings" }}
       />
       <Drawer.Screen
         name="Rewards"
@@ -114,6 +122,19 @@ function SettingsNavigator() {
   )
 }
 
+const TrackingsStack = createStackNavigator<TabEightParamList>();
+
+function TrackingsNavigator() {
+  return (
+    <TrackingsStack.Navigator>
+      <TrackingsStack.Screen
+        name="UserTrackingsScreen"
+        component={UserTrackingsScreen}
+        options={{ headerTitle: 'User Trackings' }}
+      />
+    </TrackingsStack.Navigator>
+  )
+}
 const RewardsStack = createStackNavigator<TabFourParamList>();
 
 function RewardsNavigator() {

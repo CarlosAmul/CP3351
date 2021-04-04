@@ -7,6 +7,7 @@ admin.initializeApp();
 //Omar
 const createSampleCenters = require('./createSampleCenters')
 const createHistoricReadingsSample = require('./createHistoricReadingsSample');
+// const { convertToObject } = require("typescript");
 
 exports.createSampleCenters = functions.https.onCall(createSampleCenters)
 exports.createHistoricReadingsSample = functions.https.onCall(createHistoricReadingsSample)
@@ -28,16 +29,16 @@ const db = admin.firestore()
 
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
-  async ({location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category}, context) => {
-      for (let k = 0; k < quantity; k++) {
-        if(category.name === "Temperature" || category.name === "Heart Rate Monitor" || category.name === "Body Temperature") {
-          await db.collection('sensors').add({location, userid, categoryid, min, max, alert, price, manufacturer, install, request})
-        }
-        else if(category.name === "Pedometer") {
-          await db.collection('sensors').add({location, userid, categoryid, goal, alert, price, manufacturer, install, request})
-        }
-        await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })  
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category }, context) => {
+    for (let k = 0; k < quantity; k++) {
+      if (category.name === "Temperature" || category.name === "Heart Rate Monitor" || category.name === "Body Temperature") {
+        await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request })
       }
+      else if (category.name === "Pedometer") {
+        await db.collection('sensors').add({ location, userid, categoryid, goal, alert, price, manufacturer, install, request })
+      }
+      await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })
+    }
   }
 )
 
@@ -112,10 +113,27 @@ exports.createSampleData = functions.https.onCall(
       )
     )
 
+    const ads = await findAll('ads')
+    await Promise.all(
+      ads.map(
+        async ad =>
+          await removeOne('ads', ad.id)
+      )
+    )
+
+
     const authUsers = (await admin.auth().listUsers()).users
     await Promise.all(
       authUsers.map(
         async user => await admin.auth().deleteUser(user.uid)
+      )
+    )
+
+    const userTrackings = await findAll('usertrackings')
+    await Promise.all(
+      userTrackings.map(
+        async tracking =>
+          await removeOne('usertrackings', tracking.id)
       )
     )
 
@@ -130,12 +148,12 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId1 } = await admin.auth().createUser({ email: "joe@joe.com", password: "joejoe" })
     // functions.logger.info("authId1", { authId1 })
 
-    await db.collection('faqs').add({ question: 'Test Question', answer: "Test Answer", userid: authId1 })
+    await db.collection('faqs').add({ question: 'Test Question', answer: "Test Answer", userid: authId1, status: 'answered' })
 
     const { uid: authId2 } = await admin.auth().createUser({ email: "ann@ann.com", password: "annann" })
     // functions.logger.info("authId2", { authId2 })
 
-    await db.collection('faqs').add({ question: 'Another Test Question', answer: "Another Test Answer", userid: authId2 })
+    await db.collection('faqs').add({ question: 'Another Test Question', answer: "Another Test Answer", userid: authId2, status: 'answered' })
 
     const { uid: authId3 } = await admin.auth().createUser({ email: "admin@admin.com", password: "adminadmin" })
     // functions.logger.info("authId3", { authId3 })
@@ -149,10 +167,13 @@ exports.createSampleData = functions.https.onCall(
     const { uid: authId6 } = await admin.auth().createUser({ email: "kareem@kareem.com", password: "kareemkareem" })
     // functions.logger.info("authId6", { authId6 })
 
+    const { uid: authId7 } = await admin.auth().createUser({ email: "bita@bita.com", password: "bitabita" })
+    functions.logger.info("authId5", { authId7 })
+
     const result1 = await db.collection('users').doc(authId1).set({ name: "Joe", role: "Customer", points: 0 })
     // functions.logger.info("result1", { result1 })
 
-    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", points: 0, address: [25.213983211544196,51.30470898002386]})
+    const result2 = await db.collection('users').doc(authId2).set({ name: "Ann", role: "Customer", points: 0, address: [25.213983211544196, 51.30470898002386] })
     // functions.logger.info("result2", { result2 })
 
     const result3 = await db.collection('users').doc(authId3).set({ name: "Admin", role: "Admin" })
@@ -167,6 +188,8 @@ exports.createSampleData = functions.https.onCall(
     const result6 = await db.collection('users').doc(authId6).set({ name: "Kareem", role: "Service", centerid: alKhor.id })
     // functions.logger.info("result6", { result6 })
 
+    const result7 = await db.collection('users').doc(authId7).set({ name: "Bita", role: "Marketing" })
+
     const { id: fitnesstip1 } = await db.collection('fitnesstips').add({ title: 'Daily Monitoring', description: 'Use the heart rate monitor to daily monitor your heart rate whenever you do workout', tags: ['heart', 'workout', 'monitoring', 'heart rate sensor'], userid: authId1, approved: true, approvedby: authId4 })
     const { id: fitnesstip2 } = await db.collection('fitnesstips').add({ title: 'Measuring body heat', description: 'Use the skin/body temperature sensorto daily monitor your skin/body temperature whenever you do workout', tags: ['body', 'workout', 'monitoring', 'body temperature sensor'], userid: authId2, approved: false, approvedby: authId4 })
 
@@ -179,11 +202,12 @@ exports.createSampleData = functions.https.onCall(
     const { id: categoryId1 } = await db.collection('categories').add({ name: "Motion", description: "All motion sensors here", price: 500, url: "https://is5-ssl.mzstatic.com/image/thumb/Purple30/v4/cf/b9/cf/cfb9cfdb-0258-d8c0-245d-18d644205b8d/source/512x512bb.jpg", manufacturers: [manufacturer1, manufacturer2] })
     const { id: categoryId2 } = await db.collection('categories').add({ name: "Temperature", description: "All temperature sensors here", price: 400, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
     const { id: categoryId3 } = await db.collection('categories').add({ name: "Heart Rate Monitor", description: "Hear rate monitor analyzes your heart beat and you can continuously check your heart beat at your own comfort", price: 300, url: "https://img1.pnghut.com/t/17/18/1/gcaPjLKyBP/flower-watercolor-silhouette-frame-cartoon.jpg", manufacturers: [manufacturer1, manufacturer2] })
-    const { id: categoryId4 } = await db.collection('categories').add({ name: "Pedometer", description: "Count your steps with this amazing sensor. With pedometer, you can count your steps while you do any acitvity in your day. ", price: 350, url: "https://cdn5.vectorstock.com/i/1000x1000/10/34/fitness-app-notification-icon-vector-27151034.jpg", manufacturers: [manufacturer1, manufacturer2]})
-    const { id: categoryId5 } = await db.collection('categories').add({ name: "Blood Pressure Monitor", description: "Monitor your blood pressure with our blood pressure monitor aiming to keep you fit!", price: 450, url: "https://thumbs.dreamstime.com/b/blood-pressure-vector-concept-design-heart-blood-pressure-monitor-flat-style-blood-pressure-concept-flat-style-144129158.jpg", manufacturers: [manufacturer1]})
+    const { id: categoryId4 } = await db.collection('categories').add({ name: "Pedometer", description: "Count your steps with this amazing sensor. With pedometer, you can count your steps while you do any acitvity in your day. ", price: 350, url: "https://cdn5.vectorstock.com/i/1000x1000/10/34/fitness-app-notification-icon-vector-27151034.jpg", manufacturers: [manufacturer1, manufacturer2] })
+    const { id: categoryId5 } = await db.collection('categories').add({ name: "Blood Pressure", description: "Monitor your blood pressure with our blood pressure monitor aiming to keep you fit!", price: 450, url: "https://thumbs.dreamstime.com/b/blood-pressure-vector-concept-design-heart-blood-pressure-monitor-flat-style-blood-pressure-concept-flat-style-144129158.jpg", manufacturers: [manufacturer1] })
     const { id: categoryId6 } = await db.collection('categories').add({ name: "Body Temperature", description: "Body temperature sensor to measure your temperature of the body. ", price: 400, url: "https://image.freepik.com/free-vector/medical-infrared-thermometer-isometric-projection-digital-body-thermometer-isolated-blue-background_168129-305.jpg", manufacturers: [manufacturer1] })
-    const { id: categoryId7 } = await db.collection('categories').add({ name: "Sleep Tracker", description: "Track your sleeping environment with our unique;y designed sleep tracker sensor. ", price: 500, url: "https://pim.beurer.com/images/produkt/uebersicht/se80-flat.jpg", manufacturers: [manufacturer1, manufacturer2] })
+    // functions.logger.info("categoryId2", { categoryId2 })
 
+    const { id: categoryId10 } = await db.collection('categories').add({ name: "Blood Pressure", description: "All Blood Pressure sensors here", price: 200, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
 
     await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
     await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
@@ -194,14 +218,25 @@ exports.createSampleData = functions.https.onCall(
     const { id: sensorId1 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId1, location: "front door", motiondetected: false, price: 500 })
     // functions.logger.info("sensorId1", { sensorId1 })
 
-    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install:"no", request: "no", price: 400 })
-    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install:"yes", request: "no", price: 400 })
-    const { id: sensorId4 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId3, location: "with me", min: 40, max: 90, alert: false, install:"no", request: "no", price: 400 })
-    const { id: sensorId5 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId4, location: "At the gym", goal: 1000, alert: false, install:"no", request: "no", price: 450 })
+    const { id: sensorId2 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "lab", min: 0, max: 100, alert: false, install: "no", request: "no", price: 400 })
+    const { id: sensorId3 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId2, location: "bedroom", min: 0, max: 40, alert: false, install: "yes", request: "no", price: 400 })
+    const { id: sensorId4 } = await db.collection('sensors').add({ userid: authId1, categoryid: categoryId3, location: "with me", min: 40, max: 90, alert: false, install: "no", request: "no", price: 400 })
+    const { id: sensorId5 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId4, location: "At the gym", goal: 1000, alert: false, install: "no", request: "no", price: 450 })
 
     // functions.logger.info("sensorId2", { sensorId2 })
 
-    // await db.collection('sensors').doc(sensorId2).collection('readings').add({ current: 103, when: new Date() })
+    const { id: sensorId10 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId10, location: "left arm", maxSys: 120, minSys: 90, maxDia: 80, minDia: 60, alert: false, install: "yes", request: "no", price: 400 })
+
+    const { id: adId1 } = await db.collection('ads').add({
+      title: 'New motion sensor',
+      image: 'https://www.ikea.com/qa/en/images/products/tradfri-wireless-motion-sensor-white__0725849_pe735071_s5.jpg',
+      description: 'There is new sensor by company click to see',
+      screen: 'PublicHome',
+      startDate: new Date(),
+      endDate: new Date('2021-04-19T12:00:00-06:30')
+    })
+
+
   }
 )
 
@@ -223,6 +258,8 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     const category = { id: categoryDoc.id, ...categoryDoc.data() }
     // functions.logger.info("category", { category })
 
+    functions.logger.info("cat name ", category.name == "Blood Pressure")
+
     if (category.name === "Motion") {
       const readingData = await db.collection('sensors').doc(sensor.id).collection('readings').orderBy("when", "desc").limit(2).get()
       const readings = readingData.docs.map(doc => ({ id: doc.id, ...doc.data() }))
@@ -238,7 +275,7 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         //   -- change the blobs to base64 strings
         // 2 -- compare the strings
         // 3 -- update db with true/false (motiondetected field)
-        
+
         // functions.logger.info("checkMotion", { sensor, previousImageURL, latestImageURL })
 
         const response1 = await fetch(latestImageURL)
@@ -259,28 +296,36 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
         }
       }
     }
-    else if (category.name = "Temperature") {
+    else if (category.name === "Temperature") {
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
       if (isAlert) {
         newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Current temperature is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
       // functions.logger.info("temp alert update", { alert: isAlert });
-    } else if (category.name === "Heart Rate Monitor"){
+    } else if (category.name === "Blood Pressure") {
+      const isAlert = reading.current.sys * 1 > sensor.maxSys || reading.current.sys * 1 < sensor.minSys || reading.current.dia * 1 > sensor.maxDia || reading.current.dia * 1 < sensor.minDia
+      functions.logger.info('alert', { isAlert })
+
+      await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
+      if (isAlert) {
+        newNotification(sensor.userid, `Alert on ${category.name} sensor in location "${sensor.location}". Abnormal blood pressure detected`, 'Sensors', { catId: category.id, sensorId: sensor.id })
+      }
+    } else if (category.name === "Heart Rate Monitor") {
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
-      if(isAlert) {
+      if (isAlert) {
         newNotification(sensor.userid, `Heart rate alert on ${category.name} sensor. Current beat is ${reading.current}`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
     }
-    else if(category.name === "Pedometer") {
+    else if (category.name === "Pedometer") {
       const isAlert = reading.current % 1000
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
       if (isAlert) {
         newNotification(sensor.userid, `Alert on your ${category.name} sensor. Current steps reached ${reading.current} 🔥🔥🔥`, 'Sensors', { catId: category.id, sensorId: sensor.id })
       }
     }
-    else if(category.name === "Body Temperature") {
+    else if (category.name === "Body Temperature") {
       const isAlert = reading.current > sensor.max || reading.current < sensor.min
       await db.collection('sensors').doc(sensor.id).set({ alert: isAlert }, { merge: true })
       if (isAlert) {
@@ -289,13 +334,13 @@ exports.onNewReading = functions.firestore.document('sensors/{sensorid}/readings
     }
   })
 
-//this function will be different for every different sensor because there will be separate fields
-
-exports.sendNotifications = functions.firestore.document('users/{userid}').onCreate(
+exports.newRegistration = functions.firestore.document('users/{userid}').onCreate(
   async (snap, context) => {
     const { userid } = context.params
     const userDoc = await db.collection('users').doc(userid).get()
     const user = { id: userDoc.id, ...userDoc.data() }
+    const tracking = await db.collection('usertrackings').add({ operation: 'register', when: new Date(), userid: userid })
+    console.log('registration tracked', tracking)
 
     if (user.role == "Customer") {
       const notif = newNotification(userid, 'Welcome to FitIoT!', 'PublicHome')
@@ -303,6 +348,23 @@ exports.sendNotifications = functions.firestore.document('users/{userid}').onCre
     }
   })
 
+exports.sendFAQNotification = functions.firestore.document('faqs/{faqid}').onCreate(
+  async (snap, context) => {
+    functions.logger.info("Sending notification to supports")
+    const supportsDoc = await db.collection('users').where('role', '==', 'Support').get()
+    functions.logger.info(supportsDoc, 'doc')
+    supportsDoc.docs.map(doc => {
+      newNotification(doc.id, 'An FAQ has been submitted', 'FAQs', { nestedScreen: 'PendingQuestions' })
+    })
+  }
+)
+
+//this function will be different for every different sensor because there will be separate fields
+exports.addSensor = functions.https.onCall(
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
+    functions.logger.info("Done with it!!!!!!!")
+    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+  })
 exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
   async (snap, context) => {
     const { tipid } = context.params
@@ -336,17 +398,64 @@ exports.notifyAdminForApplication = functions.https.onCall(
         await newNotification(user.id, `${username} has submitted an application`, 'Applications')
       })
     )
-  }
-)
+  })
 
 exports.notifyUserForApplication = functions.https.onCall(
   async ({ userid, status, vacancy }, context) => {
-    if(status === "rejected") {
+    if (status === "rejected") {
       await newNotification(userid, `Sorry, your application for ${vacancy.role} was rejected. Apply again next time`, 'VacancyScreen')
     } else {
       await newNotification(userid, `Congratulations! You have been hired!`, 'Settings')
-      await db.collection('users').doc(userid).set({role: vacancy.role, centerid: null}, {merge: true})
-      await db.collection('vacancies').doc(vacancy.id).set({spaces: vacancy.spaces - 1}, {merge: true})
+      await db.collection('users').doc(userid).set({ role: vacancy.role, centerid: null }, { merge: true })
+      await db.collection('vacancies').doc(vacancy.id).set({ spaces: vacancy.spaces - 1 }, { merge: true })
     }
   }
 )
+
+exports.newReview = functions.firestore.document('users/{userid}/reviews/{reviewid}').onCreate(
+  async (snap, context) => {
+    const { userid } = context.params
+    const { reviewid } = context.params
+
+    const reviewDoc = await db.collection('users').doc(userid).collection('reviews').doc(reviewid).get()
+    const review = { id: reviewDoc.id, ...reviewDoc.data() }
+
+    const notif = newNotification(review.supportid, 'You have a new review', 'Reviews')
+    functions.logger.info("notification sent", notif)
+
+  })
+
+exports.newRequest = functions.firestore.document('sensors/{sensorid}/installation/{installationid}').onCreate(
+  async (snap, context) => {
+    const { sensorid } = context.params
+    const { installationid } = context.params
+
+    const reqDoc = await db.collection('sensors').doc(sensorid).collection('installations').doc(installationid).get()
+    const request = { id: reqDoc.id, ...reqDoc.data() }
+
+    const supportDocs = await db.collection('users').where('role', '==', 'Support').where('centerid', '==', request.centerid).get()
+    const supports = supportDocs.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    functions.logger.info("support", supports)
+
+    // const notif = newNotification(request.supportid, 'You have a new review', 'Reviews')
+    // functions.logger.info("notification sent", notif)
+
+  })
+
+
+exports.newPurchase = functions.firestore.document('sensors/{sensorid}').onCreate(
+  async (snap, context) => {
+    const { sensorid } = context.params
+    const sensorDoc = await db.collection('sensors').doc(sensorid).get()
+    const sensor = { id: sensorDoc.id, ...sensorDoc.data() }
+    const categoryDoc = await db.collection('categories').doc(sensor.categoryid).get()
+    const category = { id: categoryDoc.id, ...categoryDoc.data() }
+    functions.logger.info("category", { category })
+    const tracking = await db.collection('usertrackings').add({ operation: 'buy', when: new Date(), userid: sensor.userid })
+    console.log('purchase tracked', tracking)
+
+    const notif = newNotification(sensor.userid, 'Thank you for your purchase! Click here to view your new sensor', 'Sensors', { catId: category.id, sensorId: sensor.id })
+    functions.logger.info("notification sent", notif)
+
+  })

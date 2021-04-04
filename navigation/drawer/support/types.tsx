@@ -10,6 +10,7 @@ export type DrawerParamList = {
   Actions: undefined,
   Settings: undefined,
   Notifications: undefined,
+  FAQs: undefined,
   FitnessTips: undefined
 };
 
@@ -30,6 +31,12 @@ export type TabFourParamList = {
 };
 
 export type TabFiveParamList = {
+  FAQsScreen: undefined;
+  PendingQuestions: undefined;
+  DraftsScreen: undefined;
+};
+
+export type TabSixParamList = { 
   FitnessTipsScreen: undefined;
 };
 

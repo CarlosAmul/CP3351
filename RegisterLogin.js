@@ -38,10 +38,13 @@ export default function RegisterLogin() {
 	const [password, setPassword] = useState("")
 
 	const login = async () => {
-		email !== "" && password !== "" ?
+		if(email !== "" && password !== ""){
 			await fb.auth().signInWithEmailAndPassword(email, password)
-			:
-			undefined
+			await db.UserTrackings.addTrack(fb.auth().currentUser.uid, 'login')
+		}
+			// await fb.auth().signInWithEmailAndPassword(email, password)
+			// :
+			// undefined
 	}
 
 	const register = async () => {

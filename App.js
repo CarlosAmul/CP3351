@@ -8,6 +8,7 @@ import useColorScheme from './hooks/useColorScheme';
 import DrawerAdmin from './navigation/drawer/admin';
 import DrawerCustomer from './navigation/drawer/customer';
 import DrawerSupport from './navigation/drawer/support';
+import DrawerMarketing from './navigation/drawer/marketing';
 import DrawerService from './navigation/drawer/service'
 
 import { LogBox, View, Text } from 'react-native'
@@ -69,6 +70,8 @@ export default function App() {
             return <DrawerAdmin colorScheme={colorScheme} />
         } else if (user?.role === "Support") {
             return <DrawerSupport colorScheme={colorScheme} />
+        } else if (user?.role === "Marketing") {
+            return <DrawerMarketing colorScheme={colorScheme} />
         } else if (user?.role === "Service") {
             return <DrawerService colorScheme={colorScheme} />
         } else {

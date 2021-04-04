@@ -40,6 +40,7 @@ export default function InstallationsServiceScreen() {
     const [finished, setFinished] = useState([])
     
     useEffect(() => db.Sensors.Installations.listenByPending(setPending, user.centerid), [])
+    console.log('pending', pending)
     useEffect(() => db.Sensors.Installations.listenByAssigned(setAssigned, user.id), [])
     useEffect(() => db.Sensors.Installations.listenByFinished(setFinished, user.id), [])
 
@@ -58,8 +59,13 @@ export default function InstallationsServiceScreen() {
         navigation.navigate("DetailsScreen", options)
     }
 
+    const handleReviews = (request) => {
+        navigation.navigate("ReviewsForm", { request })
+    }
+
     const [isOpen, open] = useState(false)
     const [edit, setEdit] = useState("")
+    console.log(edit)
 
     const handleEdit = () => { open(!isOpen) }
 
@@ -67,16 +73,22 @@ export default function InstallationsServiceScreen() {
         (async () => {
             let item = {...req, status:edit}
             let sensor = {...await db.Sensors.findOne(req.parent)}
+            if (edit === "Arrived") {
+                db.Users.Notifications.newNotification(req.customerid, 'Service has arrived', '')
+            }
             if (edit === "Finished")  {
                 sensor.install = "yes"
                 sensor.request = "no"
+                db.Users.Notifications
+                .newNotification(req.customerid,
+                    `Your ${req.type === "install" ? "installation" : "removal"} request has been completed. Click here to leave a review`, 'Installations', 'ReviewsForm', req)
             }
             await db.Sensors.Installations.updateSub(item, req.parent)
             db.Sensors.update(sensor)
         })()
     }
 
-    validateSave = () =>
+    const validateSave = () =>
         edit === ""
 
     return (
@@ -145,7 +157,7 @@ export default function InstallationsServiceScreen() {
                                                 style={styles.flexButton}
                                                 backgroundColor={Colors.primary}
                                                 onPress={() => { save(request) }}
-                                                disabled={validateSave()}
+                                                disabled={validateSave}
                                                 marginT-15
                                             />
                                         </>
@@ -167,7 +179,7 @@ export default function InstallationsServiceScreen() {
                                     <Text text60M>{request.type === "install" ? "Installation" : "Removal"} Request</Text>
                                     <Text>Made on: {request.on.toDate().toLocaleDateString()}</Text>
                                     <Text green10>Fee: {request.fee} QAR</Text>
-                                    <View style={styles.horizontalView}>
+                                    <View style={[styles.horizontalView, { flexDirection: 'column' }]}>
                                         <Button label="Details"
                                             style={styles.flexButton}
                                             backgroundColor={Colors.primary}

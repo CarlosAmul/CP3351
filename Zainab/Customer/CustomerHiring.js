@@ -1,9 +1,16 @@
-import React, {useContext} from 'react';
-import { StyleSheet,  Text, View, } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import MenuIcon from '../../components/MenuIcon'
 import { Colors, Button } from 'react-native-ui-lib'
+import Categories from './Categories'
+import MostFavorite from './MostFavorite'
+import Ad from '../../Carlos/Ad'
+import db from '../../db';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import UserContext from '../../UserContext'
 
-export default function CustomerHiring({navigation}) {
+export default function CustomerHiring({navigation}) {  
 
     const {user} = useContext(UserContext)
 
@@ -18,7 +25,36 @@ export default function CustomerHiring({navigation}) {
         darksidebg: '#38304d'
     });
 
+    const [ads, setAds] = useState([])
+    const [ad, setAd] = useState(null)
+
+    useEffect(() => db.Ads.listenAllActive(setAds), [])
+    useEffect(() => setAd(ads[Math.floor(Math.random() * ads.length)]), [ads]
+    )
+    ad && console.log(ad.endDate.toDate() > new Date())
+
+    const onPress = () => {
+        navigation.navigate(ad.screen, { screen: ad.screen + "Screen" })
+    }
+
     return (
+        <>
+        <ScrollView style={styles.scrollcontainer}>
+            {
+                ad ?
+                    <TouchableOpacity onPress={onPress}>
+                        <Ad ad={ad} styling={{ margin: 20, marginBottom: 0 }} />
+                    </TouchableOpacity>
+                    :
+                    <View style={[{ borderWidth: 1, borderColor: 'black', alignItems: 'center', borderRadius: 10, margin: 20, marginBottom: 0  }]} >
+                        <View style={{ width: '50%', margin: 5, padding: 5, textAlign: 'center' }}>
+                            <Text text40 style={{ color: Colors.grey20, alignSelf: 'center' }}>No Ad Available</Text>
+                        </View>
+                    </View>
+            }
+            {/* <Categories stacknavigation={stacknavigation} /> */}
+            <MostFavorite />
+        </ScrollView>
         <View>
             <Text style={[styles.title, styles.mainHeader]}>Looking for work at FitIoT?</Text>
             <Button 
@@ -28,6 +64,7 @@ export default function CustomerHiring({navigation}) {
                 onPress={() => user ? navigation.navigate('VacancyScreen') : navigation.navigate('LoginRegister')}
             />
         </View>
+        </>
     );
 }
 

@@ -2,22 +2,22 @@ const firebase = require('firebase')
 
 // put your own config here
 const firebaseConfig = {
-    apiKey: "AIzaSyBQH1A9fHAnQbOjkRj47L3HrXOn_g_841A",
-    authDomain: "imagesensor-d3d51.firebaseapp.com",
-    databaseURL: "https://imagesensor-d3d51-default-rtdb.firebaseio.com",
-    projectId: "imagesensor-d3d51",
-    storageBucket: "imagesensor-d3d51.appspot.com",
-    messagingSenderId: "747089375585",
-    appId: "1:747089375585:web:5c5ee73fcdb84b351fd520",
-    measurementId: "G-DXJL97PWHY"
+    apiKey: "AIzaSyCPV44gVwibJaPpWH_4G2KY8kc6AKvA1ZM",
+    authDomain: "cp3351-39dd4.firebaseapp.com",
+    databaseURL: "https://cp3351-39dd4-default-rtdb.firebaseio.com",
+    projectId: "cp3351-39dd4",
+    storageBucket: "cp3351-39dd4.appspot.com",
+    messagingSenderId: "442367383444",
+    appId: "1:442367383444:web:c462446d76f860aac6e181",
+    measurementId: "G-XQJBRTN4B6"
 }
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore()
 
-db.useEmulator("localhost", 8081)
-firebase.functions().useEmulator("localhost", 5001)
-firebase.auth().useEmulator("http://localhost:9099")
+db.useEmulator("10.0.2.2", 8081)
+firebase.functions().useEmulator("10.0.2.2", 5001)
+firebase.auth().useEmulator("http://10.0.2.2:9099")
 
 const reformat = doc => ({ id: doc.id, ...doc.data() })
 const findAll = async collection => (await db.collection(collection).get()).docs.map(reformat)
@@ -70,8 +70,31 @@ const simulateReading = async sensor => {
             when: new Date(),
             current: current + Math.floor(Math.random() * 20) - 10
         })
-    } 
-    else if(isCategory(sensor, "Heart Rate Monitor")) {
+    }
+    if (isCategory(sensor, "Blood Pressure")) {
+        const changeOps = ['+', '-']
+        const op = Math.floor(Math.random() * 2)
+        const current = readings.length > 0 ? readings[0].current : { sys: 120, dia: 80, pulse: 72 }
+
+        changeOps[op] === '+' ? 
+        await db.collection('sensors').doc(sensor.id).collection('readings').add({
+            when: new Date(),
+            current: {
+                sys: current.sys + op,
+                dia: current.dia + op,
+                pulse: current.pulse + op
+            }
+        })
+        :
+        await db.collection('sensors').doc(sensor.id).collection('readings').add({
+            when: new Date(),
+            current: {
+                sys: current.sys - op,
+                dia: current.dia - op,
+                pulse: current.pulse - op
+            }
+        })
+    } else if(isCategory(sensor, "Heart Rate Monitor")) {
         const currentR = readings.length > 0 ? readings[0].current : 70
         const changeOps = ['-', '+']
         const op = Math.floor(Math.random() * 2)

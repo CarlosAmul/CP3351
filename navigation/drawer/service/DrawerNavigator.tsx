@@ -3,6 +3,7 @@ import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer'
 import { View, SafeAreaView, Image } from 'react-native'
 import * as React from 'react';
 import {useContext} from 'react'
+import {Text} from 'react-native-ui-lib'
 // @ts-expect-error
 import db from '../../../db.js'
 // @ts-expect-error
@@ -19,18 +20,24 @@ import SafetyInstructionsScreen from '../../../Zainab/Service/SafetyInstructions
 import InstallationsServiceScreen from '../../../screens/Service/InstallationsScreen'
 // @ts-expect-error
 import DetailsScreen from '../../../screens/Service/DetailsScreen'
+// @ts-expect-error
+import ReviewsScreen from '../../../Carlos/Service/ReviewsScreen'
+// @ts-expect-error
+import NotificationsScreen from '../../../Carlos/NotificationsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList} from './types';
+
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabSixParamList} from './types';
+import { TabFiveParamList } from '../customer/types.js';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
+
 
 export default function DrawerNavigator() {
 
   const { user } = useContext(UserContext)
 
   const [notifCount, setNotifCount] = React.useState(0)
-  React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
+  React.useEffect(() => user ? db.Users.Notifications.unreadCount(user.id, setNotifCount) : undefined, [user])
 
   return (
     <Drawer.Navigator
@@ -60,6 +67,11 @@ export default function DrawerNavigator() {
         options={{ drawerLabel: "Dashboard" }} 
       />
       <Drawer.Screen
+        name="Notifications"
+        component={NotificationsNavigator}
+        options={{ drawerLabel: `Notifications (${notifCount})` }}
+      />
+      <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
       />
@@ -71,6 +83,11 @@ export default function DrawerNavigator() {
         name="InstallationsService"
         component={InstallationsServiceNavigator}
         options={{ drawerLabel: "My Installations" }}
+      />
+      <Drawer.Screen
+        name="Reviews"
+        component={ReviewsNavigator}
+        options={{ drawerLabel: "My Reviews" }}
       />
     </Drawer.Navigator>
   );
@@ -123,7 +140,7 @@ function SettingsNavigator() {
   )
 }
 
-const InstallationsServiceStack = createStackNavigator<TabFourParamList>();
+const InstallationsServiceStack = createStackNavigator<TabSixParamList>();
 
 function InstallationsServiceNavigator() {
   return (
@@ -139,5 +156,33 @@ function InstallationsServiceNavigator() {
         options={{ headerTitle: 'Details' }}
       />
     </InstallationsServiceStack.Navigator>
+  )
+}
+
+const ReviewsStack = createStackNavigator<TabFourParamList>();
+
+function ReviewsNavigator() {
+  return (
+    <ReviewsStack.Navigator>
+      <ReviewsStack.Screen
+        name="ReviewsScreen"
+        component={ReviewsScreen}
+        options={{ headerTitle: 'Reviews' }}
+      />
+    </ReviewsStack.Navigator>
+  )
+}
+
+const NotificationsStack = createStackNavigator<TabFiveParamList>();
+
+function NotificationsNavigator() {
+  return (
+    <NotificationsStack.Navigator>
+      <NotificationsStack.Screen
+        name="NotificationsScreen"
+        component={NotificationsScreen}
+        options={{ headerTitle: 'Notifications' }}
+      />
+    </NotificationsStack.Navigator>
   )
 }

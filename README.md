@@ -25,23 +25,24 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Tabbar and Tabs
 * Dialog
 * Expandable Section
+* Carousel
 ## Carlos Tasks
 ### FAQs
 - [X] Finished ✅
 * customer gets a form to ask a question. Support can see pending questions and answer them.
 * All support can remove or edit any question and they can choose to publish it or leave it as a draft.
 ### Ads
-- [ ] Finished ❌
+- [X] Finished ✅
 * Ads show up on homepage for customers and public.
 * Ads can have images, a set time to appear, and a url to the sensor page. Ads are added by marketing.
 ### UserTrackings
-- [ ] Finished ❌
+- [X] Finished ✅
 * Track aggregate user data over periods of time to show on graphs
 * Each time a user logins or registers or logs out, a new track is recorded. 
 * The time is given, and a type name is given so it can be picked from a list of specific reports.
 * each buy also sends a track
 ### Customer Reviews
-- [ ] Finished ❌
+- [X] Finished ✅
 * Customer can leave review after installation is done. Also after support role resolves complaint
 ### Notifications
 - [x] Finished ✅
@@ -82,7 +83,7 @@ npm i @expo/vector-icons@12.0.3 (for icons)
 * Once approved will be shown to other people
 * ~Again may be the other people can post their likes for these tips
 ### Hiring
-- [ ] Finished ❌
+- [x] Finished ✅
 * Customer submits an application for (service, support and marketing roles) stating his skills and abilities.
 * The admin sees all these applications and reviews them and approves/rejects.
 * Once approved, the customer's role will be updated.

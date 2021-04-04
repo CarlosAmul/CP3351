@@ -14,22 +14,27 @@ import ActionsScreen from '../../../Zainab/Admin/ActionsScreen'
 // @ts-expect-error
 import SettingsScreen from '../../../screens/Admin/SettingsScreen'
 // @ts-expect-error
-import NotificationsScreen from '../../../screens/Carlos/NotificationsScreen'
+import NotificationsScreen from '../../../Carlos/NotificationsScreen'
+// @ts-expect-error
+import FAQsScreen from '../../../Carlos/FAQsScreen'
+// @ts-expect-error
+import PendingFAQsScreen from '../../../Carlos/PendingQuestionsScreen'
+// @ts-expect-error
+import DraftsScreen from '../../../Carlos/DraftsScreen.js'
 // @ts-expect-error
 import FitnessTipsScreen from '../../../Zainab/Support/FitnessTipsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList} from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList} from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
-import {Text} from 'react-native-ui-lib'
+import { Text } from 'react-native-ui-lib'
 
 export default function DrawerNavigator() {
 
-  const { user } = useContext(UserContext)
+  const { user } = React.useContext(UserContext)
 
   const [notifCount, setNotifCount] = React.useState(0)
   React.useEffect(() => db.Users.Notifications.unreadCount(user.id, setNotifCount))
-
   return (
     <Drawer.Navigator
       drawerContent={ (props) => {
@@ -55,20 +60,24 @@ export default function DrawerNavigator() {
       <Drawer.Screen
         name="Dashboard"
         component={DashboardNavigator}
-        options={{ drawerLabel: "Dashboard" }} 
+        options={{ drawerLabel: "Dashboard" }}
+      />
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationsNavigation}
+        options={{ drawerLabel: `Notifications (${notifCount})` }}
       />
       <Drawer.Screen
         name="Actions"
         component={ActionsNavigator}
       />
       <Drawer.Screen
-        name="Settings"
-        component={SettingsNavigator}
+        name="FAQs"
+        component={FAQsNavigator}
       />
       <Drawer.Screen
-        name="Notifications"
-        component={NotificationsNavigator}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
+        name="Settings"
+        component={SettingsNavigator}
       />
       <Drawer.Screen
         name="FitnessTips"
@@ -121,21 +130,59 @@ function SettingsNavigator() {
   )
 }
 
-const NotificationStack = createStackNavigator<TabFourParamList>();
+const NotificationsStack = createStackNavigator<TabFourParamList>();
 
-function NotificationsNavigator() {
+function NotificationsNavigation() {
   return (
-    <NotificationStack.Navigator>
-      <NotificationStack.Screen
+    <NotificationsStack.Navigator>
+      <NotificationsStack.Screen
         name="NotificationsScreen"
         component={NotificationsScreen}
         options={{ headerTitle: 'Notifications' }}
       />
-    </NotificationStack.Navigator>
+    </NotificationsStack.Navigator>
   )
 }
 
-const FitnessTipsStack = createStackNavigator<TabFiveParamList>();
+const FAQsStack = createStackNavigator<TabFiveParamList>();
+
+function FAQsNavigator() {
+  return (
+    <FAQsStack.Navigator>
+      <FAQsStack.Screen
+        name="FAQsScreen"
+        component={FAQsScreen}
+        options={{ headerTitle: 'FAQ' }}
+      />
+      <FAQsStack.Screen
+        name="PendingQuestions"
+        component={PendingFAQsScreen}
+        options={{headerTitle: 'Pending Questions'}}
+      />
+      <FAQsStack.Screen
+        name="DraftsScreen"
+        component={DraftsScreen}
+        options={{headerTitle: 'Drafts'}}
+      />
+    </FAQsStack.Navigator>
+  )
+}
+
+// const PendingFAQsStack = createStackNavigator<TabSixParamList>();
+
+// function PendingFAQsNavigator() {
+//   return (
+//     <PendingFAQsStack.Navigator>
+//       <PendingFAQsStack.Screen
+//         name="PendingFAQsScreen"
+//         component={PendingFAQsScreen}
+//         options={{ headerTitle: 'Pending FAQs' }}
+//       />
+//     </PendingFAQsStack.Navigator>
+//   )
+// }
+
+const FitnessTipsStack = createStackNavigator<TabSixParamList>();
 
 function FitnessTipsNavigator() {
   return (

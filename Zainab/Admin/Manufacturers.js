@@ -29,6 +29,8 @@ export default function Manufacturers() {
     const [url, setUrl] = useState("")
     const [price, setPrice] = useState("")
 
+    const [inputErrors, setInputErrors] = useState("All fields must be specified")
+
     const edit = (manufacturer) => {
         setId(manufacturer.id)
         setName(manufacturer.name + "")
@@ -63,6 +65,7 @@ export default function Manufacturers() {
     return (
         <ScrollView style={{ backgroundColor: Colors.sidebg }}>
             <View style={styles.fieldsContainer}>
+                <Text style={{color: Colors.red50}}>{name === "" && price === "" && url === "" ? "All fields must be specified" : ""}</Text>
                 <TextField
                     onChangeText={text => setName(text)}
                     hideUnderline

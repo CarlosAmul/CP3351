@@ -48,6 +48,11 @@ export default {
               InstallationsScreen: 'two'
             },
           },
+          TabNine: {
+            screens: {
+              ReviewsScreen: 'two'
+            },
+          },
           NotFound: '*',
         },
       },

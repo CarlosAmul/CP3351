@@ -21,6 +21,16 @@ export default {
               SettingsScreen: 'three',
             },
           },
+          TabFour: {
+            screens: {
+              ReviewsScreen: 'four',
+            },
+          },
+          TabFive: {
+            screens: {
+              NotificationsScreen: 'four',
+            },
+          },
         },
       },
       NotFound: '*',

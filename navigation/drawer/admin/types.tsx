@@ -9,6 +9,7 @@ export type DrawerParamList = {
   Dashboard: undefined,
   Actions: undefined,
   Settings: undefined,
+  UserTrackings: undefined,
   Rewards: undefined,
   Vacancy: undefined,
   Applications: undefined,
@@ -41,6 +42,10 @@ export type TabSixParamList = {
 
 export type TabSevenParamList = {
   TechniciansScreen: undefined;
+};
+
+export type TabEightParamList = {
+  UserTrackingsScreen: undefined;
 };
 
 

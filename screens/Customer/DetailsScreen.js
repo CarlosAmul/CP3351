@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, createRef } from 'react';
 import { StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { View } from '../../components/Themed';
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../../components/MenuIcon'
-import { Colors, Text, Card, Button } from 'react-native-ui-lib'
+import { Colors, Text, Carousel, Button } from 'react-native-ui-lib'
 import UserContext from '../../UserContext'
 import db from '../../db'
 import fb from '../../fb'
@@ -21,6 +21,7 @@ export default function DetailsScreen({ route }) {
     const [sensor, setSensor] = useState(null)
     const [service, setService] = useState(null)
     const [customer, setCustomer] = useState(null)
+    const [review, setReview] = useState(null)
 
     useEffect(() => {
         (async () => {
@@ -44,12 +45,15 @@ export default function DetailsScreen({ route }) {
 
     useEffect(() => {
         (async () => {
-            if(request.userid !== null) {
+            if (request.userid !== null) {
                 let service = await db.Users.findOne(request.userid)
                 setService(service)
             }
         })()
     }, [])
+
+    useEffect(() => db.Users.Reviews.listenByJob(request.id, setReview), [])
+    console.log('dat is review', review)
 
     // console.log("the parent", request.parent)
     // console.log("the sensor user", sensor)
@@ -67,6 +71,7 @@ export default function DetailsScreen({ route }) {
         darksidebg: '#38304d'
     });
 
+    const installRef = createRef();
 
     return (
         <>
@@ -74,32 +79,55 @@ export default function DetailsScreen({ route }) {
                 customer && sensor &&
                 <>
                     <View style={styles.container}>
-                        <Text text60M>{request.type === "install" ? "Installation" : "Removal"} Request</Text>
-                        <Text text70M>Due: {request.when.toDate().toLocaleDateString()}</Text>
-                        <Text text70M>For: {customer.name} - {customer.authUser}</Text>
-                        <Text text70M>Sensor: {sensor.location}</Text>
-                        {
-                            request.note &&
-                            <Text text70M>Note: {request.note}</Text>
-                        }
-                        {
-                            request.status !== "Assigned" &&
-                            <Text text70M>{request.status}</Text>
-                        }
-                        {
-                            service &&
-                                <Text text70M>Assigned to: {service.name}</Text>
-                        }
-                        <Text green10>Fee: {request.fee} QAR</Text>
-                        <View style={styles.horizontalView}>
-                            <Button label="Done"
-                                style={styles.smallButton}
-                                backgroundColor={Colors.primary}
-                                onPress={() => { navigation.goBack() }}
-                                marginT-15
-                            />
-                        </View>
+                        <Carousel
+                            ref={installRef}
+                            pageControlProps={{
+                                size: 8,
+                                enlargeActive: true,
+                                onPagePress: page => installRef.current.goToPage(page)
+                            }}
+                        >
+                            <View style={{ height: '100%' }}>
+                                <Text text60M>{request.type === "install" ? "Installation" : "Removal"} Request</Text>
+                                <Text text70M>Due: {request.when.toDate().toLocaleDateString()}</Text>
+                                <Text text70M>For: {customer.name} - {customer.authUser}</Text>
+                                <Text text70M>Sensor: {sensor.location}</Text>
+                                {
+                                    request.note !== '' &&
+                                    <Text text70M>Note: {request.note}</Text>
+                                }
+                                {
+                                    request.status !== "Assigned" &&
+                                    <Text text70M>{request.status}</Text>
+                                }
+                                {
+                                    service &&
+                                    <Text text70M>Assigned to: {service.name}</Text>
+                                }
+                                <Text green10>Fee: {request.fee} QAR</Text>
+                                <View style={styles.horizontalView}>
+                                    <Button label="Done"
+                                        style={styles.smallButton}
+                                        backgroundColor={Colors.primary}
+                                        onPress={() => { navigation.goBack() }}
+                                        marginT-15
+                                    />
+                                </View>
+                            </View>
+                            {
+                                review &&
+                                <View style={{ height: '100%', padding: 10 }}>
+                                    <Text text60M> Your Review</Text>
+                                    <Text text70M style={{marginTop: 20}}>{review.comment}</Text>
+                                </View>
+                            }
+                        </Carousel>
+
                     </View>
+                    {
+                        review &&
+                        <Text grey20 style={{ alignSelf: 'center' }}>--Swipe right to see review--</Text>
+                    }
                     <DetailsMapComponent oldCenter={request.from} oldCenterName={request.centername} userAddress={request.to} />
                 </>
             }
