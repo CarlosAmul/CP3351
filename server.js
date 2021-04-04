@@ -15,9 +15,9 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore()
 
-db.useEmulator("10.0.2.2", 8081)
-firebase.functions().useEmulator("10.0.2.2", 5001)
-firebase.auth().useEmulator("http://10.0.2.2:9099")
+db.useEmulator("localhost", 8081)
+firebase.functions().useEmulator("localhost", 5001)
+firebase.auth().useEmulator("http://localhost:9099")
 
 const reformat = doc => ({ id: doc.id, ...doc.data() })
 const findAll = async collection => (await db.collection(collection).get()).docs.map(reformat)
