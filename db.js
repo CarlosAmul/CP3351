@@ -326,6 +326,17 @@ class Notifications extends DB {
         await db.collection(this.containing).doc(uid).collection(this.collection).doc(id).delete()
     }
 
+    // removeAll = async(uid) => {
+    //     const data = await db.collection(this.containing).doc(uid).collection(this.collection).get()
+    //     await Promise.all(
+    //         data.docs.map(
+    //             async notif => {
+    //                 await this.remove(uid, notif.id)
+    //             }
+    //         )
+    //     )
+    // }
+
     findByJob = async(userid, jobid) => {
         let notif = await db.collection(this.containing).doc(userid).collection(this.collection).where('extra.id', '==', jobid).limit(1).get()
         return notif.docs.map(this.reformat)[0]

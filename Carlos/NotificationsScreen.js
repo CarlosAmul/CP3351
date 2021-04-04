@@ -30,55 +30,65 @@ export default function NotificationsScreen() {
     const [notifications, setNotifications] = useState([])
     useEffect(() => db.Users.Notifications.listenByUserAll(user?.id || "", setNotifications), [user])
 
+    // const [doneRemoving, setDoneRemoving] = useState(false)
+    const [removing, setRemoving] = useState(false)
+
     // console.log(notifications)
 
     function link(uid, nid, screen, extra, nestedScreen) {
         db.Users.Notifications.markRead(uid, nid)
-        console.log('nestedScreen', nestedScreen)
-        if(screen !== ''){
+        if (screen !== '') {
             navigation.navigate(screen, { screen: nestedScreen ? nestedScreen : screen + "Screen", params: { extra: extra ? extra : null } })
         }
     }
 
-    function clearAll() {
-        // const tempNotification = notifications
-        // setNotifications([])
-        notifications.map(notif => {
-            removeNotif(notif.id)
-        })
+    async function clearAll() {
+        setRemoving(true)
+        await Promise.all(
+            notifications.map(async notif => {
+                await removeNotif(notif.id)
+            })
+        )
+        setRemoving(false)
     }
 
-    function removeNotif(id) {
-        db.Users.Notifications.remove(user.id, id)
-        console.log('notification cleared')
+    async function removeNotif(id) {
+        await db.Users.Notifications.remove(user.id, id)
     }
 
     return (
         <ScrollView style={styles.notifContainer}>
             {
-                notifications.map(
-                    notification =>
-                        <Card
-                            row
-                            enableShadow
-                            key={notification.id}
-                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra, notification.extra.nestedScreen)}
-                            style={[styles.card, { backgroundColor: notification.status ? '#f2f2f2' : 'white' }]}
-                        >
-                            <Card.Section
-                                content={[
-                                    { text: notification.message, text60: true, grey10: true },
-                                    { text: notification.when.toDate('MM/dd/yyyy').toString().slice(0, 24), text70: true, grey30: true },
-                                ]}
+                !removing ?
+                    notifications.map(
+                        notification =>
+                            <Card
+                                row
+                                enableShadow
+                                key={notification.id}
+                                onPress={() => link(user.id, notification.id, notification.screen, notification.extra, notification.extra.nestedScreen)}
+                                style={[styles.card, { backgroundColor: notification.status ? '#f2f2f2' : 'white' }]}
+                            >
+                                <Card.Section
+                                    content={[
+                                        { text: notification.message, text60: true, grey10: true },
+                                        { text: notification.when.toDate('MM/dd/yyyy').toString().slice(0, 24), text70: true, grey30: true },
+                                    ]}
 
-                                style={{ padding: 20, flex: 1 }}
-                            />
-                            <TouchableOpacity onPress={() => removeNotif(notification.id)}>
-                                <Text style={{color: CustomColors.grey20}}>Dismiss</Text>
-                            </TouchableOpacity>
+                                    style={{ padding: 20, flex: 1 }}
+                                />
+                                <TouchableOpacity onPress={() => removeNotif(notification.id)}>
+                                    <Text style={{ color: CustomColors.grey20 }}>Dismiss</Text>
+                                </TouchableOpacity>
 
-                        </Card>
-                )
+                            </Card>
+                    )
+                    :
+                    <View style={styles.container}>
+                        <Text style={{ fontSize: 18 }}> Removing Notifications ...  </Text>
+                        <Text style={{ fontSize: 18 }}> {notifications.length} left </Text>
+                    </View>
+
             }
         </ScrollView>
 
@@ -90,6 +100,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        height: 500
     },
     notifContainer: {
         flex: 1
