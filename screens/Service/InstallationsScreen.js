@@ -157,7 +157,7 @@ export default function InstallationsServiceScreen() {
                                                 style={styles.flexButton}
                                                 backgroundColor={Colors.primary}
                                                 onPress={() => { save(request) }}
-                                                // disabled={validateSave}
+                                                disabled={validateSave}
                                                 marginT-15
                                             />
                                         </>

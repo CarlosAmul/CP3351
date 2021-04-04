@@ -355,7 +355,7 @@ exports.sendFAQNotification = functions.firestore.document('faqs/{faqid}').onCre
     const supportsDoc = await db.collection('users').where('role', '==', 'Support').get()
     functions.logger.info(supportsDoc, 'doc')
     supportsDoc.docs.map(doc => {
-      newNotification(doc.id, 'An FAQ has been submitted', 'PendingQuestions')
+      newNotification(doc.id, 'An FAQ has been submitted', 'FAQs', { nestedScreen: 'PendingQuestions' })
     })
   }
 )

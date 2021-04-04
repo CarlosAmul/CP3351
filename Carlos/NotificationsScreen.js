@@ -62,7 +62,7 @@ export default function NotificationsScreen() {
                             row
                             enableShadow
                             key={notification.id}
-                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra, notification.                                                                                                                    nestedScreen)}
+                            onPress={() => link(user.id, notification.id, notification.screen, notification.extra, notification.extra.nestedScreen)}
                             style={[styles.card, { backgroundColor: notification.status ? '#f2f2f2' : 'white' }]}
                         >
                             <Card.Section

@@ -16,6 +16,13 @@ export default function PendingQuestions() {
 
     const navigation = useNavigation();
 
+    // useEffect(() => {
+    //     navigation.setOptions({
+    //         // @ts-expect-error
+    //         headerLeft: () => (<Text>BACK</Text>)
+    //     });
+    // });
+
     const { user } = useContext(UserContext)
 
     const [faqs, setFaqs] = useState([])
@@ -38,6 +45,11 @@ export default function PendingQuestions() {
                     )
                 }
             </View>
+            {/* <View>
+                <Button>
+                    <Text>Go Back</Text>
+                </Button>
+            </View> */}
         </ScrollView>
 
     );

@@ -80,11 +80,6 @@ export default function DrawerNavigator() {
         component={SettingsNavigator}
       />
       <Drawer.Screen
-        name="Notifications"
-        component={NotificationsNavigation}
-        options={{ drawerLabel: `Notifications (${notifCount})` }}
-      />
-      <Drawer.Screen
         name="FitnessTips"
         component={FitnessTipsNavigator}
         options={{ drawerLabel: `Fitness Tips` }}
