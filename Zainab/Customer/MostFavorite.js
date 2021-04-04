@@ -16,15 +16,8 @@ export default function MostFavorite() {
     const [allFavs, setAllFavs] = useState([])
     useEffect(() => db.Categories.Favorites.listenToAllFavs(setAllFavs), [])
 
-    const [catFavs, setCatFavs] = useState([])
-    useEffect(() => {
-        const getFavs = async() => {
-            await db.Categories.Favorites.findAllFavsWithCategories(setCatFavs)
-        }
-        getFavs()
-    }, [allFavs]) 
-
-    console.log(catFavs)
+    const [categories, setCategories] = useState([])
+    useEffect(() => db.Categories.listenAll(setCategories), [allFavs])
 
     return ( 
         <>   
@@ -35,17 +28,33 @@ export default function MostFavorite() {
                 elevation={15}
             >
                 <View style={styles.leftCardView}>
-                    <Card.Image
-                        style={styles.cardimg}
-                        source={{ uri: catFavs.length > 0 ? catFavs.reduce((first, second) => first.favs > second.favs ? first : second).category.url : "Nothing yet"}}
-                    />
+                    {
+                        allFavs.length > 0 ?
+                                <Card.Image
+                                    style={styles.cardimg}
+                                    source={{ uri: categories.reduce((first, second) => allFavs.filter(f => f.parentId === first.id).length > allFavs.filter(f => f.parentId === second.id).length ? first : second ).url}}
+                                />
+                            :
+                                <Card.Image
+                                    style={styles.cardimg}
+                                    source={{ uri: "Loading..."}}
+                                />
+                    }
                 </View>
                 <View style={styles.rightCardView}>
                     <Entypo name="trophy" size={50} color={Colors.secondary} />
-                    <Card.Section
-                        content={[{ text: catFavs.length > 0 ? catFavs.reduce((first, second) => first.favs > second.favs ? first : second).category.name : "Nothing yet", text60M: true, dark10: true, marginT: 20 }]}
-                        backgroundColor={Colors.white}
-                    />
+                    {
+                        allFavs.length > 0 && categories.length > 0 ?
+                            <Card.Section
+                                content={[{ text: categories.reduce((first, second) => allFavs.filter(f => f.parentId === first.id).length > allFavs.filter(f => f.parentId === second.id).length ? first : second).name, text60M: true, dark10: true, marginT: 20 }]}
+                                backgroundColor={Colors.white}
+                            />
+                        :
+                            <Card.Section
+                                content={[{ text: "Nothin yet...", text60M: true, dark10: true, marginT: 20 }]}
+                                backgroundColor={Colors.white}
+                            />
+                    }
                 </View>
             </Card>
         </>

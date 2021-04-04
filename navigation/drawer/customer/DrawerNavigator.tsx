@@ -54,7 +54,7 @@ import ReviewForm from '../../../Carlos/ReviewForm'
 // @ts-expect-error
 import ReviewsScreen from '../../../Carlos/Customer/ReviewsScreen'
 
-import { DrawerParamList, TabOneParamList, TabTwoParamList, TabThreeParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList, TabElevenParamList } from './types';
+import { DrawerParamList, TabOneParamList, TabTwoParamList, TabFourParamList, TabFiveParamList, TabSixParamList, TabSevenParamList, TabEightParamList, TabNineParamList, TabTenParamList, TabElevenParamList } from './types';
 
 const Drawer = createDrawerNavigator<DrawerParamList>();  
 
