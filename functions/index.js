@@ -29,12 +29,14 @@ const db = admin.firestore()
 
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category }, context) => {
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category, goal }, context) => {
     for (let k = 0; k < quantity; k++) {
       if (category.name === "Temperature" || category.name === "Heart Rate Monitor" || category.name === "Body Temperature") {
+        functions.logger.info('Running not pedometer')
         await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request })
       }
       else if (category.name === "Pedometer") {
+        functions.logger.info('Running pedometer')
         await db.collection('sensors').add({ location, userid, categoryid, goal, alert, price, manufacturer, install, request })
       }
       await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })
@@ -360,11 +362,11 @@ exports.sendFAQNotification = functions.firestore.document('faqs/{faqid}').onCre
 )
 
 //this function will be different for every different sensor because there will be separate fields
-exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
-    functions.logger.info("Done with it!!!!!!!")
-    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
-  })
+// exports.addSensor = functions.https.onCall(
+//   async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
+//     functions.logger.info("Done with it!!!!!!!")
+//     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+//   })
 exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
   async (snap, context) => {
     const { tipid } = context.params
