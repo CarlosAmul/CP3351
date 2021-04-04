@@ -90,8 +90,8 @@ export default function DashboardScreen() {
                     <Text style={[styles.numberTitle]}>{faqs.length}</Text>
                 </Card>
             </View>
-            {/* <Text style={[styles.title, {color: Colors.grey30}]}>Total Approved Tips {approvedTips.length} / {allTips.length}</Text>
-            <Progress.Bar 
+            <Text style={[styles.title, {color: Colors.grey30}]}>Total Approved Tips {approvedTips.length} / {allTips.length}</Text>
+            {/* <Progress.Bar 
                 progress={approvedTips.length / allTips.length} 
                 width={300} 
                 color={Colors.darkprimary}
