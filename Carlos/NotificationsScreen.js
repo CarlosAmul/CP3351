@@ -41,9 +41,9 @@ export default function NotificationsScreen() {
     }
 
     function clearAll() {
-        const tempNotification = notifications
-        setNotifications([])
-        tempNotification.map(notif => {
+        // const tempNotification = notifications
+        // setNotifications([])
+        notifications.map(notif => {
             removeNotif(notif.id)
         })
     }

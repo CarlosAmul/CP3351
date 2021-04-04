@@ -9,7 +9,7 @@ import db from '../db'
 export default function PendingQuestion({ faq, set }) {
 
     const [expanded, setExpanded] = useState(false)
-    const [answer, setAnswer] = useState('')
+    const [answer, setAnswer] = useState(faq.status == 'draft' ? faq.answer : '')
 
     const drawHeader = () => {
         return (
@@ -57,7 +57,7 @@ export default function PendingQuestion({ faq, set }) {
                             placeholder={"Answer this question"}
                             style={{ marginBottom: 20 }}
                             onChangeText={text => setAnswer(text)}
-                            value={faq.status == "draft" ? faq.answer : answer}
+                            value={answer}
                         />
                     </View>
                     <View style={{ marginTop: 10, marginBottom: 10 }}>
