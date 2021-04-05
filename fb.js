@@ -1,8 +1,8 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
-import "firebase/functions";
+import firebase from 'firebase/app'
+import "firebase/auth"
+import 'firebase/firestore'
+import 'firebase/storage'
+import 'firebase/functions'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBR4o8GEC0_0Uqd3OSeimB1djijA8iRkAI",
@@ -20,4 +20,4 @@ firebase.firestore().useEmulator("10.0.2.2", 8081);
 firebase.functions().useEmulator("10.0.2.2", 5001);
 firebase.auth().useEmulator(`http://10.0.2.2:9099`);
 
-export default firebase;
+export default firebase

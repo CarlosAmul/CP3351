@@ -29,12 +29,14 @@ const db = admin.firestore()
 
 //this function will be different for every different sensor because there will be separate fields
 exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category }, context) => {
+  async ({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request, quantity, user, category, goal }, context) => {
     for (let k = 0; k < quantity; k++) {
       if (category.name === "Temperature" || category.name === "Heart Rate Monitor" || category.name === "Body Temperature") {
+        functions.logger.info('Running not pedometer')
         await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer, install, request })
       }
       else if (category.name === "Pedometer") {
+        functions.logger.info('Running pedometer')
         await db.collection('sensors').add({ location, userid, categoryid, goal, alert, price, manufacturer, install, request })
       }
       await db.collection('users').doc(user.id).set({ points: user.points + 150 }, { merge: true })
@@ -207,7 +209,7 @@ exports.createSampleData = functions.https.onCall(
     const { id: categoryId6 } = await db.collection('categories').add({ name: "Body Temperature", description: "Body temperature sensor to measure your temperature of the body. ", price: 400, url: "https://image.freepik.com/free-vector/medical-infrared-thermometer-isometric-projection-digital-body-thermometer-isolated-blue-background_168129-305.jpg", manufacturers: [manufacturer1] })
     // functions.logger.info("categoryId2", { categoryId2 })
 
-    const { id: categoryId10 } = await db.collection('categories').add({ name: "Blood Pressure", description: "All Blood Pressure sensors here", price: 200, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
+    // const { id: categoryId10 } = await db.collection('categories').add({ name: "Blood Pressure", description: "All Blood Pressure sensors here", price: 200, url: "https://cdn0.iconfinder.com/data/icons/flaturici-set-3/512/thermometer-512.png", manufacturers: [manufacturer1] })
 
     await db.collection('categories').doc(categoryId1).collection('safetyinstructions').add({ title: 'Wipe Front Screen', description: 'Atfer long use, it is recommended to wipe the screen to prevent unhygienic conditions. ', image: 'https://www.dtv-installations.com/sites/default/files/styles/original_image/public/functions_nest_thermostat.jpg' })
     await db.collection('categories').doc(categoryId2).collection('safetyinstructions').add({ title: 'Adjust the valve', description: 'Make sure the valve which is located on the back side is adjusted properly. ', image: 'https://cdn3.vectorstock.com/i/thumb-large/26/02/pressure-sensor-manometer-isolated-vector-10502602.jpg' })
@@ -225,7 +227,7 @@ exports.createSampleData = functions.https.onCall(
 
     // functions.logger.info("sensorId2", { sensorId2 })
 
-    const { id: sensorId10 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId10, location: "left arm", maxSys: 120, minSys: 90, maxDia: 80, minDia: 60, alert: false, install: "yes", request: "no", price: 400 })
+    const { id: sensorId10 } = await db.collection('sensors').add({ userid: authId2, categoryid: categoryId5, location: "left arm", maxSys: 120, minSys: 90, maxDia: 80, minDia: 60, alert: false, install: "yes", request: "no", price: 400 })
 
     const { id: adId1 } = await db.collection('ads').add({
       title: 'New motion sensor',
@@ -360,11 +362,11 @@ exports.sendFAQNotification = functions.firestore.document('faqs/{faqid}').onCre
 )
 
 //this function will be different for every different sensor because there will be separate fields
-exports.addSensor = functions.https.onCall(
-  async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
-    functions.logger.info("Done with it!!!!!!!")
-    await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
-  })
+// exports.addSensor = functions.https.onCall(
+//   async ({ location, userid, categoryid, min, max, alert, price, manufacturer }, context) => {
+//     functions.logger.info("Done with it!!!!!!!")
+//     await db.collection('sensors').add({ location, userid, categoryid, min, max, alert, price, manufacturer })
+//   })
 exports.sendFitnessNotificationsToSupport = functions.firestore.document('fitnesstips/{tipid}').onCreate(
   async (snap, context) => {
     const { tipid } = context.params

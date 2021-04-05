@@ -102,12 +102,12 @@ export default function AdForm({ navigation: { goBack }, route }) {
                     <Picker selectedValue={screen} style={{ height: 50, width: 200 }} onValueChange={value => setScreen(value)}>
                         <Picker.Item key={0} label={'Select a Screen...'} value="" />
                         <Picker.Item key={1} label={'Public Home'} value="PublicHome" />
-                        <Picker.Item key={2} label={'Notifications'} value="Notifications" />
+                        {/* <Picker.Item key={2} label={'Notifications'} value="Notifications" /> */}
                         <Picker.Item key={3} label={'FAQs'} value="FAQs" />
-                        <Picker.Item key={4} label={'Actions'} value="Actions" />
-                        <Picker.Item key={5} label={'Sensors'} value="Sensors" />
-                        <Picker.Item key={6} label={'Favorites'} value="UserFavorites" />
-                        <Picker.Item key={7} label={'Settings'} value="Settings" />
+                        {/* <Picker.Item key={4} label={'Actions'} value="Actions" /> */}
+                        {/* <Picker.Item key={5} label={'Sensors'} value="Sensors" /> */}
+                        {/* <Picker.Item key={6} label={'Favorites'} value="UserFavorites" /> */}
+                        <Picker.Item key={7} label={'Customer Rewards'} value="CustomerRewards" />
                     </Picker>
                     <Text text70 style={{ color: Colors.primary, marginBottom: 10 }}>Start Date</Text>
                     <View style={{ flexDirection: 'row' }}>
