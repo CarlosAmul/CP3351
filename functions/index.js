@@ -16,11 +16,9 @@ exports.createHistoricReadingsSample = functions.https.onCall(createHistoricRead
 
 exports.findAuthUser = functions.https.onCall(
   async (uid, context) => {
-    // functions.logger.info("uid", { uid })
-
+    functions.logger.info("uid", { uid })
     const authUser = await admin.auth().getUser(uid)
-    // functions.logger.info("authUser", { authUser })
-
+    functions.logger.info("authUser", { authUser })
     return authUser
   }
 )
