@@ -70,6 +70,7 @@ const simulateReading = async sensor => {
             when: new Date(),
             current: current + Math.floor(Math.random() * 20) - 10
         })
+        console.log('temp at ' + current)
     }
     if (isCategory(sensor, "Blood Pressure")) {
         const changeOps = ['+', '-']
@@ -94,6 +95,7 @@ const simulateReading = async sensor => {
                     pulse: current.pulse - op
                 }
             })
+        console.log('blood at ' + current)
     } else if (isCategory(sensor, "Heart Rate Monitor")) {
         const currentR = readings.length > 0 ? readings[0].current : 70
         const changeOps = ['-', '+']
@@ -109,6 +111,7 @@ const simulateReading = async sensor => {
                 when: new Date(),
                 current: currentR + randomValue
             })
+        console.log('hr at ' + currentR)
     }
     else if (isCategory(sensor, "Pedometer")) {
         const currentR = readings.length > 0 ? readings[0].current : 100
@@ -132,6 +135,7 @@ const simulateReading = async sensor => {
                 when: new Date(),
                 current: currentR + randomValue
             })
+        console.log('body at ' + currentR)
     }
     else {
         console.log('other type of sensor not simulated yet')
