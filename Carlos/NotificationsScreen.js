@@ -87,6 +87,10 @@ export default function NotificationsScreen() {
                     <View style={styles.container}>
                         <Text style={{ fontSize: 18 }}> Removing Notifications ...  </Text>
                         <Text style={{ fontSize: 18 }}> {notifications.length} left </Text>
+                        {
+                            notifications.length == 0 &&
+                            <Text style={{ fontSize: 18 }}> Finalizing... </Text>
+                        }
                     </View>
 
             }

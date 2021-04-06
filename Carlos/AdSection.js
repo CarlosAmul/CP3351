@@ -3,16 +3,11 @@ import { StyleSheet, View, ScrollView, Text, Image, TouchableOpacity } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import MenuIcon from '../components/MenuIcon'
 import { Colors, Card, Carousel } from 'react-native-ui-lib'
-import Categories from './Customer/Categories'
-import MostFavorite from './Customer/MostFavorite'
-import FitnessTips from './Customer/FitnessTips'
-import CustomerHiring from './Customer/CustomerHiring'
 import Ad from '../Carlos/Ad'
-import AdSection from '../Carlos/AdSection'
 import db from '../db'
 
 
-export default function PublicHomeScreen() {
+export default function AdSection() {
 
     const navigation = useNavigation();
     useEffect(() => {
@@ -36,20 +31,17 @@ export default function PublicHomeScreen() {
     const [ads, setAds] = useState([])
     const [ad, setAd] = useState(null)
 
-    useEffect(() => db.Ads.listenAll(setAds), [])
+    useEffect(() => db.Ads.listenAllActive(setAds), [])
     console.log('ads', ads)
     useEffect(() => setAd(ads[Math.floor(Math.random() * ads.length)]), [ads])
 
     const onPress = () => {
-        if (ad) {
-            navigation.navigate(ad.screen, { screen: ad.screen + "Screen" })
-        }
-
+        navigation.navigate(ad.screen, { screen: ad.screen + "Screen" })
     }
 
     return (
-        <ScrollView style={styles.scrollcontainer} contentContainerStyle={{ alignItems: 'center' }}>
-            {/* {
+        <View>
+            {
                 ad ?
                     <TouchableOpacity onPress={onPress}>
                         <Ad ad={ad} styling={{ margin: 20, marginBottom: 0 }} />
@@ -60,76 +52,8 @@ export default function PublicHomeScreen() {
                             <Text text40 style={{ color: Colors.grey20, alignSelf: 'center' }}>No Ad Available</Text>
                         </View>
                     </View>
-            } */}
-            {
-                ad &&
-                <TouchableOpacity onPress={onPress}>
-                    <Ad ad={ad} styling={{ margin: 20, marginBottom: 0 }} />
-                </TouchableOpacity>
             }
-            {
-                !ad &&
-                <View style={[{ borderWidth: 1, borderColor: 'black', alignItems: 'center', borderRadius: 10, margin: 20, marginBottom: 0 }]} >
-                    <View style={{ width: '50%', margin: 5, padding: 5, textAlign: 'center' }}>
-                        <Text text40 style={{ color: Colors.grey20, alignSelf: 'center' }}>No Ad Available</Text>
-                    </View>
-                </View>
-            }
-            <Card
-                borderRadius={20}
-                style={styles.card}
-                enableShadow={false}
-            >
-                <View style={styles.leftCardVew}>
-                    <Text style={[styles.title, { color: Colors.darkprimary }]}>Welcome to FitIoT</Text>
-                    <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Be smart in your fitness!</Text>
-                </View>
-                <View style={styles.rightCardView}>
-                    <Image
-                        source={require("../assets/images/sensor-vector.png")}
-                        style={{ width: 150, height: 150 }}
-                    />
-                </View>
-            </Card>
-            <Carousel
-                containerStyle={{
-                    height: 250,
-                    width: "90%",
-                    margin: 20
-                }}
-                loop
-                pageControlProps={{
-                    size: 10,
-                    containerStyle: styles.loopCarousel
-                }}
-                pageControlPosition={Carousel.pageControlPositions.OVER}
-                autoplay={true}
-                containerPaddingVertical={10}
-            >
-                <View centerV key={0}>
-                    <Image
-                        style={{ width: "100%", height: "100%" }}
-                        source={require("../assets/images/fitness-tracker1.jpg")}
-                    />
-                </View>
-                <View centerV key={1}>
-                    <Image
-                        style={{ width: "100%", height: "100%" }}
-                        source={require("../assets/images/fitness-tracker2.jpg")}
-                    />
-                </View>
-                <View centerV key={2}>
-                    <Image
-                        style={{ width: "100%", height: "100%" }}
-                        source={require("../assets/images/fitness-tracker3.jpg")}
-                    />
-                </View>
-            </Carousel>
-            <Categories navigation={navigation} />
-            <MostFavorite />
-            <CustomerHiring navigation={navigation} />
-            <FitnessTips navigation={navigation} />
-        </ScrollView>
+        </View>
     );
 }
 

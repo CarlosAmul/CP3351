@@ -456,9 +456,12 @@ class Ads extends DB {
     listenAllActive = (set) => {
         db.collection(this.collection).where('startDate', '<=', new Date())
             .onSnapshot(snap => {
-                const array = snap.docs.map(doc => this.reformat(doc))
-                set(array.filter(a => a.endDate.toDate() > new Date()))
+                set(snap.docs.map(doc => this.reformat(doc)).filter(a => a.endDate.toDate() > new Date()))
             })
+    }
+
+    listenChange = (set) => {
+        db.collection(this.collection).onSnapshot(set(true))
     }
 }
 
