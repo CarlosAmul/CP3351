@@ -208,8 +208,8 @@ export default function DashboardScreen() {
                     source={{ uri: 'https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif' }}
                   />
                   <Text text60>
-                    Loading...
-              </Text>
+                    No Ads Available at this Time
+                  </Text>
                 </View>
             }
 

@@ -12,7 +12,10 @@ import DrawerMarketing from './navigation/drawer/marketing';
 import DrawerService from './navigation/drawer/service'
 
 import { LogBox, View, Text } from 'react-native'
-LogBox.ignoreLogs(['Setting a timer for a long period of time'])
+LogBox.ignoreLogs([
+    'Setting a timer for a long period of time',
+    "Can't perform a React state update on an unmounted component"
+])
 
 import fb from './fb'
 import db from './db'

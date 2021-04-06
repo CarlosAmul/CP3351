@@ -79,6 +79,7 @@ export default function AdForm({ navigation: { goBack }, route }) {
                             enableShadow
                             onPress={() => uploadImage()}
                         />
+                        
                         <Button
                             backgroundColor={Colors.primary}
                             label="Remove"
